@@ -5,7 +5,7 @@
       <paths name="ICVS">
         <serverdata>
           <mappings>
-            <mapping deploy="/lemniscate.pytorch" local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/lemniscate" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>

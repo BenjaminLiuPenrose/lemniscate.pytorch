@@ -3,7 +3,7 @@
   <component name="WebServers">
     <option name="servers">
       <webServer id="eee06906-499d-4e64-8706-f303dde921b2" name="ICVS" url="http://13.59.139.3">
-        <fileTransfer host="13.59.139.3" port="22" rootFolder="/root/benliu/localTest/mine" accessType="SFTP">
+        <fileTransfer host="13.59.139.3" port="22" rootFolder="/run" accessType="SFTP">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
           </advancedOptions>
