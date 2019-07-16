@@ -2,8 +2,8 @@
 <project version="4">
   <component name="WebServers">
     <option name="servers">
-      <webServer id="eee06906-499d-4e64-8706-f303dde921b2" name="ICVS" url="http://13.59.139.3">
-        <fileTransfer host="13.59.139.3" port="22" rootFolder="/run" accessType="SFTP">
+      <webServer id="eee06906-499d-4e64-8706-f303dde921b2" name="ICVS" url="http://dtn.brc.berkeley.edu">
+        <fileTransfer host="dtn.brc.berkeley.edu" port="22" rootFolder="/global/home/users/peterwg/scratch/benliu" accessType="SFTP">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
           </advancedOptions>
