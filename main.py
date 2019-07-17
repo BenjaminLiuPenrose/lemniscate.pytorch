@@ -146,6 +146,7 @@ def main():
     # define lemniscate and loss function (criterion)
     ndata = train_dataset.__len__()
     if args.nce_k > 0:
+        # TODO for now, consider nce_k = 0 case only
         lemniscate = NCEAverage(args.low_dim, ndata, args.nce_k, args.nce_t, args.nce_m).cuda()
         criterion = NCECriterion(ndata).cuda()
     else:

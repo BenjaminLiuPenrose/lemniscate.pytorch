@@ -41,3 +41,9 @@ class CIFAR100Instance(CIFAR10Instance):
     test_list = [
         ['test', 'f0ef6b0ae62326f3e7ffdfab6717acfc'],
     ]
+
+    meta = {
+        'filename': 'meta',
+        'key': 'label_names',
+        'md5': '5ff9c542aee3614f3951f8cda6e48888',
+    }
