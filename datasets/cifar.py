@@ -44,6 +44,6 @@ class CIFAR100Instance(CIFAR10Instance):
 
     meta = {
         'filename': 'meta',
-        'key': 'label_names',
-        'md5': '5ff9c542aee3614f3951f8cda6e48888',
+        'key': 'fine_label_names',
+        'md5': '7973b15100ade9c7d40fb424638fde48',
     }
