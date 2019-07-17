@@ -50,8 +50,9 @@ class LinearAverage(nn.Module):
 
         self.register_buffer('params',torch.tensor([T, momentum]));
         stdv = 1. / math.sqrt(inputSize/3)
-        self.register_buffer('memory', torch.rand(outputSize, inputSize).mul_(2*stdv).add_(-stdv))
+        self.register_parameter('memory', torch.rand(outputSize, inputSize).mul_(2*stdv).add_(-stdv))
 
     def forward(self, x, y):
+        print(self.memory.requires_grad)
         out = LinearAverageOp.apply(x, y, self.memory, self.params)
         return out
