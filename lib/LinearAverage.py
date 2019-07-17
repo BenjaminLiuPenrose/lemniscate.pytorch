@@ -12,7 +12,7 @@ class LinearAverageOp(Function):
         # inner product
         out = torch.mm(x.data, memory.t())
         out.div_(T) # batchSize * N
-        
+
         self.save_for_backward(x, memory, y, params)
 
         return out
@@ -23,7 +23,7 @@ class LinearAverageOp(Function):
         batchSize = gradOutput.size(0)
         T = params[0].item()
         momentum = params[1].item()
-        
+
         # add temperature
         gradOutput.data.div_(T)
 
@@ -38,7 +38,7 @@ class LinearAverageOp(Function):
         w_norm = weight_pos.pow(2).sum(1, keepdim=True).pow(0.5)
         updated_weight = weight_pos.div(w_norm)
         memory.index_copy_(0, y, updated_weight)
-        
+
         return gradInput, None, None, None
 
 class LinearAverage(nn.Module):
@@ -55,4 +55,3 @@ class LinearAverage(nn.Module):
     def forward(self, x, y):
         out = LinearAverageOp.apply(x, y, self.memory, self.params)
         return out
-
