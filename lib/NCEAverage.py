@@ -89,5 +89,6 @@ class NCEAverage(nn.Module):
     def forward(self, x, y):
         batchSize = x.size(0)
         idx = self.multinomial.draw(batchSize * (self.K+1)).view(batchSize, -1)
+        # print(self.memory.requires_grad)
         out = NCEFunction.apply(x, y, self.memory, idx, self.params)
         return out
