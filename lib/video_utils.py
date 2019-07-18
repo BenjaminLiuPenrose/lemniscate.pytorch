@@ -36,6 +36,38 @@ def frameArr_to_frameJpg(frame_array, jpg_path_parent):
         cv2.imwrite(jpg_path, frame)
     return True
 
+def process_ucf101():
+    """ process ucf101 to data instance dict
+    """
+    movie_path_datahome = "../data/UCF-101/"
+    # jpg_path_datahome = "../data/UCF-101-Frame/"
+    suffix = ".avi"
+    instance_idx = 0
+    ucf101_frame_dict = {}
+    cut_at_n_frame = 50
+    # if not os.path.exists(jpg_path_datahome):
+        # os.makedirs(jpg_path_datahome)
+
+    movieCategoryName_ls = [folder[0].split("/")[-1] for folder in os.walk(movie_path_datahome)]
+    for movieCategoryName in movieCategoryName_ls:
+        # movieCategoryName = "ApplyEyeMakeup"
+        movie_path_parent = os.path.join(movie_path_datahome, movieCategoryName)
+        filenames = os.listdir(movie_path_parent)
+        moviename_ls = [ filename for filename in filenames if filename.endswith( suffix ) ]
+        for moviename in moviename_ls:
+            moviename_rmsuffix = moviename[:-len(suffix)]
+            instance_name = "Instance{}_{}".format(instance_idx, moviename_rmsuffix)
+            movie_path = os.path.join(movie_path_parent, moviename)
+            # jpg_path_parent = os.path.join(jpg_path_datahome, instance_name)
+            # if not os.path.exists(jpg_path_parent):
+            #     os.makedirs(jpg_path_parent)
+            frame_array = process_vidseq(movie_path)
+            # success = frameArr_to_frameJpg(frame_array, jpg_path_parent)
+            ucf101_frame_dict[instance_name] = frame_array[:cut_at_n_frame]
+            print("Finish process {}".format(instance_name))
+            instance_idx += 1
+    return ucf101_frame_dict
+
 
 def test():
     movie_path_datahome = "../data/UCF-101/"
