@@ -2,6 +2,7 @@ data/*
 checkpoint/*
 logs/*
 ipnb/*
+.ipynb_checkpoints/*
 
 *.pyc
 *.bak
@@ -9,4 +10,5 @@ ipnb/*
 *.tar
 *.pth
 *.rar
+*.ipynb
 UCF101.rar.crdownload
