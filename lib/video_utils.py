@@ -36,10 +36,9 @@ def frameArr_to_frameJpg(frame_array, jpg_path_parent):
         cv2.imwrite(jpg_path, frame)
     return True
 
-def process_ucf101():
+def process_ucf101(movie_path_datahome = "../data/UCF-101/"):
     """ process ucf101 to data instance dict
     """
-    movie_path_datahome = "../data/UCF-101/"
     # jpg_path_datahome = "../data/UCF-101-Frame/"
     suffix = ".avi"
     instance_idx = 0
