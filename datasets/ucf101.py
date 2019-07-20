@@ -7,8 +7,13 @@ import functools
 import json
 import copy
 
-from utils import load_value_file
+# from utils import load_value_file, tmp fix
 
+def load_value_file(file_path):
+    with open(file_path, 'r') as input_file:
+        value = float(input_file.read().rstrip('\n\r'))
+
+    return value
 
 def pil_loader(path):
     # open path as file to avoid ResourceWarning (https://github.com/python-pillow/Pillow/issues/835)
