@@ -10,7 +10,8 @@ import torch.backends.cudnn as cudnn
 
 import torchvision
 # import torchvision.transforms as transforms
-import utils.transforms as transforms
+from utils.spatial_transforms import Compose, Normalize, RandomHorizontalFlip, MultiScaleRandomCrop, ToTensor, CenterCrop
+from utils.temporal_transforms import TemporalRandomCrop
 import lib.custom_transforms as custom_transforms
 
 import os
