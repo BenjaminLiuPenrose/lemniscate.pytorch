@@ -79,23 +79,23 @@ print('==> Preparing data..')
 # ])
 
 transform_train = {
-    "spatial": transforms.Compose([
-                        transforms.MultiScaleRandomCrop(args.scales, args.spatial_size),
-                        transforms.RandomHorizontalFlip(),
-                        transforms.ToTensor(args.norm_value),
-                        transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
+    "spatial": Compose([
+                        MultiScaleRandomCrop(args.scales, args.spatial_size),
+                        RandomHorizontalFlip(),
+                        ToTensor(args.norm_value),
+                        Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
                 ]),
-    "temporal": transforms.TemporalRandomCrop(args.sample_duration),
+    "temporal": TemporalRandomCrop(args.sample_duration),
     "target": None,
 }
 
 transform_test = {
     'spatial':  transforms.Compose([
-                        transforms.CenterCrop(args.spatial_size),
-                        transform.ToTensor(args.norm_value),
-                        transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
+                        CenterCrop(args.spatial_size),
+                        ToTensor(args.norm_value),
+                        Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
                         ]),
-    'temporal': transforms.TemporalRandomCrop(config.sample_duration),
+    'temporal': TemporalRandomCrop(config.sample_duration),
     'target':  None,
 }
 
