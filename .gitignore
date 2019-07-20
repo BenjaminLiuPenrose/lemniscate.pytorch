@@ -3,6 +3,7 @@ checkpoint/*
 logs/*
 ipnb/*
 .ipynb_checkpoints/*
+.idea/*
 
 *.pyc
 *.bak
