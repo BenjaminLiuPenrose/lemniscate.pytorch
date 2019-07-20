@@ -90,7 +90,7 @@ transform_train = {
 }
 
 transform_test = {
-    'spatial':  transforms.Compose([
+    'spatial':  Compose([
                         CenterCrop(args.spatial_size),
                         ToTensor(args.norm_value),
                         Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
