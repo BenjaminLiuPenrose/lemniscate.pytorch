@@ -84,7 +84,7 @@ transform_train = {
                         transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
                 ]),
     "temporal": transforms.TemporalRandomCrop(args.sample_duration),
-    "target": NOne,
+    "target": None,
 }
 
 transform_test = {
@@ -93,8 +93,8 @@ transform_test = {
                         transform.ToTensor(args.norm_value),
                         transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
                         ]),
-    'temporal': TemporalRandomCrop(config.sample_duration),
-    'target':   ClassLabel()
+    'temporal': transforms.TemporalRandomCrop(config.sample_duration),
+    'target':  None,
 }
 
 spatial_transform = None
