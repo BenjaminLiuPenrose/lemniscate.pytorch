@@ -9,6 +9,37 @@ import pickle
 import os
 import cv2
 
+# due to https://stackoverflow.com/questions/44650888/resize-an-image-without-distortion-opencv
+def image_resize(image, width = None, height = None, inter = cv2.INTER_AREA):
+    # initialize the dimensions of the image to be resized and
+    # grab the image size
+    dim = None
+    (h, w) = image.shape[:2]
+
+    # if both the width and height are None, then return the
+    # original image
+    if width is None and height is None:
+        return image
+
+    # check to see if the width is None
+    if width is None:
+        # calculate the ratio of the height and construct the
+        # dimensions
+        r = height / float(h)
+        dim = (int(w * r), height)
+
+    # otherwise, the height is None
+    else:
+        # calculate the ratio of the width and construct the
+        # dimensions
+        r = width / float(w)
+        dim = (width, int(h * r))
+
+    # resize the image
+    resized = cv2.resize(image, dim, interpolation = inter)
+
+    # return the resized image
+    return resized
 
 def process_vidseq(movie_path, interval=1):
     """ process one video
@@ -26,13 +57,14 @@ def process_vidseq(movie_path, interval=1):
         count += 1
     return np.array(frame_all[::interval])
 
-def frameArr_to_frameJpg(frame_array, jpg_path_parent):
+def frameArr_to_frameJpg(frame_array, jpg_path_parent, filename_fmt, width = None, height = None):
     """ write from np array to jpg
     """
     length = len(frame_array)
     for i in range(length):
-        jpg_path = os.path.join(jpg_path_parent, "frame%d.jpg" % i)
+        jpg_path = os.path.join(jpg_path_parent, filename_fmt % i)
         frame = frame_array[i]
+        frame = image_resize(frame, width = width, height = height)
         cv2.imwrite(jpg_path, frame)
     return True
 

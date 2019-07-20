@@ -3,6 +3,8 @@ import os
 import sys
 import subprocess
 
+from video_utils import process_vidseq, frameArr_to_frameJpg
+
 def class_process(dir_path, dst_dir_path, class_name):
   class_path = os.path.join(dir_path, class_name)
   if not os.path.isdir(class_path):
@@ -33,9 +35,15 @@ def class_process(dir_path, dst_dir_path, class_name):
       print(dst_directory_path)
       continue
     cmd = 'ffmpeg -i \"{}\" -vf scale=-1:240 \"{}/image_%05d.jpg\"'.format(video_file_path, dst_directory_path)
-    print(cmd)
-    subprocess.call(cmd, shell=True)
-    print('\n')
+    # print(cmd)
+    # subprocess.call(cmd, shell=True)
+    # print('\n')
+    # jpg_path_parent = os.path.join(dst_directory_path, "image_%05d.jpg")
+    filename_fmt = "image_%05d.jpg"
+    frame_array = process_vidseq(video_file_path)
+    success = frameArr_to_frameJpg(frame_array, dst_directory_path, filename_fmt, width = None, height = 240)
+    print(cmd, " ", success)
+
 
 if __name__=="__main__":
   dir_path = sys.argv[1]
