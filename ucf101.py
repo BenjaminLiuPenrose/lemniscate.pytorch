@@ -38,6 +38,12 @@ parser.add_argument('--nce-t', default=0.1, type=float,
                     metavar='T', help='temperature parameter for softmax')
 parser.add_argument('--nce-m', default=0.5, type=float,
                     metavar='M', help='momentum for non-parametric updates')
+parser.add_argument('--video_path', '-video', default='./data/UCF-101-Frame/',
+                    type=str, help='video path')
+parser.add_argument('--annotation_path', '-anno',
+                    default='./data/UCF-101-Annotate/UCF101_Action_detection_splits/',
+                    type=str, help='annotation path')
+
 
 args = parser.parse_args()
 
