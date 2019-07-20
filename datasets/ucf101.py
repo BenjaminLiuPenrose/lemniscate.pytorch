@@ -172,6 +172,7 @@ class UCF101Instance(data.Dataset):
             root_path, annotation_path, subset, n_samples_for_each_video,
             sample_duration)
 
+        self.transform = transform
         self.spatial_transform = spatial_transform
         self.temporal_transform = temporal_transform
         self.target_transform = target_transform
