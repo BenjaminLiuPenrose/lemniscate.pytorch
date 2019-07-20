@@ -197,7 +197,7 @@ class UCF101Instance(data.Dataset):
             self.spatial_transform.randomize_parameters()
             clip = [self.spatial_transform(img) for img in clip]
         if self.transform is not None:
-            clip = self.transform(clip)
+            clip = [self.transform(clip) for img in clip]
         clip = torch.stack(clip, 0).permute(1, 0, 2, 3)
 
 
