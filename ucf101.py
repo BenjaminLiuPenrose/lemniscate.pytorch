@@ -38,14 +38,23 @@ parser.add_argument('--nce-t', default=0.1, type=float,
                     metavar='T', help='temperature parameter for softmax')
 parser.add_argument('--nce-m', default=0.5, type=float,
                     metavar='M', help='momentum for non-parametric updates')
+
 parser.add_argument('--video_path', '-video', default='./data/UCF-101-Frame/',
                     type=str, help='video path')
 parser.add_argument('--annotation_path', '-anno',
                     default='./data/UCF-101-Annotate/UCF101_Action_detection_splits/',
                     type=str, help='annotation path')
-
-
+parser.add_argument('--norm_value', default=255, type=int, help='Divide inputs by 255 or 1')
+parser.add_argument('--sample_duration', default=64, type=int, help='Temporal duration of inputs')
+parser.add_argument('--spatial_size', default=224, type=int, help='Height and width of inputs')
+parser.add_argument('--initial_scale', default=1.0, type=float, help='Initial scale for multiscale cropping')
+parser.add_argument('--num_scales', default=5, type=int, help='Number of scales for multiscale cropping')
+parser.add_argument('--scale_step', default=0.84089641525, type=float, help='Scale step for multiscale cropping')
 args = parser.parse_args()
+
+args.scales = [args.initial_scale]
+for i in range(1, args.num_scales):
+    args.scales.append(args.scales[-1] * args.scale_step)
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 best_acc = 0  # best test accuracy
@@ -53,19 +62,40 @@ start_epoch = 0  # start from epoch 0 or last checkpoint epoch
 
 # Data
 print('==> Preparing data..')
-transform_train = transforms.Compose([
-    transforms.RandomResizedCrop(size=32, scale=(0.2,1.)),
-    transforms.ColorJitter(0.4, 0.4, 0.4, 0.4),
-    transforms.RandomGrayscale(p=0.2),
-    #transforms.RandomHorizontalFlip(),
-    transforms.ToTensor(),
-    transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
-])
+# transform_train = transforms.Compose([
+#     transforms.RandomResizedCrop(size=32, scale=(0.2,1.)),
+#     transforms.ColorJitter(0.4, 0.4, 0.4, 0.4),
+#     transforms.RandomGrayscale(p=0.2),
+#     #transforms.RandomHorizontalFlip(),
+#     transforms.ToTensor(),
+#     transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
+# ])
+#
+# transform_test = transforms.Compose([
+#     transforms.ToTensor(),
+#     transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
+# ])
 
-transform_test = transforms.Compose([
-    transforms.ToTensor(),
-    transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
-])
+transform_train = {
+    "spatial": transforms.Compose([
+                        transforms.MultiScaleRandomCrop(args.scales, args.spatial_size),
+                        transforms.RandomHorizontalFlip(),
+                        transforms.ToTensor(args.norm_value),
+                        transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
+                ]),
+    "temporal": transforms.TemporalRandomCrop(args.sample_duration),
+    "target": NOne,
+}
+
+transform_test = {
+    'spatial':  transforms.Compose([
+                        transforms.CenterCrop(args.spatial_size),
+                        transform.ToTensor(args.norm_value),
+                        transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
+                        ]),
+    'temporal': TemporalRandomCrop(config.sample_duration),
+    'target':   ClassLabel()
+}
 
 spatial_transform = None
 temporal_transform = None
@@ -162,6 +192,7 @@ def train(epoch):
     end = time.time()
     for batch_idx, (inputs, targets, indexes) in enumerate(trainloader):
         data_time.update(time.time() - end)
+        print(type(inputs), type(targets), type(device))
         inputs, targets, indexes = inputs.to(device), targets.to(device), indexes.to(device)
         optimizer.zero_grad()
 
