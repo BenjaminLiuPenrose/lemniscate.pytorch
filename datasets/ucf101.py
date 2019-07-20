@@ -6,6 +6,7 @@ import math
 import functools
 import json
 import copy
+import numpy as np
 
 # from utils import load_value_file, tmp fix
 
@@ -192,7 +193,7 @@ class UCF101Instance(data.Dataset):
         if self.temporal_transform is not None:
             frame_indices = self.temporal_transform(frame_indices)
         clip = self.loader(path, frame_indices)
-        clip = torch.from_numpy(numpy.array(clip))
+        clip = torch.from_numpy(np.array(clip))
         if self.spatial_transform is not None:
             self.spatial_transform.randomize_parameters()
             clip = [self.spatial_transform(img) for img in clip]
