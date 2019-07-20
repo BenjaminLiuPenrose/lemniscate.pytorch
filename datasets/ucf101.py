@@ -108,7 +108,8 @@ def make_dataset(root_path, annotation_path, subset, n_samples_for_each_video,
             'video': video_path,
             'segment': [begin_t, end_t],
             'n_frames': n_frames,
-            'video_id': video_names[i].split('/')[1]
+            'video_id': video_names[i].split('/')[1],
+            'video_index': i,
         }
         if len(annotations) != 0:
             sample['label'] = class_to_idx[annotations[i]['label']]
@@ -156,6 +157,7 @@ class UCF101(data.Dataset):
                  annotation_path,
                  subset,
                  n_samples_for_each_video=1,
+                 transform = None,
                  spatial_transform=None,
                  temporal_transform=None,
                  target_transform=None,
@@ -180,6 +182,7 @@ class UCF101(data.Dataset):
         path = self.data[index]['video']
 
         frame_indices = self.data[index]['frame_indices']
+        video_index = self.data[index]['video_index']
         if self.temporal_transform is not None:
             frame_indices = self.temporal_transform(frame_indices)
         clip = self.loader(path, frame_indices)
@@ -187,12 +190,14 @@ class UCF101(data.Dataset):
             self.spatial_transform.randomize_parameters()
             clip = [self.spatial_transform(img) for img in clip]
         clip = torch.stack(clip, 0).permute(1, 0, 2, 3)
+        if self.transform is not None:
+            clip = self.transform(clip)
 
         target = self.data[index]
         if self.target_transform is not None:
             target = self.target_transform(target)
 
-        return clip, target
+        return clip, target, video_index
 
     def __len__(self):
         return len(self.data)
