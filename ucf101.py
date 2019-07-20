@@ -19,6 +19,7 @@ import argparse
 import time
 
 import models
+import models.resnet_ucf101 as resnet_ucf101
 import datasets
 import math
 
@@ -52,6 +53,8 @@ parser.add_argument('--spatial_size', default=224, type=int, help='Height and wi
 parser.add_argument('--initial_scale', default=1.0, type=float, help='Initial scale for multiscale cropping')
 parser.add_argument('--num_scales', default=5, type=int, help='Number of scales for multiscale cropping')
 parser.add_argument('--scale_step', default=0.84089641525, type=float, help='Scale step for multiscale cropping')
+parser.add_argument('--resnet_shortcut', default='B', type=str, help='Shortcut type of resnet (A | B)')
+
 args = parser.parse_args()
 
 args.scales = [args.initial_scale]
@@ -128,7 +131,13 @@ testloader = torch.utils.data.DataLoader(testset, batch_size=1, shuffle=False, n
 ndata = trainset.__len__()
 
 print('==> Building model..')
-net = models.__dict__['ResNet18'](low_dim=args.low_dim)
+# net = models.__dict__['ResNet18'](low_dim=args.low_dim)
+net = resnet_ucf101.resnet18(
+                num_classes=args.low_dim,
+                shortcut_type=args.resnet_shortcut,
+                spatial_size=args.spatial_size,
+                sample_duration=args.sample_duration
+)
 # define leminiscate
 if args.nce_k > 0:
     lemniscate = NCEAverage(args.low_dim, ndata, args.nce_k, args.nce_t, args.nce_m)
@@ -191,7 +200,6 @@ def train(epoch):
     end = time.time()
     for batch_idx, (inputs, targets, indexes) in enumerate(trainloader):
         data_time.update(time.time() - end)
-        print(type(inputs), type(targets), type(device))
         inputs, targets, indexes = inputs.to(device), targets.to(device), indexes.to(device)
         optimizer.zero_grad()
 
