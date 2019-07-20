@@ -1,7 +1,5 @@
 import numpy as np
 import torch
-import h5py
-from pdb import set_trace as st
 import torch.nn as nn
 import argparse
 from torch.autograd import Variable
