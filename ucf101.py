@@ -9,7 +9,7 @@ import torch.nn.functional as F
 import torch.backends.cudnn as cudnn
 
 import torchvision
-# import torchvision.transforms as transforms
+import torchvision.transforms as transforms
 from utils.spatial_transforms import Compose, Normalize, RandomHorizontalFlip, MultiScaleRandomCrop, ToTensor, CenterCrop
 from utils.temporal_transforms import TemporalRandomCrop
 import lib.custom_transforms as custom_transforms
@@ -99,17 +99,14 @@ transform_test = {
     'target':  None,
 }
 
-spatial_transform = None
-temporal_transform = None
-target_transform = None
 trainset = datasets.UCF101Instance(
             args.video_path,
             args.annotation_path,
             'training',
-            transform = transform_train,
-            spatial_transform=spatial_transform,
-            temporal_transform=temporal_transform,
-            target_transform=target_transform
+            # transform = transform_train,
+            spatial_transform=transform_train["spatial"],
+            temporal_transform=transform_train["temporal"],
+            target_transform=transform_train["target"],
             )
 trainloader = torch.utils.data.DataLoader(trainset, batch_size=1, shuffle=True, num_workers=6)
 # trainset = datasets.CIFAR100Instance(root='./data', train=True, download=True, transform=transform_train)
@@ -119,10 +116,10 @@ testset = datasets.UCF101Instance(
             args.video_path,
             args.annotation_path,
             'testing',
-            transform = transform_train,
-            spatial_transform=spatial_transform,
-            temporal_transform=temporal_transform,
-            target_transform=target_transform
+            # transform = transform_test,
+            spatial_transform=transform_test["spatial"],
+            temporal_transform=transform_test["temporal"],
+            target_transform=transform_test["target"],
             )
 testloader = torch.utils.data.DataLoader(testset, batch_size=1, shuffle=False, num_workers=6)
 # testset = datasets.CIFAR100Instance(root='./data', train=False, download=True, transform=transform_test)
