@@ -135,7 +135,7 @@ def make_dataset(root_path, annotation_path, subset, n_samples_for_each_video,
     return dataset, idx_to_class
 
 
-class UCF101(data.Dataset):
+class UCF101Instance(data.Dataset):
     """
     Args:
         root (string): Root directory path.

@@ -70,7 +70,7 @@ transform_test = transforms.Compose([
 spatial_transform = None
 temporal_transform = None
 target_transform = None
-trainset = datasets.UCF101(
+trainset = datasets.UCF101Instance(
             args.video_path,
             args.annotation_path,
             'training',
@@ -83,7 +83,7 @@ trainloader = torch.utils.data.DataLoader(trainset, batch_size=16, shuffle=True,
 # trainset = datasets.CIFAR100Instance(root='./data', train=True, download=True, transform=transform_train)
 # trainloader = torch.utils.data.DataLoader(trainset, batch_size=128, shuffle=True, num_workers=2)
 
-testset = datasets.UCF101(
+testset = datasets.UCF101Instance(
             args.video_path,
             args.annotation_path,
             'testing',
