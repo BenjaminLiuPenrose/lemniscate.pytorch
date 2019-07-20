@@ -95,7 +95,7 @@ transform_test = {
                         ToTensor(args.norm_value),
                         Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
                         ]),
-    'temporal': TemporalRandomCrop(config.sample_duration),
+    'temporal': TemporalRandomCrop(args.sample_duration),
     'target':  None,
 }
 
