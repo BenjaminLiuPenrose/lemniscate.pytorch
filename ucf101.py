@@ -19,7 +19,7 @@ import argparse
 import time
 
 import models
-import models.resnet_ucf101 as resnet_ucf101
+from models import resnet_ucf101
 import datasets
 import math
 
