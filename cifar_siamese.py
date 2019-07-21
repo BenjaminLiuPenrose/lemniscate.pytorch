@@ -28,7 +28,7 @@ from test import NN, kNN
 
 from utils.datasets import BalancedBatchSampler_CIFAR
 from utils.losses import OnlineContrastiveLoss
-from utils.utils import AllPositivePairSelector, HardNegativePairSelector # Strategies for selecting pairs within a minibatch
+from utils.utils import AllPositivePairSelector, HardNegativePairSelector, AllNegativePairSelector # Strategies for selecting pairs within a minibatch
 
 
 
@@ -118,7 +118,7 @@ if hasattr(lemniscate, 'K'):
     criterion = NCECriterion(ndata)
 else:
     # criterion = nn.CrossEntropyLoss()
-    criterion = OnlineContrastiveLoss(args.margin, HardNegativePairSelector())
+    criterion = OnlineContrastiveLoss(args.margin, AllNegativePairSelector())
 
 net.to(device)
 lemniscate.to(device)
