@@ -74,12 +74,12 @@ transform_test = transforms.Compose([
 trainset = datasets.CIFAR10Instance(root='./data', train=True, download=True, transform=transform_train)
 # trainset = datasets.CIFAR100Instance(root='./data', train=True, download=True, transform=transform_train)
 train_batch_sampler = BalancedBatchSampler(trainset.targets, n_classes=10, n_samples=25)
-trainloader = torch.utils.data.DataLoader(trainset, batch_sampler=train_batch_sampler, shuffle=True, num_workers=2, pin_memory = True)
+trainloader = torch.utils.data.DataLoader(trainset, batch_sampler = train_batch_sampler, num_workers=2, pin_memory = True)
 
 testset = datasets.CIFAR10Instance(root='./data', train=False, download=True, transform=transform_test)
 # testset = datasets.CIFAR100Instance(root='./data', train=False, download=True, transform=transform_test)
 test_batch_sampler = BalancedBatchSampler(testset.targets, n_classes=10, n_samples=25)
-testloader = torch.utils.data.DataLoader(testset, batch_sampler=test_batch_sampler, shuffle=False, num_workers=2, pin_memory = True)
+testloader = torch.utils.data.DataLoader(testset, batch_sampler = test_batch_sampler, num_workers=2, pin_memory = True)
 
 classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
 ndata = trainset.__len__()
