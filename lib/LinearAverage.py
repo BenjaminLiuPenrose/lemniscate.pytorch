@@ -57,7 +57,7 @@ class LinearAverage(nn.Module):
 
 
     def forward(self, x, y):
-        print(self.memory.requires_grad)
+        # print(self.memory.requires_grad)
         out = LinearAverageOp.apply(x, y, self.memory, self.params)
         return out
 

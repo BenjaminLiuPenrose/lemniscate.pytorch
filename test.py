@@ -129,6 +129,8 @@ def kNN(epoch, net, lemniscate, trainloader, testloader, K, sigma, recompute_mem
 
             total += targets.size(0)
 
+            # print(predictions.)
+
             print('Test [{}/{}]\t'
                   'Net Time {net_time.val:.3f} ({net_time.avg:.3f})\t'
                   'Cls Time {cls_time.val:.3f} ({cls_time.avg:.3f})\t'

@@ -179,7 +179,7 @@ def train(epoch):
               epoch, batch_idx, len(trainloader), batch_time=batch_time, data_time=data_time, train_loss=train_loss))
         for metric in metrics:
             msg += '\t{}: {}'.format(metric.name(), metric.value())
-        print(msg)
+        # print(msg)
 
 for epoch in range(start_epoch, start_epoch+200):
     train(epoch)
