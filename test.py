@@ -30,7 +30,7 @@ def NN(epoch, net, lemniscate, trainloader, testloader, recompute_memory=0, asyn
             features = net(inputs)
             # stop w = v process to make w stand alone
             if async_bank:
-                trainFeatures[:, batch_idx*batchSize:batch_i?dx*batchSize+batchSize] = features.data.t()
+                trainFeatures[:, batch_idx*batchSize:batch_idx*batchSize+batchSize] = features.data.t()
         trainLabels = torch.LongTensor(temploader.dataset.targets).cuda()
         trainloader.dataset.transform = transform_bak
 
