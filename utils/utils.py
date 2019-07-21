@@ -86,7 +86,7 @@ class AllNegativePairSelector(PairSelector):
         all_pairs = np.array(list(combinations(range(len(labels)), 2)))
         all_pairs = torch.LongTensor(all_pairs)
         # positive_pairs = all_pairs[(labels[all_pairs[:, 0]] == labels[all_pairs[:, 1]]).nonzero()]
-        positive_pairs = torch.Tensor([])
+        positive_pairs = torch.Tensor(  np.array([[], []]) )
         negative_pairs = all_pairs
         return positive_pairs, negative_pairs
 
