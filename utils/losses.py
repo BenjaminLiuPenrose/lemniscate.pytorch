@@ -60,6 +60,7 @@ class OnlineContrastiveLoss(nn.Module):
         negative_loss = F.relu(
             self.margin - (embeddings[negative_pairs[:, 0]] - embeddings[negative_pairs[:, 1]]).pow(2).sum(
                 1).sqrt()).pow(2)
+        print("debug loss", positive_loss, negative_loss)
         loss = torch.cat([positive_loss, negative_loss], dim=0)
         return loss.mean()
 
