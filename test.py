@@ -136,4 +136,4 @@ def kNN(epoch, net, lemniscate, trainloader, testloader, K, sigma, recompute_mem
 
     print(top1*100./(total + 1e-8), total, top1 )
 
-    return top1/total
+    return top1/(total + 1e-8)

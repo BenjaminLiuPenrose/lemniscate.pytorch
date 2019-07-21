@@ -26,6 +26,12 @@ from lib.NCECriterion import NCECriterion
 from lib.utils import AverageMeter
 from test import NN, kNN
 
+from utils.datasets import BalancedBatchSampler
+from utils.losses import OnlineContrastiveLoss
+from utils.utils import AllPositivePairSelector, HardNegativePairSelector # Strategies for selecting pairs within a minibatch
+
+
+
 parser = argparse.ArgumentParser(description='PyTorch CIFAR100 Training')
 parser.add_argument('--lr', default=0.03, type=float, help='learning rate')
 parser.add_argument('--resume', '-r', default='', type=str, help='resume from checkpoint')
@@ -61,13 +67,16 @@ transform_test = transforms.Compose([
     transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
 ])
 
-# trainset = datasets.CIFAR10Instance(root='./data', train=True, download=True, transform=transform_train)
-trainset = datasets.CIFAR100Instance(root='./data', train=True, download=True, transform=transform_train)
+trainset = datasets.CIFAR10Instance(root='./data', train=True, download=True, transform=transform_train)
+# trainset = datasets.CIFAR100Instance(root='./data', train=True, download=True, transform=transform_train)
 trainloader = torch.utils.data.DataLoader(trainset, batch_size=128, shuffle=True, num_workers=2)
 
-# testset = datasets.CIFAR10Instance(root='./data', train=False, download=True, transform=transform_test)
-testset = datasets.CIFAR100Instance(root='./data', train=False, download=True, transform=transform_test)
+testset = datasets.CIFAR10Instance(root='./data', train=False, download=True, transform=transform_test)
+# testset = datasets.CIFAR100Instance(root='./data', train=False, download=True, transform=transform_test)
 testloader = torch.utils.data.DataLoader(testset, batch_size=100, shuffle=False, num_workers=2)
+
+train_batch_sampler = BalancedBatchSampler(trainset.train_labels, n_classes=10, n_samples=25)
+
 
 classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
 ndata = trainset.__len__()
