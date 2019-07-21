@@ -170,11 +170,11 @@ def train(epoch):
         batch_time.update(time.time() - end)
         end = time.time()
 
-        msg = 'Epoch: [{}][{}/{}]'
+        msg = ('Epoch: [{}][{}/{}]'
               'Time: {batch_time.val:.3f} ({batch_time.avg:.3f}) '
               'Data: {data_time.val:.3f} ({data_time.avg:.3f}) '
               'Loss: {train_loss.val:.4f} ({train_loss.avg:.4f})'.format(
-              epoch, batch_idx, len(trainloader), batch_time=batch_time, data_time=data_time, train_loss=train_loss)
+              epoch, batch_idx, len(trainloader), batch_time=batch_time, data_time=data_time, train_loss=train_loss))
         for metric in metrics:
             msg += '\t{}: {}'.format(metric.name(), metric.value())
         print(msg)
