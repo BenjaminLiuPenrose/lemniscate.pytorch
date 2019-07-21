@@ -42,7 +42,7 @@ class CIFAR100Instance(CIFAR10Instance):
         ['test', 'f0ef6b0ae62326f3e7ffdfab6717acfc'],
     ]
 
-    ### from https://github.com/pytorch/vision/blob/master/torchvision/datasets/cifar.py 
+    ### from https://github.com/pytorch/vision/blob/master/torchvision/datasets/cifar.py
     meta = {
         'filename': 'meta',
         'key': 'fine_label_names',
