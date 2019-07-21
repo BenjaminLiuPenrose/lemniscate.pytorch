@@ -60,3 +60,9 @@ class LinearAverage(nn.Module):
         print(self.memory.requires_grad)
         out = LinearAverageOp.apply(x, y, self.memory, self.params)
         return out
+
+class FeatureBank(nn.Module):
+    def __init__(self, inputSize, outputSize):
+        super(FeatureBank, self).__init__()
+        stdv = 1 / math.sqrt(inputSize / 3)
+        self.momory = self.register_buffer('memory', torch.rand(outputSize, inputSize).mul_(2*stdv).add_(-stdv))

@@ -21,7 +21,7 @@ import datasets
 import math
 
 from lib.NCEAverage import NCEAverage
-from lib.LinearAverage import LinearAverage
+from lib.LinearAverage import LinearAverage, FeatureBank
 from lib.NCECriterion import NCECriterion
 from lib.utils import AverageMeter
 from test import NN, kNN
@@ -85,17 +85,17 @@ testloader = torch.utils.data.DataLoader(testset, batch_sampler = test_batch_sam
 
 classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
 ndata = trainset.__len__()
-print(type(trainloader.dataset.targets), type(trainloader.dataset.targets[1]))
 
 print('==> Building model..')
 net = models.__dict__['ResNet18'](low_dim=args.low_dim)
-# define leminiscate
+# define lemniscate
 if args.nce_k > 0:
     assert False
     lemniscate = NCEAverage(args.low_dim, ndata, args.nce_k, args.nce_t, args.nce_m)
 else:
-    lemniscate = LinearAverage(args.low_dim, ndata, args.nce_t, args.nce_m)
-    metrics = []
+    # lemniscate = LinearAverage(args.low_dim, ndata, args.nce_t, args.nce_m)
+    lemniscate = FeatureBank()
+metrics = []
 
 if device == 'cuda':
     net = torch.nn.DataParallel(net, device_ids=range(torch.cuda.device_count()))
@@ -125,7 +125,7 @@ lemniscate.to(device)
 criterion.to(device)
 
 if args.test_only:
-    acc = kNN(0, net, lemniscate, trainloader, testloader, 200, args.nce_t, 1)
+    acc = kNN(0, net, lemniscate, trainloader, testloader, 200, args.nce_t, 1, async_bank = True)
     sys.exit(0)
 
 optimizer = optim.SGD(net.parameters(), lr=args.lr, momentum=0.9, weight_decay=5e-4)
@@ -183,7 +183,7 @@ def train(epoch):
 
 for epoch in range(start_epoch, start_epoch+200):
     train(epoch)
-    acc = kNN(epoch, net, lemniscate, trainloader, testloader, 200, args.nce_t, 0)
+    acc = kNN(epoch, net, lemniscate, trainloader, testloader, 200, args.nce_t, 0, async_bank = True)
 
     if acc > best_acc:
         print('Saving..')
@@ -200,7 +200,7 @@ for epoch in range(start_epoch, start_epoch+200):
 
     print('best accuracy: {:.2f}'.format(best_acc*100))
 
-acc = kNN(0, net, lemniscate, trainloader, testloader, 200, args.nce_t, 1)
+acc = kNN(0, net, lemniscate, trainloader, testloader, 200, args.nce_t, 1, async_bank = True)
 print('last accuracy: {:.2f}'.format(acc*100))
 
 end_glob = time.time()

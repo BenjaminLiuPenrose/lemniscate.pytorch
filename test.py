@@ -5,7 +5,7 @@ from lib.utils import AverageMeter
 import torchvision.transforms as transforms
 import numpy as np
 
-def NN(epoch, net, lemniscate, trainloader, testloader, recompute_memory=0):
+def NN(epoch, net, lemniscate, trainloader, testloader, recompute_memory=0, async_bank = False):
     net.eval()
     net_time = AverageMeter()
     cls_time = AverageMeter()
@@ -29,7 +29,8 @@ def NN(epoch, net, lemniscate, trainloader, testloader, recompute_memory=0):
             batchSize = inputs.size(0)
             features = net(inputs)
             # stop w = v process to make w stand alone
-            # trainFeatures[:, batch_idx*batchSize:batch_i?dx*batchSize+batchSize] = features.data.t()
+            if async_bank:
+                trainFeatures[:, batch_idx*batchSize:batch_i?dx*batchSize+batchSize] = features.data.t()
         trainLabels = torch.LongTensor(temploader.dataset.targets).cuda()
         trainloader.dataset.transform = transform_bak
 
@@ -65,7 +66,7 @@ def NN(epoch, net, lemniscate, trainloader, testloader, recompute_memory=0):
 
     return correct/total
 
-def kNN(epoch, net, lemniscate, trainloader, testloader, K, sigma, recompute_memory=0):
+def kNN(epoch, net, lemniscate, trainloader, testloader, K, sigma, recompute_memory=0, async_bank = False):
     net.eval()
     net_time = AverageMeter()
     cls_time = AverageMeter()
@@ -75,8 +76,6 @@ def kNN(epoch, net, lemniscate, trainloader, testloader, K, sigma, recompute_mem
     trainFeatures = lemniscate.memory.t()
     if hasattr(trainloader.dataset, 'imgs'):
         trainLabels = torch.LongTensor([y for (p, y) in trainloader.dataset.imgs]).cuda()
-    elif isinstance(trainloader.dataset.targets, dict):
-        trainLabels = torch.LongTensor([trainloader.dataset.targets[ky] for ky in trainloader.dataset.targets])
     else:
         trainLabels = torch.LongTensor(trainloader.dataset.targets).cuda()
     C = trainLabels.max() + 1
@@ -90,7 +89,8 @@ def kNN(epoch, net, lemniscate, trainloader, testloader, K, sigma, recompute_mem
             batchSize = inputs.size(0)
             features = net(inputs)
             # stop w = v process to make w stand alone
-            # trainFeatures[:, batch_idx*batchSize:batch_idx*batchSize+batchSize] = features.data.t()
+            if async_bank:
+                trainFeatures[:, batch_idx*batchSize:batch_idx*batchSize+batchSize] = features.data.t()
         trainLabels = torch.LongTensor(temploader.dataset.targets).cuda()
         trainloader.dataset.transform = transform_bak
 
