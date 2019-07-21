@@ -64,7 +64,7 @@ class LinearAverage(nn.Module):
 
 class FeatureBankOp(Function):
     @staticmethod
-    def forward(self, x, y, memory):
+    def forward(self, x, y, memory, momentum):
         batchSize = x.size(0)
 
         # inner product
@@ -72,7 +72,8 @@ class FeatureBankOp(Function):
 
         # update the non-parametric data
         weight_pos = memory.index_select(0, y.data.view(-1)).resize_as_(x)
-        weight_pos.add_(torch.mul(x.data, 1))
+        weight_pos.mul_(momentum)
+        weight_pos.add_(torch.mul(x.data, 1-momentum))
         w_norm = weight_pos.pow(2).sum(1, keepdim=True).pow(0.5)
         updated_weight = weight_pos.div(w_norm)
         memory.index_copy_(0, y, updated_weight)
@@ -90,12 +91,13 @@ class FeatureBankOp(Function):
         return gradOutput, None, None, None
 
 class FeatureBank(nn.Module):
-    def __init__(self, inputSize, outputSize):
+    def __init__(self, inputSize, outputSize, momentum = 0.5):
         super(FeatureBank, self).__init__()
         stdv = 1 / math.sqrt(inputSize / 3)
         self.momory = self.register_buffer('memory', torch.rand(outputSize, inputSize).mul_(2*stdv).add_(-stdv))
         self.nLem = outputSize
+        self.momentum = momentum
 
     def forward(self, x, y):
-        out = FeatureBankOp.apply(x, y, self.memory)
+        out = FeatureBankOp.apply(x, y, self.memory, self.momentum)
         return out
