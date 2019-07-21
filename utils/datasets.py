@@ -212,6 +212,7 @@ class BalancedBatchSampler_CIFAR(BatchSampler):
 
     def __iter__(self):
         self.count = 0
+        print("check", self.count + self.batch_size < self.n_dataset)
         while self.count + self.batch_size < self.n_dataset:
             classes = np.random.choice(self.labels_set, self.n_classes, replace=False)
             indices = []
