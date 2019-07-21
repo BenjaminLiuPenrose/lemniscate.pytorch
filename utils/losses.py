@@ -48,7 +48,7 @@ class OnlineContrastiveLoss(nn.Module):
 
     def __init__(self, margin, pair_selector):
         super(OnlineContrastiveLoss, self).__init__()
-        self.margin = margin
+        self.margin = .1
         self.pair_selector = pair_selector
 
     def forward(self, embeddings, target):
@@ -63,7 +63,7 @@ class OnlineContrastiveLoss(nn.Module):
         #     self.margin - (embeddings[negative_pairs[:, 0]] - embeddings[negative_pairs[:, 1]]).pow(2).sum(
         #         1).sqrt()).pow(2)
         negative_loss = F.relu(
-            torch.dot(embeddings[negative_pairs[:, 0]], embeddings[positive_pairs[:, 1]])  - self.margin
+            torch.dot(embeddings[negative_pairs[:, 0]], embeddings[negative_pairs[:, 1]])  - self.margin
         )
         # loss = torch.cat([positive_loss, negative_loss], dim=0)
         loss = negative_loss
