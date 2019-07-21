@@ -26,7 +26,7 @@ from lib.NCECriterion import NCECriterion
 from lib.utils import AverageMeter
 from test import NN, kNN
 
-from utils.datasets import BalancedBatchSampler
+from utils.datasets import BalancedBatchSampler_CIFAR
 from utils.losses import OnlineContrastiveLoss
 from utils.utils import AllPositivePairSelector, HardNegativePairSelector # Strategies for selecting pairs within a minibatch
 
