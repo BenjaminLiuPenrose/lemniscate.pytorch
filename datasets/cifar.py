@@ -6,6 +6,9 @@ import torch.utils.data as data
 class CIFAR10Instance(datasets.CIFAR10):
     """CIFAR10Instance Dataset.
     """
+    def init(self):
+        self.indices = [i for i in range(len(self.data))]
+
     def __getitem__(self, index):
         if self.train:
             # img, target = self.train_data[index], self.train_labels[index]
@@ -48,3 +51,5 @@ class CIFAR100Instance(CIFAR10Instance):
         'key': 'fine_label_names',
         'md5': '7973b15100ade9c7d40fb424638fde48',
     }
+    def init(self):
+        self.indices = [i for i in range(len(self.data))]
