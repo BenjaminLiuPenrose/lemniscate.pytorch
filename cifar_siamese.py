@@ -44,6 +44,8 @@ parser.add_argument('--nce-t', default=0.1, type=float,
                     metavar='T', help='temperature parameter for softmax')
 parser.add_argument('--nce-m', default=0.5, type=float,
                     metavar='M', help='momentum for non-parametric updates')
+parser.add_argument('--margin', default=1., type=float,
+                    help='margin for Saimese loss')
 
 args = parser.parse_args()
 
@@ -69,14 +71,13 @@ transform_test = transforms.Compose([
 
 trainset = datasets.CIFAR10Instance(root='./data', train=True, download=True, transform=transform_train)
 # trainset = datasets.CIFAR100Instance(root='./data', train=True, download=True, transform=transform_train)
-trainloader = torch.utils.data.DataLoader(trainset, batch_size=128, shuffle=True, num_workers=2)
+train_batch_sampler = BalancedBatchSampler(trainset.train_labels, n_classes=10, n_samples=25)
+trainloader = torch.utils.data.DataLoader(trainset, batch_sampler=train_batch_sampler, shuffle=True, num_workers=2, pin_memory = True)
 
 testset = datasets.CIFAR10Instance(root='./data', train=False, download=True, transform=transform_test)
 # testset = datasets.CIFAR100Instance(root='./data', train=False, download=True, transform=transform_test)
-testloader = torch.utils.data.DataLoader(testset, batch_size=100, shuffle=False, num_workers=2)
-
-train_batch_sampler = BalancedBatchSampler(trainset.train_labels, n_classes=10, n_samples=25)
-
+test_batch_sampler = BalancedBatchSampler(testset.test_labels, n_classes=10, n_samples=25)
+testloader = torch.utils.data.DataLoader(testset, batch_sampler=test_batch_sampler, shuffle=False, num_workers=2, pin_memory = True)
 
 classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
 ndata = trainset.__len__()
@@ -86,6 +87,7 @@ print('==> Building model..')
 net = models.__dict__['ResNet18'](low_dim=args.low_dim)
 # define leminiscate
 if args.nce_k > 0:
+    assert False
     lemniscate = NCEAverage(args.low_dim, ndata, args.nce_k, args.nce_t, args.nce_m)
 else:
     lemniscate = LinearAverage(args.low_dim, ndata, args.nce_t, args.nce_m)
@@ -107,9 +109,11 @@ if args.test_only or len(args.resume)>0:
 
 # define loss function
 if hasattr(lemniscate, 'K'):
+    assert False
     criterion = NCECriterion(ndata)
 else:
-    criterion = nn.CrossEntropyLoss()
+    # criterion = nn.CrossEntropyLoss()
+    criterion = OnlineContrastiveLoss(margin, HardNegativePairSelector())
 
 net.to(device)
 lemniscate.to(device)

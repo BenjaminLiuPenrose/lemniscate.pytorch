@@ -109,7 +109,7 @@ if args.test_only:
     acc = kNN(0, net, lemniscate, trainloader, testloader, 200, args.nce_t, 1)
     sys.exit(0)
 
-optimizer = optim.SGD(net.parameters(), lr=args.lr, momentum=0.9, weight_decay=5e-4)
+optimizer = optim.SGD([net.parameters(), lemniscate.parameters()], lr=args.lr, momentum=0.9, weight_decay=5e-4)
 
 def adjust_learning_rate(optimizer, epoch):
     """Sets the learning rate to the initial LR decayed by 10 every 30 epochs"""
