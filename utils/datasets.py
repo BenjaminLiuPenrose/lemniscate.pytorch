@@ -223,6 +223,7 @@ class BalancedBatchSampler_CIFAR(BatchSampler):
                 if self.used_label_indices_count[class_] + self.n_samples > len(self.label_to_indices[class_]):
                     np.random.shuffle(self.label_to_indices[class_])
                     self.used_label_indices_count[class_] = 0
+            print(indices)
             yield indices
             self.count += self.n_classes * self.n_samples
 
