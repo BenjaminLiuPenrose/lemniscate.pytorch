@@ -48,7 +48,8 @@ class OnlineContrastiveLoss(nn.Module):
 
     def __init__(self, margin, pair_selector):
         super(OnlineContrastiveLoss, self).__init__()
-        self.margin = .1
+        self.margin = margin
+        pint(self.margin)
         self.pair_selector = pair_selector
 
     def forward(self, embeddings, target):
