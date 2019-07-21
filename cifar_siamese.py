@@ -116,7 +116,7 @@ if hasattr(lemniscate, 'K'):
     criterion = NCECriterion(ndata)
 else:
     # criterion = nn.CrossEntropyLoss()
-    criterion = OnlineContrastiveLoss(margin, HardNegativePairSelector())
+    criterion = OnlineContrastiveLoss(args.margin, HardNegativePairSelector())
 
 net.to(device)
 lemniscate.to(device)

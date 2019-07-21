@@ -154,7 +154,7 @@ class BalancedBatchSampler(BatchSampler):
         # self.labels_set = list(set(self.labels.numpy() ))
         # self.label_to_indices = {label: np.where(self.labels.numpy() == label)[0]
         #                          for label in self.labels_set}
-        print("debug", type(self.labels), type(self.labels[0]))
+        # print("debug", type(self.labels), type(self.labels[0]))
         self.labels_set = list(set(self.labels ))
         self.label_to_indices = {label: np.where(self.labels == label)[0]
                                  for label in self.labels_set}
