@@ -44,7 +44,7 @@ parser.add_argument('--nce-t', default=0.1, type=float,
                     metavar='T', help='temperature parameter for softmax')
 parser.add_argument('--nce-m', default=0.5, type=float,
                     metavar='M', help='momentum for non-parametric updates')
-parser.add_argument('--margin', default=1., type=float,
+parser.add_argument('--margin', default=.1, type=float,
                     help='margin for Saimese loss')
 
 args = parser.parse_args()
