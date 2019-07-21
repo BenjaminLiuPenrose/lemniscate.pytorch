@@ -91,6 +91,7 @@ if args.nce_k > 0:
     lemniscate = NCEAverage(args.low_dim, ndata, args.nce_k, args.nce_t, args.nce_m)
 else:
     lemniscate = LinearAverage(args.low_dim, ndata, args.nce_t, args.nce_m)
+    metrics = []
 
 if device == 'cuda':
     net = torch.nn.DataParallel(net, device_ids=range(torch.cuda.device_count()))
@@ -124,6 +125,7 @@ if args.test_only:
     sys.exit(0)
 
 optimizer = optim.SGD(net.parameters(), lr=args.lr, momentum=0.9, weight_decay=5e-4)
+# optimizer = optim.SGD(list(net.parameters())+list(lemniscate.parameters()), lr=args.lr, momentum=0.9, weight_decay=5e-4)
 
 def adjust_learning_rate(optimizer, epoch):
     """Sets the learning rate to the initial LR decayed by 10 every 30 epochs"""
@@ -154,8 +156,8 @@ def train(epoch):
         optimizer.zero_grad()
 
         features = net(inputs)
-        outputs = lemniscate(features, indexes)
-        loss = criterion(outputs, indexes)
+        # outputs = lemniscate(features, indexes)
+        loss = criterion(features, indexes)
 
         loss.backward()
         optimizer.step()
@@ -166,11 +168,13 @@ def train(epoch):
         batch_time.update(time.time() - end)
         end = time.time()
 
-        print('Epoch: [{}][{}/{}]'
+        msg = 'Epoch: [{}][{}/{}]'
               'Time: {batch_time.val:.3f} ({batch_time.avg:.3f}) '
               'Data: {data_time.val:.3f} ({data_time.avg:.3f}) '
               'Loss: {train_loss.val:.4f} ({train_loss.avg:.4f})'.format(
               epoch, batch_idx, len(trainloader), batch_time=batch_time, data_time=data_time, train_loss=train_loss))
+        for metric in metrics:
+            msg += '\t{}: {}'.format(metric.name(), metric.value())
 
 for epoch in range(start_epoch, start_epoch+200):
     train(epoch)
