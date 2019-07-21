@@ -134,6 +134,6 @@ def kNN(epoch, net, lemniscate, trainloader, testloader, K, sigma, recompute_mem
                   'Top1: {:.2f}  Top5: {:.2f}'.format(
                   total, testsize, top1*100./total, top5*100./total, net_time=net_time, cls_time=cls_time))
 
-    print(top1*100./total)
+    print(top1*100./(total + 1e-8) )
 
     return top1/total
