@@ -73,7 +73,7 @@ def get_class_labels(data):
 def get_labels_class(data):
     labels_class_list = []
     for idx, class_label in enumerate(data['labels']):
-        labels_class_list.append(class_label)
+        labels_class_list.append(idx)
     return labels_class_list
 
 
