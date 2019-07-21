@@ -70,6 +70,12 @@ def get_class_labels(data):
         index += 1
     return class_labels_map
 
+def get_labels_class(data):
+    labels_class_list = []
+    for idx, class_label in enumerate(data['labels']):
+        labels_class_list.append(class_label)
+    return labels_class_list
+
 
 def get_video_names_and_annotations(data, subset):
     video_names = []
@@ -90,9 +96,11 @@ def make_dataset(root_path, annotation_path, subset, n_samples_for_each_video,
     data = load_annotation_data(annotation_path)
     video_names, annotations = get_video_names_and_annotations(data, subset)
     class_to_idx = get_class_labels(data)
-    idx_to_class = {}
-    for name, label in class_to_idx.items():
-        idx_to_class[label] = name
+    # idx_to_class = {}
+    # for name, label in class_to_idx.items():
+    #     idx_to_class[label] = name
+    idx_to_class = get_labels_class(data)
+
 
     dataset = []
     for i in range(len(video_names)):
