@@ -204,7 +204,6 @@ class UCF101Instance(data.Dataset):
         clip = torch.stack(clip, 0).permute(1, 0, 2, 3)
         # print("image", video_index, clip[0].shape, "video index", video_index)
 
-
         target = self.data[index]['label'] # video_id
         if self.target_transform is not None:
             target = self.target_transform(target)

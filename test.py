@@ -75,6 +75,8 @@ def kNN(epoch, net, lemniscate, trainloader, testloader, K, sigma, recompute_mem
     trainFeatures = lemniscate.memory.t()
     if hasattr(trainloader.dataset, 'imgs'):
         trainLabels = torch.LongTensor([y for (p, y) in trainloader.dataset.imgs]).cuda()
+    elif isinstance(trainloader.dataset.targets, dict):
+        trainLabels = torch.LongTensor([trainloader.dataset.targets[ky] for ky in trainloader.dataset.targets])
     else:
         trainLabels = torch.LongTensor(trainloader.dataset.targets).cuda()
     C = trainLabels.max() + 1
