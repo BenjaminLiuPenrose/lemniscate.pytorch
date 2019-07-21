@@ -62,7 +62,7 @@ class LinearAverage(nn.Module):
         return out
 
 
-class LinearAverageOp(Function):
+class FeatureBankOp(Function):
     @staticmethod
     def forward(self, x, y):
         batchSize = x.size(0)
