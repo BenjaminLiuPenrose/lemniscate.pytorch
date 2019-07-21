@@ -130,6 +130,8 @@ testloader = torch.utils.data.DataLoader(testset, batch_size=8, shuffle=False, n
 
 ndata = trainset.__len__()
 
+print(type(trainloader.dataset.targets), type(trainloader.dataset.targets[1]))
+
 print('==> Building model..')
 # net = models.__dict__['ResNet18'](low_dim=args.low_dim)
 net = resnet_ucf101.resnet18(
