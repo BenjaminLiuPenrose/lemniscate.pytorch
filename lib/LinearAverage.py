@@ -68,7 +68,17 @@ class FeatureBankOp(Function):
         batchSize = x.size(0)
 
         # inner product
-        out = torch.mm(x.data, memory.t())
+        out = x
+
+        self.save_for_backward(x, memory, y, momentum)
+
+        return out
+
+    @staticmethod
+    def backward(self, gradOutput):
+        print("running backwards at FeatureBank")
+        x, memory, y, momentum = self.saved_tensors
+        batchSize = gradOutput.size(0)
 
         # update the non-parametric data
         weight_pos = memory.index_select(0, y.data.view(-1)).resize_as_(x)
@@ -78,15 +88,6 @@ class FeatureBankOp(Function):
         updated_weight = weight_pos.div(w_norm)
         memory.index_copy_(0, y, updated_weight)
         self.save_for_backward(x, memory, y)
-
-        return out
-
-    @staticmethod
-    def backward(self, gradOutput):
-        print("run backward at feature bank")
-        x, memory, y = self.saved_tensors
-        batchSize = gradOutput.size(0)
-
 
         return gradOutput, None, None, None
 

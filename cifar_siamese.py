@@ -160,7 +160,7 @@ def train(epoch):
         optimizer.zero_grad()
 
         features = net(inputs)
-        outputs = lemniscate(features, indexes)
+        features = lemniscate(features, indexes)
         loss = criterion(features, indexes)
 
         loss.backward()
