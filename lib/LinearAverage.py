@@ -56,7 +56,7 @@ class LinearAverage(nn.Module):
         stdv = 1. / math.sqrt(inputSize/3)
         ### stop w = v process to make w stand alone
         # self.register_buffer('memory', torch.rand(outputSize, inputSize).mul_(2*stdv).add_(-stdv))
-        # self.register_parameter('memory', None)
+        self.register_parameter('memory', None)
         self.memory = nn.Parameter(torch.rand(outputSize, inputSize).mul_(2*stdv).add_(-stdv) )
 
 
