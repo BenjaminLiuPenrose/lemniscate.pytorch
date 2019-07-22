@@ -4,6 +4,7 @@ import torch.nn.functional as F
 from torch.autograd import Variable
 import math
 from functools import partial
+from lib.normalize import Normalize
 
 __all__ = [
     'ResNet', 'resnet10', 'resnet18', 'resnet34', 'resnet50', 'resnet101',
@@ -139,6 +140,7 @@ class ResNet(nn.Module):
         self.avgpool = nn.AvgPool3d(
             (last_duration, last_size, last_size), stride=1)
         self.fc = nn.Linear(512 * block.expansion, num_classes)
+        self.l2norm = Normalize(2)
 
         for m in self.modules():
             if isinstance(m, nn.Conv3d):
@@ -187,6 +189,7 @@ class ResNet(nn.Module):
 
         x = x.view(x.size(0), -1)
         x = self.fc(x)
+        x = self.l2norm(x)
 
         return x
 

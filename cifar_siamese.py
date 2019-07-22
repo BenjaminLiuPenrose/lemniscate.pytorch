@@ -93,8 +93,8 @@ if args.nce_k > 0:
     assert False
     lemniscate = NCEAverage(args.low_dim, ndata, args.nce_k, args.nce_t, args.nce_m)
 else:
-    # lemniscate = LinearAverage(args.low_dim, ndata, args.nce_t, args.nce_m)
-    lemniscate = FeatureBank(args.low_dim, ndata, momentum = args.nce_m)
+    lemniscate = LinearAverage(args.low_dim, ndata, args.nce_t, args.nce_m)
+    # lemniscate = FeatureBank(args.low_dim, ndata, args.nce_t, args.nce_m)
 metrics = []
 
 if device == 'cuda':
@@ -160,8 +160,8 @@ def train(epoch):
         optimizer.zero_grad()
 
         features = net(inputs)
-        features = lemniscate(features, indexes)
-        loss = criterion(features, indexes)
+        outputs = lemniscate(features, indexes)
+        loss = criterion(outputs, indexes)
 
         loss.backward()
         optimizer.step()
