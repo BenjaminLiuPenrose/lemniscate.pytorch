@@ -8,6 +8,8 @@ class LinearAverageOp(Function):
     def forward(self, x, y, memory, params):
         T = params[0].item()
         batchSize = x.size(0)
+        momentum = params[1].item()
+
 
         # inner product
         out = torch.mm(x.data, memory.t())
