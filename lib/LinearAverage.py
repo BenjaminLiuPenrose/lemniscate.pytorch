@@ -72,7 +72,7 @@ class FeatureBankOp(Function):
     def forward(self, x, y, memory, params):
         batchSize = x.size(0)
 
-        memory = F.normalize(memory, p = 2, dim = 1)
+        # memory = F.normalize(memory, p = 2, dim = 1)
 
         # inner product
         out = x
