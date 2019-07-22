@@ -12,6 +12,7 @@ class LinearAverageOp(Function):
         batchSize = x.size(0)
         momentum = params[1].item()
 
+        memory = F.normalize(memory, p = 2, dim = 1)
 
         # inner product
         out = torch.mm(x.data, memory.t())
@@ -62,7 +63,6 @@ class LinearAverage(nn.Module):
 
     def forward(self, x, y):
         # print(self.memory.requires_grad)
-        self.memory = F.normalize(self.memory.t(), p = 2, dim = 1)
         out = LinearAverageOp.apply(x, y, self.memory, self.params)
         return out
 
