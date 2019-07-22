@@ -76,7 +76,7 @@ class OnlineContrastiveLoss(nn.Module):
         # print(negative_loss)
         # loss = torch.cat([positive_loss, negative_loss], dim=0)
         loss = negative_loss
-        return loss.mean()
+        return torch.mul(loss.mean(), 1000)
 
 
 class OnlineTripletLoss(nn.Module):

@@ -28,7 +28,6 @@ def NN(epoch, net, lemniscate, trainloader, testloader, recompute_memory=0, asyn
             targets = targets.cuda(non_blocking=True)
             batchSize = inputs.size(0)
             features = net(inputs)
-            features = normalize(features)
             # stop w = v process to make w stand alone
             trainFeatures[:, batch_idx*batchSize:batch_idx*batchSize+batchSize] = features.data.t()
         trainLabels = torch.LongTensor(temploader.dataset.targets).cuda()
@@ -40,7 +39,6 @@ def NN(epoch, net, lemniscate, trainloader, testloader, recompute_memory=0, asyn
             targets = targets.cuda(non_blocking=True)
             batchSize = inputs.size(0)
             features = net(inputs)
-            features = normalize(features)
             net_time.update(time.time() - end)
             end = time.time()
 
@@ -89,7 +87,6 @@ def kNN(epoch, net, lemniscate, trainloader, testloader, K, sigma, recompute_mem
             targets = targets.cuda(non_blocking=True)
             batchSize = inputs.size(0)
             features = net(inputs)
-            features = normalize(features)
             # stop w = v process to make w stand alone
             trainFeatures[:, batch_idx*batchSize:batch_idx*batchSize+batchSize] = features.data.t()
         trainLabels = torch.LongTensor(temploader.dataset.targets).cuda()
@@ -105,7 +102,6 @@ def kNN(epoch, net, lemniscate, trainloader, testloader, K, sigma, recompute_mem
             targets = targets.cuda(non_blocking=True)
             batchSize = inputs.size(0)
             features = net(inputs)
-            features = normalize(features)
             net_time.update(time.time() - end)
             end = time.time()
 
