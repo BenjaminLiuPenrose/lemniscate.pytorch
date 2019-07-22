@@ -23,7 +23,7 @@ import math
 from lib.NCEAverage import NCEAverage
 from lib.LinearAverage import LinearAverage, FeatureBank
 from lib.NCECriterion import NCECriterion
-from lib.utils import AverageMeter
+from lib.utils import AverageMeter, normalize
 from test import NN, kNN
 
 from utils.datasets import BalancedBatchSampler_CIFAR
@@ -160,6 +160,7 @@ def train(epoch):
         optimizer.zero_grad()
 
         features = net(inputs)
+        features = normalize(features)
         features = lemniscate(features, indexes)
         loss = criterion(features, indexes)
 
