@@ -37,7 +37,7 @@ def fit(train_loader, val_loader, model, loss_fn, optimizer, scheduler, n_epochs
         print(message)
 
 
-def train_epoch(train_loader, model, loss_fn, optimizer, cuda, log_interval, metrics):
+def train(train_loader, model, loss_fn, optimizer, cuda, log_interval, metric):
     for metric in metrics:
         metric.reset()
 
