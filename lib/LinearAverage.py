@@ -104,7 +104,6 @@ class FeatureBank(nn.Module):
         self.register_buffer('params',torch.tensor([T, momentum]));
         self.register_buffer('memory', torch.rand(outputSize, inputSize).mul_(2*stdv).add_(-stdv))
         self.nLem = outputSize
-        self.momentum = momentum
 
     def forward(self, x, y):
         out = FeatureBankOp.apply(x, y, self.memory, self.params)
