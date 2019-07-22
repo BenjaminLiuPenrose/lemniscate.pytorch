@@ -20,3 +20,8 @@ def load_value_file(file_path):
         value = float(input_file.read().rstrip('\n\r'))
 
     return value
+
+def normalize(x):
+    x_norm = x.pow(2).sum(1, keepdim=True).pow(0.5)
+    updated_x = x.div(x_norm)
+    return updated_x

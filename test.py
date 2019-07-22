@@ -91,7 +91,7 @@ def kNN(epoch, net, lemniscate, trainloader, testloader, K, sigma, recompute_mem
             # stop w = v process to make w stand alone
             if async_bank:
                 print(lemniscate.memory.t())
-                lemniscate.memory.t()[:, batch_idx*batchSize:batch_idx*batchSize+batchSize] = features.data.t()
+                trainFeatures[:, batch_idx*batchSize:batch_idx*batchSize+batchSize] = features.data.t()
         trainLabels = torch.LongTensor(temploader.dataset.targets).cuda()
         trainloader.dataset.transform = transform_bak
 
