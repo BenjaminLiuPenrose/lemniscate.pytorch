@@ -23,7 +23,7 @@ import math
 from lib.NCEAverage import NCEAverage
 from lib.LinearAverage import LinearAverage
 from lib.NCECriterion import NCECriterion
-from lib.utils import AverageMeter
+from lib.utils import AverageMeter, normalize
 from test import NN, kNN
 
 parser = argparse.ArgumentParser(description='PyTorch CIFAR10 Training')
