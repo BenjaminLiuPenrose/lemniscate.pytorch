@@ -64,20 +64,21 @@ class LinearAverage(nn.Module):
 
 class FeatureBankOp(Function):
     @staticmethod
-    def forward(self, x, y, memory, momentum):
+    def forward(self, x, y, memory, params):
         batchSize = x.size(0)
 
         # inner product
         out = x
 
-        self.save_for_backward(x, memory, y, momentum)
+        self.save_for_backward(x, memory, y, params)
 
         return out
 
     @staticmethod
     def backward(self, gradOutput):
         print("running backwards at FeatureBank")
-        x, memory, y, momentum = self.saved_tensors
+        x, memory, y, params = self.saved_tensors
+        momentum = params[0].item()
         batchSize = gradOutput.size(0)
 
         # update the non-parametric data
@@ -95,10 +96,11 @@ class FeatureBank(nn.Module):
     def __init__(self, inputSize, outputSize, momentum = 0.5):
         super(FeatureBank, self).__init__()
         stdv = 1 / math.sqrt(inputSize / 3)
+        self.params = self.register_buffer('params',torch.tensor([momentum]));
         self.momory = self.register_buffer('memory', torch.rand(outputSize, inputSize).mul_(2*stdv).add_(-stdv))
         self.nLem = outputSize
         self.momentum = momentum
 
     def forward(self, x, y):
-        out = FeatureBankOp.apply(x, y, self.memory, self.momentum)
+        out = FeatureBankOp.apply(x, y, self.memory, self.params)
         return out
