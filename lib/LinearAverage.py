@@ -1,5 +1,6 @@
 import torch
 from torch.autograd import Function
+import torch.nn.functional as F
 from torch import nn
 import math
 from lib.utils import normalize
@@ -55,13 +56,13 @@ class LinearAverage(nn.Module):
         stdv = 1. / math.sqrt(inputSize/3)
         ### stop w = v process to make w stand alone
         # self.register_buffer('memory', torch.rand(outputSize, inputSize).mul_(2*stdv).add_(-stdv))
-        self.register_parameter('memory', None)
+        # self.register_parameter('memory', None)
         self.memory = nn.Parameter(torch.rand(outputSize, inputSize).mul_(2*stdv).add_(-stdv) )
 
 
     def forward(self, x, y):
         # print(self.memory.requires_grad)
-        self.memory = normalize(self.memory)
+        self.memory.weight.data = F.normalize(self.memory.weight.data, p = 2, dim = 1)
         out = LinearAverageOp.apply(x, y, self.memory, self.params)
         return out
 
