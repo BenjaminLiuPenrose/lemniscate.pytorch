@@ -93,8 +93,8 @@ if args.nce_k > 0:
     assert False
     lemniscate = NCEAverage(args.low_dim, ndata, args.nce_k, args.nce_t, args.nce_m)
 else:
-    lemniscate = LinearAverage(args.low_dim, ndata, args.nce_t, args.nce_m)
-    # lemniscate = FeatureBank(args.low_dim, ndata, args.nce_t, args.nce_m)
+    # lemniscate = LinearAverage(args.low_dim, ndata, args.nce_t, args.nce_m)
+    lemniscate = FeatureBank(args.low_dim, ndata, args.nce_t, args.nce_m)
 metrics = []
 
 if device == 'cuda':
@@ -117,8 +117,8 @@ if hasattr(lemniscate, 'K'):
     assert False
     criterion = NCECriterion(ndata)
 else:
-    # criterion = nn.CrossEntropyLoss()
-    criterion = OnlineContrastiveLoss(args.margin, AllNegativePairSelector())
+    criterion = nn.CrossEntropyLoss()
+    # criterion = OnlineContrastiveLoss(args.margin, AllNegativePairSelector())
 
 net.to(device)
 lemniscate.to(device)
