@@ -181,7 +181,7 @@ def train(epoch):
 metric = AccumulatedAccuracyMetric()
 def test(epoch):
     with torch.no_grad():
-        model.eval()
+        net.eval()
         test_loss = 0
         for batch_idx, (inputs, targets, indexes) in enumerate(testloader):
             inputs, targets, indexes = inputs.to(device), targets.to(device), indexes.to(device)
