@@ -94,7 +94,7 @@ if args.nce_k > 0:
     lemniscate = NCEAverage(args.low_dim, ndata, args.nce_k, args.nce_t, args.nce_m)
 else:
     # lemniscate = LinearAverage(args.low_dim, ndata, args.nce_t, args.nce_m)
-    lemniscate = FeatureBank(args.low_dim, ndata, args.nce_m)
+    lemniscate = FeatureBank(args.low_dim, ndata, momentum = args.nce_m)
 metrics = []
 
 if device == 'cuda':

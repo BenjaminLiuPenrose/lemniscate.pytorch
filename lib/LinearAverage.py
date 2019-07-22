@@ -76,9 +76,8 @@ class FeatureBankOp(Function):
 
     @staticmethod
     def backward(self, gradOutput):
-        print("running backwards at FeatureBank")
         x, memory, y, params = self.saved_tensors
-        momentum = params[0].item()
+        momentum = params[1].item()
         batchSize = gradOutput.size(0)
 
         # update the non-parametric data
@@ -93,10 +92,10 @@ class FeatureBankOp(Function):
         return gradOutput, None, None, None
 
 class FeatureBank(nn.Module):
-    def __init__(self, inputSize, outputSize, momentum = 0.5):
+    def __init__(self, inputSize, outputSize, T = 0.07, momentum = 0.5):
         super(FeatureBank, self).__init__()
         stdv = 1 / math.sqrt(inputSize / 3)
-        self.params = self.register_buffer('params',torch.tensor([momentum]));
+        self.params = self.register_buffer('params',torch.tensor([T, momentum]));
         self.momory = self.register_buffer('memory', torch.rand(outputSize, inputSize).mul_(2*stdv).add_(-stdv))
         self.nLem = outputSize
         self.momentum = momentum
