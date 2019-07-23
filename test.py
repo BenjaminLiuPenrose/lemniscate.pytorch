@@ -172,7 +172,7 @@ def kNN(epoch, net, lemniscate, trainloader, testloader, K, sigma, recompute_mem
         trainFeatures.view(batchSize, embeddingsDim, 1)
         ).mean()
     print("="*30)
-    print("my loss all train ========= ", mms.item() * 1000, " ", negative_loss.item() * 1000)
+    print("my loss all train ========= ", mms.item() , " ", negative_loss.item() )
     print("="*30)
 
     print(top1*100./(total + 1e-8), total, top1 )
