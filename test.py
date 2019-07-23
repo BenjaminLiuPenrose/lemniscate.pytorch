@@ -78,6 +78,10 @@ def kNN(epoch, net, lemniscate, trainloader, testloader, K, sigma, recompute_mem
     else:
         trainLabels = torch.LongTensor(trainloader.dataset.targets).cuda()
     C = trainLabels.max() + 1
+    x = trainFeatures[:, 1]
+    norm = x.pow(2).sum(1, keepdim=True).pow(1./2)
+    print(norm)
+    print(norm.item())
 
     if recompute_memory:
         transform_bak = trainloader.dataset.transform

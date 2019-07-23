@@ -253,7 +253,7 @@ def train(epoch):
 
 for epoch in range(start_epoch, start_epoch+200):
     train(epoch)
-    acc = NN(epoch, net, lemniscate, trainloader, testloader, 200, args.nce_t, 0, async_bank = True)
+    acc = kNN(epoch, net, lemniscate, trainloader, testloader, 200, args.nce_t, 0, async_bank = True)
 
     if acc > best_acc:
         print('Saving..')
@@ -270,7 +270,7 @@ for epoch in range(start_epoch, start_epoch+200):
 
     print('best accuracy: {:.2f}'.format(best_acc*100))
 
-acc = NN(0, net, lemniscate, trainloader, testloader, 200, args.nce_t, 1, async_bank = True)
+acc = kNN(0, net, lemniscate, trainloader, testloader, 200, args.nce_t, 1, async_bank = True)
 print('last accuracy: {:.2f}'.format(acc*100))
 
 end_glob = time.time()
