@@ -26,6 +26,9 @@ from lib.NCECriterion import NCECriterion
 from lib.utils import AverageMeter, normalize
 from test import NN, kNN
 
+from utils.losses import OnlineContrastiveLoss
+from utils.utils import AllPositivePairSelector, HardNegativePairSelector, AllNegativePairSelector # Strategies for selecting pairs within a minibatch
+
 parser = argparse.ArgumentParser(description='PyTorch CIFAR10 Training')
 parser.add_argument('--lr', default=0.03, type=float, help='learning rate')
 parser.add_argument('--resume', '-r', default='', type=str, help='resume from checkpoint')
@@ -132,6 +135,9 @@ def train(epoch):
     correct = 0
     total = 0
 
+    myCriterion = OnlineContrastiveLoss(0.1, AllNegativePairSelector())
+    train_myloss = AverageMeter()
+
     # switch to train mode
     net.train()
 
@@ -144,6 +150,9 @@ def train(epoch):
         features = net(inputs)
         outputs = lemniscate(features, indexes)
         loss = criterion(outputs, indexes)
+        with torch.no_grad():
+            myLoss = myCriterion(features, indexes)
+            train_myloss.update(myLoss.item(), inputs.size(0))
 
         loss.backward()
         optimizer.step()
@@ -154,11 +163,12 @@ def train(epoch):
         batch_time.update(time.time() - end)
         end = time.time()
 
-        # print('Epoch: [{}][{}/{}]'
-        #       'Time: {batch_time.val:.3f} ({batch_time.avg:.3f}) '
-        #       'Data: {data_time.val:.3f} ({data_time.avg:.3f}) '
-        #       'Loss: {train_loss.val:.4f} ({train_loss.avg:.4f})'.format(
-        #       epoch, batch_idx, len(trainloader), batch_time=batch_time, data_time=data_time, train_loss=train_loss))
+        print('Epoch: [{}][{}/{}]'
+              'Time: {batch_time.val:.3f} ({batch_time.avg:.3f}) '
+              'Data: {data_time.val:.3f} ({data_time.avg:.3f}) '
+              'Loss: {train_loss.val:.4f} ({train_loss.avg:.4f})'
+              'mylos: {train_myLoss.val:{.4f} (train_myLoss.avg:.4f)}'.format(
+              epoch, batch_idx, len(trainloader), batch_time=batch_time, data_time=data_time, train_loss=train_loss, train_myLoss=train_myLoss))
 
 for epoch in range(start_epoch, start_epoch+200):
     train(epoch)

@@ -5,6 +5,8 @@ from lib.utils import AverageMeter, normalize
 import torchvision.transforms as transforms
 import numpy as np
 import torch.nn.functional as F
+from utils.losses import OnlineContrastiveLoss
+from utils.utils import AllPositivePairSelector, HardNegativePairSelector, AllNegativePairSelector # Strategies for selecting pairs within a minibatch
 
 def NN(epoch, net, lemniscate, trainloader, testloader, recompute_memory=0, async_bank = False):
     net.eval()
@@ -159,18 +161,19 @@ def kNN(epoch, net, lemniscate, trainloader, testloader, K, sigma, recompute_mem
                   'Cls Time {cls_time.val:.3f} ({cls_time.avg:.3f})\t'
                   'Top1: {:.2f}  Top5: {:.2f}'.format(
                   total, testsize, top1*100./total, top5*100./total, net_time=net_time, cls_time=cls_time))
-    batchSize = trainFeatures[:, :100].size(0)
-    embeddingsDim = trainFeatures[:, :100].size(1)
-    negative_loss = F.relu(
-        torch.bmm(
-            trainFeatures[:, :100].view(batchSize, 1, embeddingsDim),
-            trainFeatures[:, -100:].view(batchSize, embeddingsDim, 1)
-            ) - 0.1
-    ).mean()
-    mms = torch.bmm(
-        trainFeatures[:, :100].view(batchSize, 1, embeddingsDim),
-        trainFeatures[:, -100:].view(batchSize, embeddingsDim, 1)
-        ).mean()
+
+    # batchSize = trainFeatures[:, :100].size(0)
+    # embeddingsDim = trainFeatures[:, :100].size(1)
+    # negative_loss = F.relu(
+    #     torch.bmm(
+    #         trainFeatures[:, :100].view(batchSize, 1, embeddingsDim),
+    #         trainFeatures[:, -100:].view(batchSize, embeddingsDim, 1)
+    #         ) - 0.1
+    # ).mean()
+    # mms = torch.bmm(
+    #     trainFeatures[:, :100].view(batchSize, 1, embeddingsDim),
+    #     trainFeatures[:, -100:].view(batchSize, embeddingsDim, 1)
+    #     ).mean()
     print("="*30)
     print("my loss all train ========= ", mms.item() , " ", negative_loss.item() )
     print("="*30)
