@@ -19,6 +19,7 @@ import time
 import models
 import datasets
 import math
+import numpy as np
 
 from lib.NCEAverage import NCEAverage
 from lib.LinearAverage import LinearAverage, FeatureBank
@@ -270,12 +271,12 @@ for epoch in range(start_epoch, start_epoch+200):
 
     print('best accuracy: {:.2f}'.format(best_acc*100))
 
-    if epoch == start_epoch:
-        memory_diff = lemniscate.memory.t()
-    else:
-        memory_diff = lemniscate.memory.t() - debug_ls[-1]
-    print(memory_diff)
-    debug_ls.append(memory_diff)
+    # if epoch == start_epoch:
+    #     memory_diff = lemniscate.memory.t()
+    # else:
+    #     memory_diff = lemniscate.memory.t() - debug_ls[-1]
+    # print(memory_diff[np.nonzero()])
+    # debug_ls.append(memory_diff)
 
 
 acc = kNN(0, net, lemniscate, trainloader, testloader, 200, args.nce_t, 1, async_bank = True)

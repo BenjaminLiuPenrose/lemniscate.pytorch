@@ -163,13 +163,13 @@ def kNN(epoch, net, lemniscate, trainloader, testloader, K, sigma, recompute_mem
     embeddingsDim = trainFeatures.size(1)
     negative_loss = F.relu(
         torch.bmm(
-            trainFeatures.view(batchSize, 1, embeddingsDim),
-            trainFeatures.view(batchSize, embeddingsDim, 1)
+            trainFeatures[:, :100].view(batchSize, 1, embeddingsDim),
+            trainFeatures[:, -100:].view(batchSize, embeddingsDim, 1)
             ) - 0.1
     ).mean()
     mms = torch.bmm(
-        trainFeatures.view(batchSize, 1, embeddingsDim),
-        trainFeatures.view(batchSize, embeddingsDim, 1)
+        trainFeatures[:, :100].view(batchSize, 1, embeddingsDim),
+        trainFeatures[:, -100:].view(batchSize, embeddingsDim, 1)
         ).mean()
     print("="*30)
     print("my loss all train ========= ", mms.item() , " ", negative_loss.item() )

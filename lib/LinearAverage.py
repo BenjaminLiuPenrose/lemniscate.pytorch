@@ -72,7 +72,7 @@ class FeatureBankOp(Function):
     def forward(self, x, y, memory, params):
         batchSize = x.size(0)
         momentum = params[1].item()
-        
+
         # for siamese, need to comment out
         # memory = F.normalize(memory, p = 2, dim = 1)
 
