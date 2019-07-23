@@ -222,7 +222,7 @@ def train(epoch):
     total = 0
 
     myCriterion = nn.CrossEntropyLoss()
-    myLemniscate = NCEAverage(args.low_dim, ndata, args.nce_k, args.nce_t, args.nce_m)
+    myLemniscate = LinearAverage(args.low_dim, ndata, args.nce_t, args.nce_m)
     train_myLoss = AverageMeter()
 
     # switch to train mode
@@ -261,7 +261,7 @@ def train(epoch):
         for metric in metrics:
             msg += '\t{}: {}'.format(metric.name(), metric.value())
         print(msg)
-        
+
 debug_ls =  []
 for epoch in range(start_epoch, start_epoch+200):
     train(epoch)
