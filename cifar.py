@@ -136,7 +136,7 @@ def train(epoch):
     total = 0
 
     myCriterion = OnlineContrastiveLoss(0.1, AllNegativePairSelector())
-    train_myloss = AverageMeter()
+    train_myLoss = AverageMeter()
 
     # switch to train mode
     net.train()
@@ -152,7 +152,7 @@ def train(epoch):
         loss = criterion(outputs, indexes)
         with torch.no_grad():
             myLoss = myCriterion(features, indexes)
-            train_myloss.update(myLoss.item(), inputs.size(0))
+            train_myLoss.update(myLoss.item(), inputs.size(0))
 
         loss.backward()
         optimizer.step()
