@@ -79,10 +79,8 @@ def kNN(epoch, net, lemniscate, trainloader, testloader, K, sigma, recompute_mem
         trainLabels = torch.LongTensor(trainloader.dataset.targets).cuda()
     C = trainLabels.max() + 1
     x = trainFeatures[:, 1]
-    print(x.shape)
     norm = x.pow(2).sum().pow(1./2)
-    print(norm)
-    print(norm.item())
+    print("norm of sample vector ====================================================== ", norm.item())
 
     if recompute_memory:
         transform_bak = trainloader.dataset.transform
@@ -115,6 +113,9 @@ def kNN(epoch, net, lemniscate, trainloader, testloader, K, sigma, recompute_mem
             yd, yi = dist.topk(K, dim=1, largest=True, sorted=True)
             candidates = trainLabels.view(1,-1).expand(batchSize, -1)
             retrieval = torch.gather(candidates, 1, yi)
+            x = retrieval
+            norm = x.pow(2).sum(1, keepdim = True).pow(1./2)
+            print("norm of sample vector ", norm.item())
 
             retrieval_one_hot.resize_(batchSize * K, C).zero_()
             retrieval_one_hot.scatter_(1, retrieval.view(-1, 1), 1)
