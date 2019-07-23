@@ -250,7 +250,7 @@ def train(epoch):
         # for metric in metrics:
         #     msg += '\t{}: {}'.format(metric.name(), metric.value())
         # print(msg)
-
+debug_ls =  []
 for epoch in range(start_epoch, start_epoch+200):
     train(epoch)
     acc = kNN(epoch, net, lemniscate, trainloader, testloader, 200, args.nce_t, 0, async_bank = True)
@@ -269,6 +269,14 @@ for epoch in range(start_epoch, start_epoch+200):
         best_acc = acc
 
     print('best accuracy: {:.2f}'.format(best_acc*100))
+
+    if epoch == start_epoch:
+        memory_diff = lemniscate.memory.t()
+    else:
+        memory_diff = lemniscate.memory.t()
+    print(memory_diff)
+    debug_ls.append(memory_diff)
+
 
 acc = kNN(0, net, lemniscate, trainloader, testloader, 200, args.nce_t, 1, async_bank = True)
 print('last accuracy: {:.2f}'.format(acc*100))
