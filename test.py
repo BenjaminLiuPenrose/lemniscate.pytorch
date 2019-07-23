@@ -120,6 +120,19 @@ def kNN(epoch, net, lemniscate, trainloader, testloader, K, sigma, recompute_mem
                 x = features
                 norm = x.pow(2).sum(1, keepdim = True).pow(1./2)
                 print("norm of feature vector ", [n.item() for n in norm][:5] )
+                batchSize = features.size(0)
+                embeddingsDim = features.size(1)
+                negative_loss = F.relu(
+                    torch.bmm(
+                        features.view(batchSize, 1, embeddingsDim),
+                        features.view(batchSize, embeddingsDim, 1)
+                        ) - 0.1
+                )
+                mms = torch.bmm(
+                    features.view(batchSize, 1, embeddingsDim),
+                    features.view(batchSize, embeddingsDim, 1)
+                    ).mean()
+                print("loss bmm ================== ", mms.item() * 1000, " ", negative_loss.item() * 1000)
 
             retrieval_one_hot.resize_(batchSize * K, C).zero_()
             retrieval_one_hot.scatter_(1, retrieval.view(-1, 1), 1)
