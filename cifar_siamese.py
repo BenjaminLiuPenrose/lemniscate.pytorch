@@ -141,77 +141,6 @@ def adjust_learning_rate(optimizer, epoch):
     for param_group in optimizer.param_groups:
         param_group['lr'] = lr
 
-# Training
-def train(epoch):
-    print('\nEpoch: %d' % epoch)
-    adjust_learning_rate(optimizer, epoch)
-    train_loss = AverageMeter()
-    data_time = AverageMeter()
-    batch_time = AverageMeter()
-    correct = 0
-    total = 0
-
-    net.train()
-
-    end = time.time()
-    for batch_idx, (inputs, targets, indexes) in enumerate(trainloader):
-        data_time.update(time.time() - end)
-        inputs, targets, indexes = inputs.to(device), targets.to(device), indexes.to(device)
-
-        optimizer.zero_grad()
-        features = net(inputs)
-        loss = criterion(features, indexes)
-
-        loss.backward()
-        optimizer.step()
-        train_loss.update(loss.item(), inputs.size(0))
-
-        batch_time.update(time.time() - end)
-        end = time.time()
-
-        msg = ('Epoch: [{}][{}/{}]'
-              'Time: {batch_time.val:.3f} ({batch_time.avg:.3f}) '
-              'Data: {data_time.val:.3f} ({data_time.avg:.3f}) '
-              'Loss: {train_loss.val:.3f} ({train_loss.avg:.3f})'.format(
-              epoch, batch_idx, len(trainloader), batch_time=batch_time, data_time=data_time, train_loss=train_loss))
-        for metric in metrics:
-            msg += '\t{}: {}'.format(metric.name(), metric.value())
-        print(msg)
-
-metric = AccumulatedAccuracyMetric()
-def test(epoch):
-    with torch.no_grad():
-        net.eval()
-        metric.reset()
-        test_loss = 0
-        for batch_idx, (inputs, targets, indexes) in enumerate(testloader):
-            inputs, targets, indexes = inputs.to(device), targets.to(device), indexes.to(device)
-            features = net(inputs)
-            loss = criterion(features, indexes)
-            test_loss += loss.item()
-            acc = metric(features, indexes, loss)
-        return test_loss / len(testloader), acc
-
-for epoch in range(start_epoch, start_epoch+200):
-    train(epoch)
-    test_loss, acc = test(epoch)
-
-    if acc > best_acc:
-        print('Saving..')
-        state = {
-            'net': net.state_dict(),
-            'lemniscate': lemniscate,
-            'acc': acc,
-            'epoch': epoch,
-        }
-        if not os.path.isdir('checkpoint'):
-            os.mkdir('checkpoint')
-        torch.save(state, './checkpoint/ckpt.t7')
-        best_acc = acc
-
-    print('test_loss: {:4f}; best accuracy: {:.2f}'.format(test_loss, best_acc*100))
-
-# # Training
 # def train(epoch):
 #     print('\nEpoch: %d' % epoch)
 #     adjust_learning_rate(optimizer, epoch)
@@ -221,25 +150,21 @@ for epoch in range(start_epoch, start_epoch+200):
 #     correct = 0
 #     total = 0
 #
-#     # switch to train mode
 #     net.train()
 #
 #     end = time.time()
 #     for batch_idx, (inputs, targets, indexes) in enumerate(trainloader):
 #         data_time.update(time.time() - end)
 #         inputs, targets, indexes = inputs.to(device), targets.to(device), indexes.to(device)
-#         optimizer.zero_grad()
 #
+#         optimizer.zero_grad()
 #         features = net(inputs)
-#         outputs = lemniscate(features, indexes)
-#         loss = criterion(outputs, indexes)
+#         loss = criterion(features, indexes)
 #
 #         loss.backward()
 #         optimizer.step()
-#
 #         train_loss.update(loss.item(), inputs.size(0))
 #
-#         # measure elapsed time
 #         batch_time.update(time.time() - end)
 #         end = time.time()
 #
@@ -252,9 +177,23 @@ for epoch in range(start_epoch, start_epoch+200):
 #             msg += '\t{}: {}'.format(metric.name(), metric.value())
 #         print(msg)
 #
+# metric = AccumulatedAccuracyMetric()
+# def test(epoch):
+#     with torch.no_grad():
+#         net.eval()
+#         metric.reset()
+#         test_loss = 0
+#         for batch_idx, (inputs, targets, indexes) in enumerate(testloader):
+#             inputs, targets, indexes = inputs.to(device), targets.to(device), indexes.to(device)
+#             features = net(inputs)
+#             loss = criterion(features, indexes)
+#             test_loss += loss.item()
+#             acc = metric(features, indexes, loss)
+#         return test_loss / len(testloader), acc
+#
 # for epoch in range(start_epoch, start_epoch+200):
 #     train(epoch)
-#     acc = kNN(epoch, net, lemniscate, trainloader, testloader, 200, args.nce_t, 0, async_bank = True)
+#     test_loss, acc = test(epoch)
 #
 #     if acc > best_acc:
 #         print('Saving..')
@@ -269,10 +208,70 @@ for epoch in range(start_epoch, start_epoch+200):
 #         torch.save(state, './checkpoint/ckpt.t7')
 #         best_acc = acc
 #
-#     print('best accuracy: {:.2f}'.format(best_acc*100))
-#
-# acc = kNN(0, net, lemniscate, trainloader, testloader, 200, args.nce_t, 1, async_bank = True)
-# print('last accuracy: {:.2f}'.format(acc*100))
+#     print('test_loss: {:4f}; best accuracy: {:.2f}'.format(test_loss, best_acc*100))
+
+# Training
+def train(epoch):
+    print('\nEpoch: %d' % epoch)
+    adjust_learning_rate(optimizer, epoch)
+    train_loss = AverageMeter()
+    data_time = AverageMeter()
+    batch_time = AverageMeter()
+    correct = 0
+    total = 0
+
+    # switch to train mode
+    net.train()
+
+    end = time.time()
+    for batch_idx, (inputs, targets, indexes) in enumerate(trainloader):
+        data_time.update(time.time() - end)
+        inputs, targets, indexes = inputs.to(device), targets.to(device), indexes.to(device)
+        optimizer.zero_grad()
+
+        features = net(inputs)
+        outputs = lemniscate(features, indexes)
+        loss = criterion(outputs, indexes)
+
+        loss.backward()
+        optimizer.step()
+
+        train_loss.update(loss.item(), inputs.size(0))
+
+        # measure elapsed time
+        batch_time.update(time.time() - end)
+        end = time.time()
+
+        msg = ('Epoch: [{}][{}/{}]'
+              'Time: {batch_time.val:.3f} ({batch_time.avg:.3f}) '
+              'Data: {data_time.val:.3f} ({data_time.avg:.3f}) '
+              'Loss: {train_loss.val:.3f} ({train_loss.avg:.3f})'.format(
+              epoch, batch_idx, len(trainloader), batch_time=batch_time, data_time=data_time, train_loss=train_loss))
+        for metric in metrics:
+            msg += '\t{}: {}'.format(metric.name(), metric.value())
+        print(msg)
+
+for epoch in range(start_epoch, start_epoch+200):
+    train(epoch)
+    acc = NN(epoch, net, lemniscate, trainloader, testloader, 200, args.nce_t, 0, async_bank = True)
+
+    if acc > best_acc:
+        print('Saving..')
+        state = {
+            'net': net.state_dict(),
+            'lemniscate': lemniscate,
+            'acc': acc,
+            'epoch': epoch,
+        }
+        if not os.path.isdir('checkpoint'):
+            os.mkdir('checkpoint')
+        torch.save(state, './checkpoint/ckpt.t7')
+        best_acc = acc
+
+    print('best accuracy: {:.2f}'.format(best_acc*100))
+
+acc = NN(0, net, lemniscate, trainloader, testloader, 200, args.nce_t, 1, async_bank = True)
+print('last accuracy: {:.2f}'.format(acc*100))
 
 end_glob = time.time()
 print('total Training time: {}'.format(end_glob - start_glob) )
