@@ -221,6 +221,10 @@ def train(epoch):
     correct = 0
     total = 0
 
+    myCriterion = nn.CrossEntropyLoss()
+    myLemniscate = NCEAverage(args.low_dim, ndata, args.nce_k, args.nce_t, args.nce_m)
+    train_myLoss = AverageMeter()
+
     # switch to train mode
     net.train()
 
@@ -234,6 +238,11 @@ def train(epoch):
         outputs = lemniscate(features, indexes)
         loss = criterion(outputs, indexes)
 
+        with torch.no_grad():
+            os = myLemniscate(features, indexes)
+            myLoss = myCriterion(os, indexes)
+            train_myLoss.update(myLoss.item(), inputs.size(0))
+
         loss.backward()
         optimizer.step()
 
@@ -243,14 +252,16 @@ def train(epoch):
         batch_time.update(time.time() - end)
         end = time.time()
 
-        # msg = ('Epoch: [{}][{}/{}]'
-        #       'Time: {batch_time.val:.3f} ({batch_time.avg:.3f}) '
-        #       'Data: {data_time.val:.3f} ({data_time.avg:.3f}) '
-        #       'Loss: {train_loss.val:.3f} ({train_loss.avg:.3f})'.format(
-        #       epoch, batch_idx, len(trainloader), batch_time=batch_time, data_time=data_time, train_loss=train_loss))
-        # for metric in metrics:
-        #     msg += '\t{}: {}'.format(metric.name(), metric.value())
-        # print(msg)
+        msg = ('Epoch: [{}][{}/{}]'
+              'Time: {batch_time.val:.3f} ({batch_time.avg:.3f}) '
+              'Data: {data_time.val:.3f} ({data_time.avg:.3f}) '
+              'Loss: {train_loss.val:.3f} ({train_loss.avg:.3f})'
+              'mylos: {train_myLoss.val:.4f} ({train_myLoss.avg:.4f})'.format(
+              epoch, batch_idx, len(trainloader), batch_time=batch_time, data_time=data_time, train_loss=train_loss, train_myLoss=train_myLoss))
+        for metric in metrics:
+            msg += '\t{}: {}'.format(metric.name(), metric.value())
+        print(msg)
+        
 debug_ls =  []
 for epoch in range(start_epoch, start_epoch+200):
     train(epoch)
