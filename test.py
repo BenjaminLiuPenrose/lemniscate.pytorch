@@ -96,22 +96,6 @@ def kNN(epoch, net, lemniscate, trainloader, testloader, K, sigma, recompute_mem
         trainLabels = torch.LongTensor(temploader.dataset.targets).cuda()
         trainloader.dataset.transform = transform_bak
 
-    batchSize = trainFeatures.size(0)
-    embeddingsDim = trainFeatures.size(1)
-    negative_loss = F.relu(
-        torch.bmm(
-            trainFeatures.view(batchSize, 1, embeddingsDim),
-            trainFeatures.view(batchSize, embeddingsDim, 1)
-            ) - 0.1
-    ).mean()
-    mms = torch.bmm(
-        trainFeatures.view(batchSize, 1, embeddingsDim),
-        trainFeatures.view(batchSize, embeddingsDim, 1)
-        ).mean()
-    print("="*30)
-    print("my loss all train ========= ", mms.item() * 1000, " ", negative_loss.item() * 1000)
-    print("="*30)
-
     top1 = 0.
     top5 = 0.
     end = time.time()
@@ -175,6 +159,21 @@ def kNN(epoch, net, lemniscate, trainloader, testloader, K, sigma, recompute_mem
                   'Cls Time {cls_time.val:.3f} ({cls_time.avg:.3f})\t'
                   'Top1: {:.2f}  Top5: {:.2f}'.format(
                   total, testsize, top1*100./total, top5*100./total, net_time=net_time, cls_time=cls_time))
+    batchSize = trainFeatures.size(0)
+    embeddingsDim = trainFeatures.size(1)
+    negative_loss = F.relu(
+        torch.bmm(
+            trainFeatures.view(batchSize, 1, embeddingsDim),
+            trainFeatures.view(batchSize, embeddingsDim, 1)
+            ) - 0.1
+    ).mean()
+    mms = torch.bmm(
+        trainFeatures.view(batchSize, 1, embeddingsDim),
+        trainFeatures.view(batchSize, embeddingsDim, 1)
+        ).mean()
+    print("="*30)
+    print("my loss all train ========= ", mms.item() * 1000, " ", negative_loss.item() * 1000)
+    print("="*30)
 
     print(top1*100./(total + 1e-8), total, top1 )
 
