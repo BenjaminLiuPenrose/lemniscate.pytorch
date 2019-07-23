@@ -76,7 +76,7 @@ class OnlineContrastiveLoss(nn.Module):
             embeddings[negative_pairs[:, 0]].view(batchSize, 1, embeddingsDim),
             embeddings[negative_pairs[:, 1]].view(batchSize, embeddingsDim, 1)
             ).mean()
-        print("loss bmm ", mms.item() * 1000 )
+        # print("loss bmm ", mms.item() * 1000 )
 
         # print(negative_loss)
         # loss = torch.cat([positive_loss, negative_loss], dim=0)
