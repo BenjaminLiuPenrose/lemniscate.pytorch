@@ -76,7 +76,7 @@ trainset.init()
 # trainset = datasets.CIFAR100Instance(root='./data', train=True, download=True, transform=transform_train)
 train_batch_sampler = BalancedBatchSampler_CIFAR(trainset.indices, n_classes=10*25, n_samples=1)
 # trainloader = torch.utils.data.DataLoader(trainset, batch_sampler = train_batch_sampler, num_workers=2, pin_memory = True)
-trainloader = torch.utils.data.DataLoader(trainset, batch_size=128, shuffle=True, num_workers=2)
+trainloader = torch.utils.data.DataLoader(trainset, batch_size=128*4, shuffle=True, num_workers=2)
 
 testset = datasets.CIFAR10Instance(root='./data', train=False, download=True, transform=transform_test)
 testset.init()
