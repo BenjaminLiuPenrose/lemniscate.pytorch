@@ -159,8 +159,8 @@ def kNN(epoch, net, lemniscate, trainloader, testloader, K, sigma, recompute_mem
                   'Cls Time {cls_time.val:.3f} ({cls_time.avg:.3f})\t'
                   'Top1: {:.2f}  Top5: {:.2f}'.format(
                   total, testsize, top1*100./total, top5*100./total, net_time=net_time, cls_time=cls_time))
-    batchSize = trainFeatures.size(0)
-    embeddingsDim = trainFeatures.size(1)
+    batchSize = trainFeatures[:, :100].size(0)
+    embeddingsDim = trainFeatures[:, :100].size(1)
     negative_loss = F.relu(
         torch.bmm(
             trainFeatures[:, :100].view(batchSize, 1, embeddingsDim),
