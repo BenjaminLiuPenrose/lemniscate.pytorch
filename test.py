@@ -133,7 +133,7 @@ def kNN(epoch, net, lemniscate, trainloader, testloader, K, sigma, recompute_mem
                     features.view(batchSize, 1, embeddingsDim),
                     features.view(batchSize, embeddingsDim, 1)
                     ).mean()
-                print("loss bmm ================== ", mms.item() * 1000, " ", negative_loss.item() * 1000)
+                print("my loss ================== ", mms.item() * 1000, " ", negative_loss.item() * 1000)
 
             retrieval_one_hot.resize_(batchSize * K, C).zero_()
             retrieval_one_hot.scatter_(1, retrieval.view(-1, 1), 1)
