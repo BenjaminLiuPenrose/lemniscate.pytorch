@@ -67,10 +67,10 @@ class OnlineContrastiveLoss(nn.Module):
         batchSize = embeddings[negative_pairs[:, 0]].size(0)
         embeddingsDim = embeddings[negative_pairs[:, 0]].size(1)
         negative_loss = F.relu(
-            self.margin - torch.bmm(
+            torch.bmm(
                 embeddings[negative_pairs[:, 0]].view(batchSize, 1, embeddingsDim),
                 embeddings[negative_pairs[:, 1]].view(batchSize, embeddingsDim, 1)
-                )
+                ) - self.margin
         )
         # mmx = torch.bmm(
         #     embeddings[negative_pairs[:, 0]].view(batchSize, 1, embeddingsDim),
