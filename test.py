@@ -4,6 +4,7 @@ import datasets
 from lib.utils import AverageMeter, normalize
 import torchvision.transforms as transforms
 import numpy as np
+import torch.nn.functional as F
 
 def NN(epoch, net, lemniscate, trainloader, testloader, recompute_memory=0, async_bank = False):
     net.eval()
