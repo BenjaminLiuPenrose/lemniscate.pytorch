@@ -128,7 +128,7 @@ def kNN(epoch, net, lemniscate, trainloader, testloader, K, sigma, recompute_mem
                         features.view(batchSize, 1, embeddingsDim),
                         features.view(batchSize, embeddingsDim, 1)
                         ) - 0.1
-                )
+                ).mean()
                 mms = torch.bmm(
                     features.view(batchSize, 1, embeddingsDim),
                     features.view(batchSize, embeddingsDim, 1)
