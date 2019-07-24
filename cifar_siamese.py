@@ -280,7 +280,7 @@ for epoch in range(start_epoch, start_epoch+200):
         torch.save(state, './checkpoint/ckpt.t7')
         best_acc = acc
         print("="*100+"saving best_acc.npy"+"="*100)
-        np.save("best_acc.npy", lemniscate.memory)
+        np.save("best_acc.npy", lemniscate.memory.cpu())
 
     print('best accuracy: {:.2f}'.format(best_acc*100))
 
