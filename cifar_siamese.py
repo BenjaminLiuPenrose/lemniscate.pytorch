@@ -83,7 +83,7 @@ testset.init()
 # testset = datasets.CIFAR100Instance(root='./data', train=False, download=True, transform=transform_test)
 test_batch_sampler = BalancedBatchSampler_CIFAR(testset.indices, n_classes=10*25, n_samples=1)
 # testloader = torch.utils.data.DataLoader(testset, batch_sampler = test_batch_sampler, num_workers=2, pin_memory = True)
-testloader = torch.utils.data.DataLoader(testset, batch_size=100, shuffle=False, num_workers=2)
+testloader = torch.utils.data.DataLoader(testset, batch_size=100*4, shuffle=False, num_workers=2)
 
 classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
 ndata = trainset.__len__()
