@@ -81,9 +81,6 @@ def kNN(epoch, net, lemniscate, trainloader, testloader, K, sigma, recompute_mem
     else:
         trainLabels = torch.LongTensor(trainloader.dataset.targets).cuda()
     C = trainLabels.max() + 1
-    # x = trainFeatures[:, 1]
-    # norm = x.pow(2).sum().pow(1./2)
-    # print("norm of sample vector ====================================================== ", norm.item())
 
     if recompute_memory:
         transform_bak = trainloader.dataset.transform
@@ -123,21 +120,7 @@ def kNN(epoch, net, lemniscate, trainloader, testloader, K, sigma, recompute_mem
                 x = features
                 norm = x.pow(2).sum(1, keepdim = True).pow(1./2)
                 print("norm of feature vector ", [n.item() for n in norm][:5] )
-                batchSize = features.size(0)
-                embeddingsDim = features.size(1)
-                negative_loss = F.relu(
-                    torch.bmm(
-                        features.view(batchSize, 1, embeddingsDim),
-                        features.view(batchSize, embeddingsDim, 1)
-                        ) - 0.1
-                ).mean()
-                mms = torch.bmm(
-                    features.view(batchSize, 1, embeddingsDim),
-                    features.view(batchSize, embeddingsDim, 1)
-                    ).mean()
-                print("="*30)
-                print("my loss ================== ", mms.item() * 1000, " ", negative_loss.item() * 1000)
-                print("="*30)
+
 
             retrieval_one_hot.resize_(batchSize * K, C).zero_()
             retrieval_one_hot.scatter_(1, retrieval.view(-1, 1), 1)
@@ -162,21 +145,6 @@ def kNN(epoch, net, lemniscate, trainloader, testloader, K, sigma, recompute_mem
                   'Top1: {:.2f}  Top5: {:.2f}'.format(
                   total, testsize, top1*100./total, top5*100./total, net_time=net_time, cls_time=cls_time))
 
-    # batchSize = trainFeatures[:, :100].size(0)
-    # embeddingsDim = trainFeatures[:, :100].size(1)
-    # negative_loss = F.relu(
-    #     torch.bmm(
-    #         trainFeatures[:, :100].view(batchSize, 1, embeddingsDim),
-    #         trainFeatures[:, -100:].view(batchSize, embeddingsDim, 1)
-    #         ) - 0.1
-    # ).mean()
-    # mms = torch.bmm(
-    #     trainFeatures[:, :100].view(batchSize, 1, embeddingsDim),
-    #     trainFeatures[:, -100:].view(batchSize, embeddingsDim, 1)
-    #     ).mean()
-    print("="*30)
-    print("my loss all train ========= ", mms.item() , " ", negative_loss.item() )
-    print("="*30)
 
     print(top1*100./(total + 1e-8), total, top1 )
 

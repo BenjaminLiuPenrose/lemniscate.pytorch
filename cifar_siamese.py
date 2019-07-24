@@ -275,6 +275,7 @@ for epoch in range(start_epoch, start_epoch+200):
             'acc': acc,
             'epoch': epoch,
         }
+        np.save("best_acc.npy", lemniscate.memory)
         if not os.path.isdir('checkpoint'):
             os.mkdir('checkpoint')
         torch.save(state, './checkpoint/ckpt.t7')
