@@ -275,6 +275,7 @@ for epoch in range(start_epoch, start_epoch+200):
             'acc': acc,
             'epoch': epoch,
         }
+        print("="*25+"saving best_acc.npy"+"="*25)
         np.save("best_acc.npy", lemniscate.memory)
         if not os.path.isdir('checkpoint'):
             os.mkdir('checkpoint')
