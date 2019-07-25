@@ -111,7 +111,7 @@ trainset = datasets.UCF101Instance(
             temporal_transform=transform_train["temporal"],
             target_transform=transform_train["target"],
             )
-trainloader = torch.utils.data.DataLoader(trainset, batch_size=6, shuffle=True, num_workers=2)
+trainloader = torch.utils.data.DataLoader(trainset, batch_size=6, shuffle=False, num_workers=2)
 # trainset = datasets.CIFAR100Instance(root='./data', train=True, download=True, transform=transform_train)
 # trainloader = torch.utils.data.DataLoader(trainset, batch_size=128, shuffle=True, num_workers=2)
 
