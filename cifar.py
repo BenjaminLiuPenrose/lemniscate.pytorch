@@ -193,7 +193,7 @@ for epoch in range(start_epoch, start_epoch+200):
         memory_diff = lemniscate.memory.t()
     else:
         memory_diff = lemniscate.memory.t() - debug_ls[-1]
-    print(memory_diff[np.nonzero()])
+    print(memory_diff)
     debug_ls.append(memory_diff)
 
 acc = kNN(0, net, lemniscate, trainloader, testloader, 200, args.nce_t, 1)
