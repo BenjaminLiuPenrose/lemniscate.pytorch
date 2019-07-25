@@ -188,6 +188,9 @@ for epoch in range(start_epoch, start_epoch+200):
             os.mkdir('checkpoint')
         torch.save(state, './checkpoint/ckpt.t7')
         best_acc = acc
+        print("="*100+"saving best_acc_zhirong.npy"+"="*100)
+        X = np.append(lemniscate.memory.cpu(), np.array([trainset.targets]).T, axis = 1)
+        np.save("best_acc_zhirong.npy", X)
 
     print('best accuracy: {:.2f}'.format(best_acc*100))
     if epoch == start_epoch:
