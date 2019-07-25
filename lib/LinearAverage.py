@@ -47,7 +47,7 @@ class LinearAverageOp(Function):
         # updated_weight = weight_pos.div(w_norm)
         # memory.index_copy_(0, y, updated_weight)
 
-        return gradInput, None, None, None
+        return gradInput, None, None, None, None
 
 class LinearAverage(nn.Module):
 
