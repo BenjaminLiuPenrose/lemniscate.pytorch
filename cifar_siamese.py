@@ -266,7 +266,8 @@ debug_ls =  []
 for epoch in range(start_epoch, start_epoch+200):
     train(epoch)
     acc = kNN(epoch, net, lemniscate, trainloader, testloader, 200, args.nce_t, 0, async_bank = True)
-
+    print(trainset.targets.shape, lemniscate.memory.shape )
+    time.sleep(10)
     if acc > best_acc:
         print('Saving..')
         state = {

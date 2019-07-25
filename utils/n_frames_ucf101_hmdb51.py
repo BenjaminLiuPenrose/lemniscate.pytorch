@@ -2,6 +2,7 @@ from __future__ import print_function, division
 import os
 import sys
 import subprocess
+import numpy as np
 
 def class_process(dir_path, class_name):
   class_path = os.path.join(dir_path, class_name)
@@ -21,7 +22,7 @@ def class_process(dir_path, class_name):
       n_frames = 0
     else:
       image_indices.sort(reverse=True)
-      n_frames = image_indices[0]
+      n_frames = np.min([image_indices[0], 50])
       print(video_dir_path, n_frames)
     with open(os.path.join(video_dir_path, 'n_frames'), 'w') as dst_file:
       dst_file.write(str(n_frames))
