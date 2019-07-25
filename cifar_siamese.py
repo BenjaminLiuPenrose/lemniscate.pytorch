@@ -261,12 +261,11 @@ def train(epoch):
         for metric in metrics:
             msg += '\t{}: {}'.format(metric.name(), metric.value())
         print(msg)
-
+print(lemniscate.memory.cpu().shape, np.array([trainset.targets]).shape)
 debug_ls =  []
 for epoch in range(start_epoch, start_epoch+200):
     train(epoch)
     acc = kNN(epoch, net, lemniscate, trainloader, testloader, 200, args.nce_t, 0, async_bank = True)
-    time.sleep(10)
     if acc > best_acc:
         print('Saving..')
         state = {
