@@ -263,7 +263,6 @@ def train(epoch):
         print(msg)
 
 debug_ls =  []
-print("test ", np.array(trainset.targets).shape, lemniscate.memory.shape )
 for epoch in range(start_epoch, start_epoch+200):
     train(epoch)
     acc = kNN(epoch, net, lemniscate, trainloader, testloader, 200, args.nce_t, 0, async_bank = True)
@@ -281,7 +280,8 @@ for epoch in range(start_epoch, start_epoch+200):
         torch.save(state, './checkpoint/ckpt.t7')
         best_acc = acc
         print("="*100+"saving best_acc.npy"+"="*100)
-        np.save("best_acc.npy", lemniscate.memory.cpu())
+        X = np.append(lemniscate.memory.cpu(), np.array([trainset.targets]), axis = 1)
+        np.save("best_acc.npy", X)
 
     print('best accuracy: {:.2f}'.format(best_acc*100))
 
