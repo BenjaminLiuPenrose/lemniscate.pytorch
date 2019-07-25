@@ -31,6 +31,10 @@ class LinearAverageOp(Function):
         T = params[0].item()
         momentum = params[1].item()
 
+        print(gradOutput.shape)
+        print(x.shape)
+        print(memory.shape)
+
         # add temperature
         gradOutput.data.div_(T)
 
