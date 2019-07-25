@@ -19,6 +19,7 @@ import time
 import models
 import datasets
 import math
+import numpy as np
 
 from lib.NCEAverage import NCEAverage
 from lib.LinearAverage import LinearAverage
