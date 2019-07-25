@@ -13,7 +13,7 @@ class LinearAverageOp(Function):
         momentum = params[1].item()
 
         # memory = F.normalize(memory, p = 2, dim = 1)
-        memory = Normalize(2)(memory)
+        # memory = Normalize(2)(memory)
 
         # inner product
         out = torch.mm(x.data, memory.t().cuda())
