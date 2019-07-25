@@ -7,12 +7,13 @@ from lib.normalize import Normalize
 
 class LinearAverageOp(Function):
     @staticmethod
-    def forward(self, x, y, memory, params):
+    def forward(self, x, y, memory, params, norm):
         T = params[0].item()
         batchSize = x.size(0)
         momentum = params[1].item()
 
         # memory = F.normalize(memory, p = 2, dim = 1)
+        memory = norm(memory)
 
         # inner product
         out = torch.mm(x.data, memory.t().cuda())
@@ -66,8 +67,7 @@ class LinearAverage(nn.Module):
 
     def forward(self, x, y):
         # print(self.memory.requires_grad)
-        self.memory = self.l2norm(self.memory)
-        out = LinearAverageOp.apply(x, y, self.memory, self.params)
+        out = LinearAverageOp.apply(x, y, self.memory, self.params, self.l2norm)
         return out
 
     def normalizeMemeoryBank(self):
