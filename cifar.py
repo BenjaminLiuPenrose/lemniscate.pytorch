@@ -170,6 +170,7 @@ def train(epoch):
               'mylos: {train_myLoss.val:.4f} ({train_myLoss.avg:.4f})'.format(
               epoch, batch_idx, len(trainloader), batch_time=batch_time, data_time=data_time, train_loss=train_loss, train_myLoss=train_myLoss))
 
+debug_ls =  []
 for epoch in range(start_epoch, start_epoch+200):
     train(epoch)
     acc = kNN(epoch, net, lemniscate, trainloader, testloader, 200, args.nce_t, 0)
@@ -188,6 +189,12 @@ for epoch in range(start_epoch, start_epoch+200):
         best_acc = acc
 
     print('best accuracy: {:.2f}'.format(best_acc*100))
+    if epoch == start_epoch:
+        memory_diff = lemniscate.memory.t()
+    else:
+        memory_diff = lemniscate.memory.t() - debug_ls[-1]
+    print(memory_diff[np.nonzero()])
+    debug_ls.append(memory_diff)
 
 acc = kNN(0, net, lemniscate, trainloader, testloader, 200, args.nce_t, 1)
 print('last accuracy: {:.2f}'.format(acc*100))
