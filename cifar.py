@@ -156,6 +156,7 @@ def train(epoch):
 
         loss.backward()
         optimizer.step()
+        # lemniscate.normalizeMemeoryBank()
 
         train_loss.update(loss.item(), inputs.size(0))
 
