@@ -93,7 +93,7 @@ class LinearAverageWithWeights(nn.Module):
         # w_norm = weight_pos.pow(2).sum(1, keepdim=True).pow(0.5)
         # updated_weight = weight_pos.div(w_norm)
         # self.memory.index_copy_(0, y, updated_weight)
-        self.memory = nn.Parameter(F.normalize(self.memory), requires_grad = False)
+        self.memory = nn.Parameter(F.normalize(self.memory_learnt), requires_grad = False)
 
         out = torch.mm(x.data, self.memory_learnt.t().cuda())
         out.div_(T)
