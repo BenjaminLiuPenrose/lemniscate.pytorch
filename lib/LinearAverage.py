@@ -95,7 +95,7 @@ class LinearAverageWithWeights(nn.Module):
         self.memory.index_copy_(0, y, updated_weight)
         # self.memory = nn.Parameter(F.normalize(self.memory_learnt), requires_grad = False).cuda()
 
-        out = torch.mm(x.data, self.memory_learnt.t())
+        out = torch.mm(x.data, self.memory_learnt)
         out.div_(T)
 
         # loss(x, class) = -log(exp(x[class]) / (\sum_j exp(x[j]))) = -x[class] + log(\sum_j exp(x[j]))
