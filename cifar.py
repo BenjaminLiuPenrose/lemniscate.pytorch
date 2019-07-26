@@ -83,8 +83,9 @@ net = models.__dict__['ResNet18'](low_dim=args.low_dim)
 # define leminiscate
 if args.nce_k > 0:
     lemniscate = NCEAverage(args.low_dim, ndata, args.nce_k, args.nce_t, args.nce_m)
+elif args.nce_k < 0:
+    lemniscate = LinearAverage(args.low_dim, ndata, args.nce_t, args.nce_m)
 else:
-    # lemniscate = LinearAverage(args.low_dim, ndata, args.nce_t, args.nce_m)
     lemniscate = LinearAverageWithWeights(args.low_dim, ndata, args.nce_t, args.nce_m)
 
 if device == 'cuda':
