@@ -4,6 +4,7 @@ import torch.nn.functional as F
 from torch import nn
 import math
 from lib.normalize import Normalize
+import copy
 
 class LinearAverageOp(Function):
     @staticmethod
@@ -81,7 +82,7 @@ class LinearAverageWithWeights(nn.Module):
                         requires_grad = True
                         )
         # self.memory = nn.Parameter(F.normalize(self.memory_learnt), requires_grad = False)
-        self.memory = F.normalize(self.memory_learnt).cuda()
+        self.memory = copy.deepcopy(self.memory_learnt).cuda()
         # self.l2norm = Normalize(2)
         self.params = nn.Parameter(torch.tensor([T, momentum]), requires_grad = False)
 
@@ -90,8 +91,6 @@ class LinearAverageWithWeights(nn.Module):
         momentum = self.params[1].item()
 
         weight_pos = self.memory_learnt.index_select(0, y.data.view(-1)) #.resize_as_(x)
-        weight_pos.mul_(momentum)
-        weight_pos.add_(torch.mul(x.data, 1-momentum))
         w_norm = weight_pos.pow(2).sum(1, keepdim=True).pow(0.5)
         updated_weight = weight_pos.div(w_norm)
         self.memory.index_copy_(0, y, updated_weight)
