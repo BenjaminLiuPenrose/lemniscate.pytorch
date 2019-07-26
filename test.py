@@ -17,7 +17,7 @@ def NN(epoch, net, lemniscate, trainloader, testloader, recompute_memory=0, asyn
     total = 0
     testsize = testloader.dataset.__len__()
 
-    trainFeatures = lemniscate.memory.t()
+    trainFeatures = lemniscate.memory.t().cuda()
     if hasattr(trainloader.dataset, 'imgs'):
         trainLabels = torch.LongTensor([y for (p, y) in trainloader.dataset.imgs]).cuda()
     else:
