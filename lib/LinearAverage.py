@@ -76,12 +76,12 @@ class LinearAverageWithWeights(nn.Module):
     def __init__(self, inputSize, outputSize, T = 0.07, momentum = 0.5):
         super(LinearAverageWithWeights, self).__init__()
         stdv = 1. / math.sqrt(inputSize/3)
-        self.memory_learnt =  nn.Parameter(
+        self.memory =  nn.Parameter(
                         F.normalize(
                         torch.rand(outputSize, inputSize).mul_(2*stdv).add_(-stdv) ),
                         requires_grad = True
                         )
-        self.memory = nn.Parameter(self.memory_learnt, requires_grad = False)
+        # self.memory = nn.Parameter(self.memory_learnt, requires_grad = False)
         self.l2norm = Normalize(2)
         self.params = nn.Parameter(torch.tensor([T, momentum]), requires_grad = False)
 
@@ -93,9 +93,9 @@ class LinearAverageWithWeights(nn.Module):
         # w_norm = weight_pos.pow(2).sum(1, keepdim=True).pow(0.5)
         # updated_weight = weight_pos.div(w_norm)
         # self.memory.index_copy_(0, y, updated_weight)
-        self.memory = nn.Parameter(F.normalize(self.memory_learnt), requires_grad = False)
+        self.memory = nn.Parameter(F.normalize(self.memory), requires_grad = False)
 
-        out = torch.mm(x.data, self.memory_learnt.t().cuda())
+        out = torch.mm(x.data, self.memory.t().cuda())
         out.div_(T)
 
         # loss(x, class) = -log(exp(x[class]) / (\sum_j exp(x[j]))) = -x[class] + log(\sum_j exp(x[j]))
