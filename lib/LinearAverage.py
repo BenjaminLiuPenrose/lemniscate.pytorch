@@ -109,7 +109,7 @@ class LinearAverageWithWeights(nn.Module):
 # ========================================================================================
 class LinearAverageWithoutWeights(nn.Module):
     def __init__(self, inputSize, outputSize, T = 0.07, momentum = 0.5):
-        super(LinearAverageWithWeights, self).__init__()
+        super(LinearAverageWithoutWeights, self).__init__()
         stdv = 1. / math.sqrt(inputSize/3)
         self.weights =  nn.Parameter(
                         torch.rand(outputSize, inputSize).mul_(2*stdv).add_(-stdv) ,
