@@ -30,7 +30,7 @@ def NN(epoch, net, lemniscate, trainloader, testloader, recompute_memory=0, asyn
         for batch_idx, (inputs, targets, indexes) in enumerate(temploader):
             targets = targets.cuda(non_blocking=True)
             batchSize = inputs.size(0)
-            features = net(inputs)
+            features = net(inputs).cuda()
             # stop w = v process to make w stand alone
             trainFeatures[:, batch_idx*batchSize:batch_idx*batchSize+batchSize] = features.data.t().cuda()
         trainLabels = torch.LongTensor(temploader.dataset.targets).cuda()
