@@ -22,7 +22,7 @@ import math
 import numpy as np
 
 from lib.NCEAverage import NCEAverage
-from lib.LinearAverage import LinearAverage
+from lib.LinearAverage import LinearAverage, LinearAverageWithWeights
 from lib.NCECriterion import NCECriterion
 from lib.utils import AverageMeter, normalize
 from test import NN, kNN
@@ -84,7 +84,8 @@ net = models.__dict__['ResNet18'](low_dim=args.low_dim)
 if args.nce_k > 0:
     lemniscate = NCEAverage(args.low_dim, ndata, args.nce_k, args.nce_t, args.nce_m)
 else:
-    lemniscate = LinearAverage(args.low_dim, ndata, args.nce_t, args.nce_m)
+    # lemniscate = LinearAverage(args.low_dim, ndata, args.nce_t, args.nce_m)
+    lemniscate = LinearAverageWithWeights(args.low_dim, ndata, args.nce_t, args.nce_m)
 
 if device == 'cuda':
     net = torch.nn.DataParallel(net, device_ids=range(torch.cuda.device_count()))

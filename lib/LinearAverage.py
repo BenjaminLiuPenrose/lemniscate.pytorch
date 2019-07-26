@@ -36,18 +36,17 @@ class LinearAverageOp(Function):
         # add temperature
         gradOutput.data.div_(T)
 
-
         # gradient of linear
         gradInput = torch.mm(gradOutput.data, memory)
         gradInput.resize_as_(x)
 
         # update the non-parametric data, comment here for w not equals v
-        # weight_pos = memory.index_select(0, y.data.view(-1)).resize_as_(x)
-        # weight_pos.mul_(momentum)
-        # weight_pos.add_(torch.mul(x.data, 1-momentum))
-        # w_norm = weight_pos.pow(2).sum(1, keepdim=True).pow(0.5)
-        # updated_weight = weight_pos.div(w_norm)
-        # memory.index_copy_(0, y, updated_weight)
+        weight_pos = memory.index_select(0, y.data.view(-1)).resize_as_(x)
+        weight_pos.mul_(momentum)
+        weight_pos.add_(torch.mul(x.data, 1-momentum))
+        w_norm = weight_pos.pow(2).sum(1, keepdim=True).pow(0.5)
+        updated_weight = weight_pos.div(w_norm)
+        memory.index_copy_(0, y, updated_weight)
 
         return gradInput, None, None, None
 
@@ -64,7 +63,7 @@ class LinearAverage(nn.Module):
         # self.register_buffer('memory', torch.rand(outputSize, inputSize).mul_(2*stdv).add_(-stdv))
         self.register_parameter('memory', None)
         self.memory = nn.Parameter(torch.rand(outputSize, inputSize).mul_(2*stdv).add_(-stdv) )
-        self.l2norm = Normalize(2)
+        # self.l2norm = Normalize(2)
 
 
     def forward(self, x, y):
@@ -72,15 +71,34 @@ class LinearAverage(nn.Module):
         out = LinearAverageOp.apply(x, y, self.memory, self.params)
         return out
 
-    def normalizeMemeoryBank(self):
+# =======================================================================================
+class LinearAverageWithWeights(nn.Module):
+    def __init__(self, inputSize, outputSize, T = 0.07, momentum = 0.5):
+        super(LinearAverageWithWeights, self).__init__()
+        stdv = 1. / math.sqrt(inputSize/3)
+        self.memory =  nn.Parameter(
+                        torch.rand(outputSize, inputSize).mul_(2*stdv).add_(-stdv),
+                        requires_grad = True
+                        )
+        self.l2norm = Normalize(2)
+        self.params = nn.Parameter([T, momentum], requires_grad = False)
+
+    def forward(self, x, y):
+        T = self.params[0].item()
         momentum = self.params[1].item()
-        memory = self.memory
-        weight_pos = memory.index_select(0, y.data.view(-1)).resize_as_(x)
-        weight_pos.mul_(momentum)
-        weight_pos.add_(torch.mul(x.data, 1-momentum))
+
+        weight_pos = self.memory.index_select(0, y.data.view(-1)).resize_as_(x)
         w_norm = weight_pos.pow(2).sum(1, keepdim=True).pow(0.5)
         updated_weight = weight_pos.div(w_norm)
-        memory.index_copy_(0, y, updated_weight)
+        self.memory.index_copy_(0, y, updated_weight)
+        
+        out = torch.mm(x.data, memory.t().cuda())
+        out.div_(T)
+
+        # loss(x, class) = -log(exp(x[class]) / (\sum_j exp(x[j]))) = -x[class] + log(\sum_j exp(x[j]))
+
+        return out
+
 
 
 class FeatureBankOp(Function):
