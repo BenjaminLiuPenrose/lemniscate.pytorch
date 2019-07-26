@@ -94,12 +94,12 @@ class LinearAverageWithWeights(nn.Module):
         out.div_(T)
 
         with torch.no_grad():
-            weight_pos = self.memory_learnt.index_select(0, y.data.view(-1)) #.resize_as_(x)
-            w_norm = weight_pos.pow(2).sum(1, keepdim=True).pow(0.5)
-            updated_weight = weight_pos.div(w_norm)
-            self.memory.index_copy_(0, y, updated_weight)
-            # self.memory = nn.Parameter(F.normalize(self.memory_learnt), requires_grad = False).cuda()
-            
+            # weight_pos = self.memory_learnt.index_select(0, y.data.view(-1)) #.resize_as_(x)
+            # w_norm = weight_pos.pow(2).sum(1, keepdim=True).pow(0.5)
+            # updated_weight = weight_pos.div(w_norm)
+            # self.memory.index_copy_(0, y, updated_weight)
+            self.memory = nn.Parameter(F.normalize(self.memory_learnt), requires_grad = False).cuda()
+
         # loss(x, class) = -log(exp(x[class]) / (\sum_j exp(x[j]))) = -x[class] + log(\sum_j exp(x[j]))
 
         return out
