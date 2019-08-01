@@ -93,6 +93,7 @@ class LinearAverageWithWeights(nn.Module):
         #                 requires_grad = False
         #                 )
         self.register_buffer('memory', torch.rand(outputSize, inputSize).mul_(2*stdv).add_(-stdv))
+        self.register_buffer('memory2', torch.rand(outputSize, inputSize).mul_(2*stdv).add_(-stdv))
         # self.memory = F.normalize(self.memory_learnt).cuda()
         # self.l2norm = Normalize(2)
         self.params = nn.Parameter(torch.tensor([T, momentum]), requires_grad = False)
@@ -103,11 +104,11 @@ class LinearAverageWithWeights(nn.Module):
 
         # self.weights = nn.Parameter(F.normalize(self.weights))
         # out = torch.mm(x.data, F.normalize(self.weights).t() )
-        memory = self.memory.cuda()
-        out = torch.mm(x, memory.t())
+        out = torch.mm(x, self.memory2.t())
         out.div_(T)
 
         with torch.no_grad():
+            self.memory = self.memory2
             weight_pos = self.memory.index_select(0, y.data.view(-1)) #.resize_as_(x)
             weight_pos.mul_(momentum)
             weight_pos.add_(torch.mul(x.data, 1-momentum))
