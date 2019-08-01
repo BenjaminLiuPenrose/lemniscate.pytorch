@@ -21,7 +21,7 @@ class LinearAverageOp(Function):
         # out = torch.mm(x.data, memory.t())
         out.div_(T) # batchSize * N
 
-        weight_pos = memory.index_select(0, y.data.view(-1)).resize_as_(x)
+        weight_pos = memory.index_select(0, y.data.view(-1)) #.resize_as_(x)
         weight_pos.mul_(momentum)
         weight_pos.add_(torch.mul(x.data, 1-momentum))
         w_norm = weight_pos.pow(2).sum(1, keepdim=True).pow(0.5)
@@ -128,18 +128,11 @@ class LinearAverageWithWeights(nn.Module):
 
         return out
 
-
-    # @property # temp fix
-    # def memory(self):
-    #     return self.weights
-
 # ========================================================================================
 class LinearAverageWithoutWeights(nn.Module):
     def __init__(self, inputSize, outputSize, T = 0.07, momentum = 0.5):
         super(LinearAverageWithoutWeights, self).__init__()
         stdv = 1. / math.sqrt(inputSize/3)
-        # if torch.cuda.is_available():
-        #     torch.cuda.manual_seed_all(42)
         self.weights =  nn.Parameter(
                         F.normalize(torch.rand(outputSize, inputSize).mul_(2*stdv).add_(-stdv)) ,
                         requires_grad = True
@@ -149,8 +142,6 @@ class LinearAverageWithoutWeights(nn.Module):
                         requires_grad = False
                         )
         self.register_buffer('memory2', torch.rand(outputSize, inputSize).mul_(2*stdv).add_(-stdv))
-        # self.memory = F.normalize(self.memory_learnt).cuda()
-        # self.l2norm = Normalize(2)
         self.params = nn.Parameter(torch.tensor([T, momentum]), requires_grad = False)
 
     def forward(self, x, y):
@@ -167,7 +158,7 @@ class LinearAverageWithoutWeights(nn.Module):
         out = x
 
         with torch.no_grad():
-            weight_pos = self.memory.index_select(0, y.data.view(-1)) 
+            weight_pos = self.memory.index_select(0, y.data.view(-1))
             weight_pos.mul_(momentum)
             weight_pos.add_(torch.mul(x.data, 1-momentum))
             # weight_pos.add_(torch.mul(F.normalize( self.weights).index_select(0, y.data.view(-1)).data, 1-momentum))
