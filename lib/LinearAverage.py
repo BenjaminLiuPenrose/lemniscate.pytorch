@@ -107,9 +107,9 @@ class LinearAverageWithWeights(nn.Module):
 
         return out
 
-    @property # temp fix
-    def memory(self):
-        return self.weights
+    # @property # temp fix
+    # def memory(self):
+    #     return self.weights
 
 # ========================================================================================
 class LinearAverageWithoutWeights(nn.Module):
