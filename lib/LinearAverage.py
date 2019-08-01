@@ -80,6 +80,7 @@ class LinearAverage(nn.Module):
         return out
 
 # =======================================================================================
+# ================== 0801 workable version ==================================================
 class LinearAverageWithWeights(nn.Module):
     def __init__(self, inputSize, outputSize, T = 0.07, momentum = 0.5):
         super(LinearAverageWithWeights, self).__init__()
@@ -88,11 +89,11 @@ class LinearAverageWithWeights(nn.Module):
                         F.normalize(torch.rand(outputSize, inputSize).mul_(2*stdv).add_(-stdv)) ,
                         requires_grad = True
                         )
-        # self.memory =  nn.Parameter(
-        #                 F.normalize(torch.rand(outputSize, inputSize).mul_(2*stdv).add_(-stdv)) ,
-        #                 requires_grad = False
-        #                 )
-        self.register_buffer('memory', torch.rand(outputSize, inputSize).mul_(2*stdv).add_(-stdv))
+        self.memory =  nn.Parameter(
+                        F.normalize(torch.rand(outputSize, inputSize).mul_(2*stdv).add_(-stdv)) ,
+                        requires_grad = False
+                        )
+        # self.register_buffer('memory', torch.rand(outputSize, inputSize).mul_(2*stdv).add_(-stdv))
         self.register_buffer('memory2', torch.rand(outputSize, inputSize).mul_(2*stdv).add_(-stdv))
         # self.memory = F.normalize(self.memory_learnt).cuda()
         # self.l2norm = Normalize(2)
