@@ -85,6 +85,8 @@ class LinearAverageWithWeights(nn.Module):
     def __init__(self, inputSize, outputSize, T = 0.07, momentum = 0.5):
         super(LinearAverageWithWeights, self).__init__()
         stdv = 1. / math.sqrt(inputSize/3)
+        if torch.cuda.is_available():
+            torch.cuda.manual_seed_all(42)
         self.weights =  nn.Parameter(
                         F.normalize(torch.rand(outputSize, inputSize).mul_(2*stdv).add_(-stdv)) ,
                         requires_grad = True
@@ -102,19 +104,20 @@ class LinearAverageWithWeights(nn.Module):
         T = self.params[0].item()
         momentum = self.params[1].item()
 
-        self.memory2 = self.memory.data
+        # self.memory2 = self.memory.data
+        # out = torch.mm(x, self.memory2.t())
 
         # out = torch.mm(x, F.normalize(self.weights).t() )
         out = torch.mm(x, self.weights.t() )
-        # out = torch.mm(x, self.memory2.t())
+
         out.div_(T)
 
         with torch.no_grad():
+            # print("DEBUG: {}, {}".format(x.data.shape, self.weights.shape))
             weight_pos = self.memory.index_select(0, y.data.view(-1)) #.resize_as_(x)
             weight_pos.mul_(momentum)
-            weight_pos.add_(torch.mul(x.data, 1-momentum))
-            # print("DEBUG: {}, {}".format(x.data.shape, self.weights.shape))
-            # weight_pos.add_(torch.mul(F.normalize( self.weights).index_select(0, y.data.view(-1)).data, 1-momentum))
+            # weight_pos.add_(torch.mul(x.data, 1-momentum))
+            weight_pos.add_(torch.mul(F.normalize( self.weights).index_select(0, y.data.view(-1)).data, 1-momentum))
             w_norm = weight_pos.pow(2).sum(1, keepdim=True).pow(0.5)
             updated_weight = weight_pos.div(w_norm)
             # updated_weight = F.normalize(weight_pos)
