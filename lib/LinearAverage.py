@@ -107,6 +107,10 @@ class LinearAverageWithWeights(nn.Module):
 
         return out
 
+    @property
+    def memory(self):
+        return self.weights
+
 # ========================================================================================
 class LinearAverageWithoutWeights(nn.Module):
     def __init__(self, inputSize, outputSize, T = 0.07, momentum = 0.5):
