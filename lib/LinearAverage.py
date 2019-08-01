@@ -17,11 +17,11 @@ class LinearAverageOp(Function):
         # memory = Normalize(2)(memory)
 
         # inner product
-        out = torch.mm(x.data, memory.t().cuda())
+        out = torch.mm(x.data, memory.t() )
         # out = torch.mm(x.data, memory.t())
         out.div_(T) # batchSize * N
 
-        weight_pos = memory.index_select(0, y.cpu().data.view(-1)) #.resize_as_()
+        weight_pos = memory.index_select(0, y.data.view(-1)).resize_as_(x)
         weight_pos.mul_(momentum)
         weight_pos.add_(torch.mul(x.data, 1-momentum))
         w_norm = weight_pos.pow(2).sum(1, keepdim=True).pow(0.5)
