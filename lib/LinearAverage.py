@@ -88,10 +88,11 @@ class LinearAverageWithWeights(nn.Module):
                         F.normalize(torch.rand(outputSize, inputSize).mul_(2*stdv).add_(-stdv)) ,
                         requires_grad = True
                         )
-        self.memory =  nn.Parameter(
-                        F.normalize(torch.rand(outputSize, inputSize).mul_(2*stdv).add_(-stdv)) ,
-                        requires_grad = False
-                        )
+        # self.memory =  nn.Parameter(
+        #                 F.normalize(torch.rand(outputSize, inputSize).mul_(2*stdv).add_(-stdv)) ,
+        #                 requires_grad = False
+        #                 )
+        self.register_buffer('memory', torch.rand(outputSize, inputSize).mul_(2*stdv).add_(-stdv))
         # self.memory = F.normalize(self.memory_learnt).cuda()
         # self.l2norm = Normalize(2)
         self.params = nn.Parameter(torch.tensor([T, momentum]), requires_grad = False)
@@ -117,21 +118,10 @@ class LinearAverageWithWeights(nn.Module):
             self.memory.index_copy_(0, y.data.view(-1), updated_weight )
             # self.memory = nn.Parameter(self.weights, requires_grad = False)
 
-        self.save_for_backward(x, self.memory, y, self.params)
         # loss(x, class) = -log(exp(x[class]) / (\sum_j exp(x[j]))) = -x[class] + log(\sum_j exp(x[j]))
 
         return out
-        
-    def backward(self, gradOutput):
-        x, memory, y, params = self.saved_tensors
-        batchSize = gradOutput.size(0)
-        T = params[0].item()
-        momentum = params[1].item()
 
-        gradOutput.data.div_(T)
-        gradInput = torch.mm(gradOutput.data, memory)
-        gradInput.resize_as_(x)
-        return gradInput, None, None, None
 
     # @property # temp fix
     # def memory(self):
