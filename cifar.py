@@ -197,9 +197,9 @@ for epoch in range(start_epoch, start_epoch+200):
 
     print('best accuracy: {:.2f}'.format(best_acc*100))
     if epoch == start_epoch:
-        memory_diff = lemniscate.weights.t()
+        memory_diff = lemniscate.memory.t()
     else:
-        memory_diff = lemniscate.weights.t() - debug_ls[-1]
+        memory_diff = lemniscate.memory.t() - debug_ls[-1]
     print(memory_diff)
     debug_ls.append(memory_diff)
 
