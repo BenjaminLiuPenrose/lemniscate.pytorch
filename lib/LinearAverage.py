@@ -90,7 +90,7 @@ class LinearAverageWithWeights(nn.Module):
                         )
         self.memory =  nn.Parameter(
                         F.normalize(torch.rand(outputSize, inputSize).mul_(2*stdv).add_(-stdv)) ,
-                        requires_grad = True
+                        requires_grad = False
                         )
         # self.memory = F.normalize(self.memory_learnt).cuda()
         # self.l2norm = Normalize(2)
