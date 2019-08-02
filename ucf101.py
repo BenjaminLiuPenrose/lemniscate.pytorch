@@ -207,7 +207,7 @@ def train(epoch):
         inputs, targets, indexes = inputs.to(device), targets.to(device), indexes.to(device)
         optimizer.zero_grad()
 
-        print("targets: {}; indexes : {}".format(targets[:10], indexes[:10]) )
+        # print("targets: {}; indexes : {}".format(targets[:10], indexes[:10]) )
         features = net(inputs)
         outputs = lemniscate(features, indexes)
         loss = criterion(outputs, indexes)
