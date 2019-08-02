@@ -240,8 +240,8 @@ def train(epoch):
         loss = criterion(outputs, indexes)
 
         with torch.no_grad():
-            os = myLemniscate(features, indexes)
-            myLoss = myCriterion(os, indexes)
+            # os = myLemniscate(features, indexes)
+            myLoss = myCriterion(features, indexes)
             train_myLoss.update(myLoss.item(), inputs.size(0))
 
         loss.backward()
