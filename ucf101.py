@@ -144,7 +144,7 @@ net = resnet_ucf101.resnet18(
 if args.nce_k > 0:
     lemniscate = NCEAverage(args.low_dim, ndata, args.nce_k, args.nce_t, args.nce_m)
 else:
-    lemniscate = LinearAverage(args.low_dim, ndata, args.nce_t, args.nce_m)
+    lemniscate = LinearAverageWithWeights(args.low_dim, ndata, args.nce_t, args.nce_m)
 
 if device == 'cuda':
     net = torch.nn.DataParallel(net, device_ids=range(torch.cuda.device_count()))
