@@ -22,7 +22,7 @@ import math
 import numpy as np
 
 from lib.NCEAverage import NCEAverage
-from lib.LinearAverage import LinearAverage, LinearAverageWithoutWeights
+from lib.LinearAverage import LinearAverage, LinearAverageWithWeights, LinearAverageWithoutWeights
 from lib.NCECriterion import NCECriterion
 from lib.utils import AverageMeter, normalize
 from test import NN, kNN
