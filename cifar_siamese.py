@@ -119,7 +119,7 @@ if hasattr(lemniscate, 'K'):
     assert False
     criterion = NCECriterion(ndata)
 else:
-    criterion = nn.CrossEntropyLoss()
+    # criterion = nn.CrossEntropyLoss()
     criterion = OnlineContrastiveLoss(args.margin, AllNegativePairSelector())
 
 net.to(device)
@@ -222,7 +222,7 @@ def train(epoch):
     total = 0
 
     myCriterion = nn.CrossEntropyLoss()
-    myLemniscate = LinearAverageWithWeights(args.low_dim, ndata, args.nce_t, args.nce_m)
+    myLemniscate = LinearAverage(args.low_dim, ndata, args.nce_t, args.nce_m)
     train_myLoss = AverageMeter()
 
     # switch to train mode
