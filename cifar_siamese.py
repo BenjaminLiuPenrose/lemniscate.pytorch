@@ -222,7 +222,7 @@ def train(epoch):
     total = 0
 
     myCriterion = nn.CrossEntropyLoss()
-    myLemniscate = LinearAverage(args.low_dim, ndata, args.nce_t, args.nce_m)
+    myLemniscate = LinearAverageWithWeights(args.low_dim, ndata, args.nce_t, args.nce_m)
     train_myLoss = AverageMeter()
 
     # switch to train mode
