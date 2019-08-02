@@ -24,7 +24,7 @@ import datasets
 import math
 
 from lib.NCEAverage import NCEAverage
-from lib.LinearAverage import LinearAverage
+from lib.LinearAverage import LinearAverage, LinearAverageWithWeights
 from lib.NCECriterion import NCECriterion
 from lib.utils import AverageMeter
 from test import NN, kNN
