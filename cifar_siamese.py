@@ -222,8 +222,8 @@ def train(epoch):
     total = 0
 
     myCriterion = nn.CrossEntropyLoss()
-    myLemniscate = LinearAverageWithWeights(args.low_dim, ndata, args.nce_t, args.nce_m)
-    myLemniscate.to(device)
+    myLemniscate = LinearAverage(args.low_dim, ndata, args.nce_t, args.nce_m)
+    # myLemniscate.to(device)
     train_myLoss = AverageMeter()
 
     # switch to train mode
