@@ -120,7 +120,7 @@ if hasattr(lemniscate, 'K'):
     criterion = NCECriterion(ndata)
 else:
     criterion = nn.CrossEntropyLoss()
-    # criterion = OnlineContrastiveLoss(args.margin, AllNegativePairSelector())
+    criterion = OnlineContrastiveLoss(args.margin, AllNegativePairSelector())
 
 net.to(device)
 lemniscate.to(device)
@@ -223,7 +223,6 @@ def train(epoch):
 
     myCriterion = nn.CrossEntropyLoss()
     myLemniscate = LinearAverage(args.low_dim, ndata, args.nce_t, args.nce_m)
-    # myLemniscate.to(device)
     train_myLoss = AverageMeter()
 
     # switch to train mode
@@ -240,8 +239,8 @@ def train(epoch):
         loss = criterion(outputs, indexes)
 
         with torch.no_grad():
-            # os = myLemniscate(features, indexes)
-            myLoss = myCriterion(features, indexes)
+            os = myLemniscate(features, indexes)
+            myLoss = myCriterion(os, indexes)
             train_myLoss.update(myLoss.item(), inputs.size(0))
 
         loss.backward()
