@@ -107,7 +107,7 @@ class LinearAverageWithWeights(nn.Module):
         # self.memory2 = self.memory.data
         # out = torch.mm(x, self.memory2.t())
 
-        out = torch.mm(x, F.normalize(self.weights).t() )
+        out = torch.mm(x, F.normalize(self.weights).t().cuda() )
         # out = torch.mm(x, self.weights.t() )
 
         out.div_(T)
