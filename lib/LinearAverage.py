@@ -133,6 +133,7 @@ class LinearAverageWithWeights(nn.Module):
         return out
 
 # ========================================================================================
+# ============================ For saimese, defined loss function ========================
 class LinearAverageWithoutWeights(nn.Module):
     def __init__(self, inputSize, outputSize, T = 0.07, momentum = 0.5):
         super(LinearAverageWithoutWeights, self).__init__()
