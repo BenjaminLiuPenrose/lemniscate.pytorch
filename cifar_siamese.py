@@ -221,9 +221,9 @@ def train(epoch):
     correct = 0
     total = 0
 
-    myCriterion = nn.CrossEntropyLoss()
-    myLemniscate = LinearAverage(args.low_dim, ndata, args.nce_t, args.nce_m)
-    train_myLoss = AverageMeter()
+    # myCriterion = nn.CrossEntropyLoss()
+    # myLemniscate = LinearAverage(args.low_dim, ndata, args.nce_t, args.nce_m)
+    # train_myLoss = AverageMeter()
 
     # switch to train mode
     net.train()
@@ -239,9 +239,10 @@ def train(epoch):
         loss = criterion(outputs, indexes)
 
         with torch.no_grad():
-            os = myLemniscate(features, indexes)
-            myLoss = myCriterion(os, indexes)
-            train_myLoss.update(myLoss.item(), inputs.size(0))
+            pass
+            # os = myLemniscate(features, indexes)
+            # myLoss = myCriterion(os, indexes)
+            # train_myLoss.update(myLoss.item(), inputs.size(0))
 
         loss.backward()
         optimizer.step()
@@ -257,7 +258,10 @@ def train(epoch):
               'Data: {data_time.val:.3f} ({data_time.avg:.3f}) '
               'Loss: {train_loss.val:.3f} ({train_loss.avg:.3f})'
               'mylos: {train_myLoss.val:.4f} ({train_myLoss.avg:.4f})'.format(
-              epoch, batch_idx, len(trainloader), batch_time=batch_time, data_time=data_time, train_loss=train_loss, train_myLoss=train_myLoss))
+              epoch, batch_idx, len(trainloader), batch_time=batch_time,
+              data_time=data_time, train_loss=train_loss#, 
+              # train_myLoss=train_myLoss
+              ))
         for metric in metrics:
             msg += '\t{}: {}'.format(metric.name(), metric.value())
         print(msg)
