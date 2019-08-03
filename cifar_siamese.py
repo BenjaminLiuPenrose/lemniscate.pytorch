@@ -256,10 +256,10 @@ def train(epoch):
         msg = ('Epoch: [{}][{}/{}]'
               'Time: {batch_time.val:.3f} ({batch_time.avg:.3f}) '
               'Data: {data_time.val:.3f} ({data_time.avg:.3f}) '
-              'Loss: {train_loss.val:.3f} ({train_loss.avg:.3f})'
-              'mylos: {train_myLoss.val:.4f} ({train_myLoss.avg:.4f})'.format(
+              'Loss: {train_loss.val:.3f} ({train_loss.avg:.3f})'.format(
+              # 'mylos: {train_myLoss.val:.4f} ({train_myLoss.avg:.4f})'.format(
               epoch, batch_idx, len(trainloader), batch_time=batch_time,
-              data_time=data_time, train_loss=train_loss#, 
+              data_time=data_time, train_loss=train_loss#,
               # train_myLoss=train_myLoss
               ))
         for metric in metrics:
