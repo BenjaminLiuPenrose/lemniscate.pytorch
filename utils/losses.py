@@ -51,35 +51,43 @@ class OnlineContrastiveLoss(nn.Module):
         self.margin = margin
         self.pair_selector = pair_selector
 
-    def forward(self, embeddings, target):
-        positive_pairs, negative_pairs = self.pair_selector.get_pairs(embeddings, target)
+    def forward(self, embeddings, targets):
+        positive_pairs, negative_pairs = self.pair_selector.get_pairs(embeddings, targets)
         if embeddings.is_cuda:
             positive_pairs = positive_pairs.cuda()
             negative_pairs = negative_pairs.cuda()
         # TODO
         # positive_loss = (embeddings[positive_pairs[:, 0]] - embeddings[positive_pairs[:, 1]]).pow(2).sum(1)
-        positive_loss = 0
         # negative_loss = F.relu(
         #     self.margin - (embeddings[negative_pairs[:, 0]] - embeddings[negative_pairs[:, 1]]).pow(2).sum(
         #         1).sqrt()).pow(2)
         # print( embeddings[negative_pairs[:, 0]].shape, embeddings.shape, embeddings[negative_pairs[:, 0]][0].shape  )
         batchSize = embeddings[negative_pairs[:, 0]].size(0)
         embeddingsDim = embeddings[negative_pairs[:, 0]].size(1)
+        margin = self.margin
+
+        square_pred = torch.pow(embeddings, 2)
+        margin_square = torch.pow(F.relu(
+                    embeddings - margin
+                ),
+            2)
+        positive_loss = 0
         negative_loss = F.relu(
             torch.bmm(
                 embeddings[negative_pairs[:, 0]].view(batchSize, 1, embeddingsDim),
                 embeddings[negative_pairs[:, 1]].view(batchSize, embeddingsDim, 1)
                 ) - self.margin
         )
-        mms = torch.bmm(
-            embeddings[negative_pairs[:, 0]].view(batchSize, 1, embeddingsDim),
-            embeddings[negative_pairs[:, 1]].view(batchSize, embeddingsDim, 1)
-            ).mean()
+        # mms = torch.bmm(
+        #     embeddings[negative_pairs[:, 0]].view(batchSize, 1, embeddingsDim),
+        #     embeddings[negative_pairs[:, 1]].view(batchSize, embeddingsDim, 1)
+        #     ).mean()
         # print("loss bmm ", mms.item() * 1000 )
 
         # print(negative_loss)
         # loss = torch.cat([positive_loss, negative_loss], dim=0)
         loss = negative_loss
+        loss = (targets * square_pred + (1 - targets) * margin_square)
         return torch.mul(loss.mean(), 1000)
 
 
