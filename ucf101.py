@@ -29,6 +29,7 @@ from lib.NCECriterion import NCECriterion
 from lib.utils import AverageMeter
 from test import NN, kNN
 
+os.environ["CUDA_VISIBLE_DEVICES"] = "0,1"
 parser = argparse.ArgumentParser(description='PyTorch UCF101 Training')
 parser.add_argument('--lr', default=0.03, type=float, help='learning rate')
 parser.add_argument('--resume', '-r', default='', type=str, help='resume from checkpoint')
