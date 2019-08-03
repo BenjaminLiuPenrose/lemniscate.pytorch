@@ -66,18 +66,18 @@ class OnlineContrastiveLoss(nn.Module):
         embeddingsDim = embeddings[negative_pairs[:, 0]].size(1)
         margin = self.margin
 
-        square_pred = torch.pow(embeddings, 2)
-        margin_square = torch.pow(F.relu(
-                    embeddings - margin
-                ),
-            2)
+        # square_pred = torch.pow(embeddings, 2)
+        # margin_square = torch.pow(F.relu(
+        #             embeddings - margin
+        #         ),
+        #     2)
         positive_loss = 0
         negative_loss = F.relu(
             torch.bmm(
                 embeddings[negative_pairs[:, 0]].view(batchSize, 1, embeddingsDim),
                 embeddings[negative_pairs[:, 1]].view(batchSize, embeddingsDim, 1)
                 ) - self.margin
-        )
+        ).pow(2)
         # mms = torch.bmm(
         #     embeddings[negative_pairs[:, 0]].view(batchSize, 1, embeddingsDim),
         #     embeddings[negative_pairs[:, 1]].view(batchSize, embeddingsDim, 1)
@@ -87,7 +87,7 @@ class OnlineContrastiveLoss(nn.Module):
         # print(negative_loss)
         # loss = torch.cat([positive_loss, negative_loss], dim=0)
         loss = negative_loss
-        loss = (targets * square_pred + (1 - targets) * margin_square)
+        # loss = (targets * square_pred + (1 - targets) * margin_square)
         return torch.mul(loss.mean(), 1000)
 
 
