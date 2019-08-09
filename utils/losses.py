@@ -65,6 +65,7 @@ class OnlineContrastiveLoss(nn.Module):
         batchSize = embeddings[negative_pairs[:, 0]].size(0)
         embeddingsDim = embeddings[negative_pairs[:, 0]].size(1)
         margin = self.margin
+        print(negative_pairs[:, 0])
 
         # square_pred = torch.pow(embeddings, 2)
         # margin_square = torch.pow(F.relu(

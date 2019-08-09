@@ -84,12 +84,11 @@ class AllNegativePairSelector(PairSelector):
 
     def get_pairs(self, embeddings, labels):
         labels = labels.cpu().data.numpy()
-        all_pairs = np.array(list(combinations(labels, 2)))
+        all_pairs = np.array(list(combinations(range(len(labels)), 2)))
         # all_pairs = np.array([(2*i, 2*i+1) for i in range( math.floor(len(labels) / 2) )])
         # all_pairs = np.array([[labels[idx_pair[0]], labels[idx_pair[1]]] for idx_pair in all_pairs_idx])
 
         all_pairs = torch.LongTensor(all_pairs)
-        print(all_pairs)
         # positive_pairs = all_pairs[(labels[all_pairs[:, 0]] == labels[all_pairs[:, 1]]).nonzero()]
         positive_pairs = torch.Tensor(  np.array([[], []]) )
         negative_pairs = all_pairs
