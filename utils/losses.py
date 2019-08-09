@@ -78,8 +78,8 @@ class OnlineContrastiveLoss(nn.Module):
                 embeddings[negative_pairs[:, 1]].view(batchSize, embeddingsDim, 1)
                 ) - margin
         ).pow(2).view(batchSize, 1)
-        print("1 ", negative_pairs[:, 0])
-        print("2 ", negative_pairs[:, 1])
+        # print("1 ", negative_pairs[:, 0])
+        # print("2 ", negative_pairs[:, 1])
         # x = torch.bmm(
         #                 embeddings[negative_pairs[:, 0]].view(batchSize, 1, embeddingsDim),
         #                 embeddings[negative_pairs[:, 1]].view(batchSize, embeddingsDim, 1)
