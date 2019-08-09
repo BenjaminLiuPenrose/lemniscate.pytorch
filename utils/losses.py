@@ -71,7 +71,7 @@ class OnlineContrastiveLoss(nn.Module):
         #             embeddings - margin
         #         ),
         #     2)
-        positive_loss = 0
+        positive_loss = torch.Tensor( [0] )
         negative_loss = F.relu(
             torch.bmm(
                 embeddings[negative_pairs[:, 0]].view(batchSize, 1, embeddingsDim),
