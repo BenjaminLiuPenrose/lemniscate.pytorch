@@ -159,8 +159,7 @@ class LinearAverageWithoutWeights(nn.Module):
         # out = torch.mm(x, F.normalize(self.weights).t() )
         # out = torch.mm(x, self.weights.t() )
 
-        out = x
-        out.div_(T)
+        out = x.data
 
         with torch.no_grad():
             weight_pos = self.memory.index_select(0, y.data.view(-1))
