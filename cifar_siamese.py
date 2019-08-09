@@ -119,8 +119,8 @@ if hasattr(lemniscate, 'K'):
     assert False
     criterion = NCECriterion(ndata)
 else:
-    # criterion = nn.CrossEntropyLoss()
-    criterion = OnlineContrastiveLoss(args.margin, AllNegativePairSelector())
+    criterion = nn.CrossEntropyLoss()
+    # criterion = OnlineContrastiveLoss(args.margin, AllNegativePairSelector())
 
 net.to(device)
 lemniscate.to(device)
@@ -141,75 +141,6 @@ def adjust_learning_rate(optimizer, epoch):
     print(lr)
     for param_group in optimizer.param_groups:
         param_group['lr'] = lr
-
-# def train(epoch):
-#     print('\nEpoch: %d' % epoch)
-#     adjust_learning_rate(optimizer, epoch)
-#     train_loss = AverageMeter()
-#     data_time = AverageMeter()
-#     batch_time = AverageMeter()
-#     correct = 0
-#     total = 0
-#
-#     net.train()
-#
-#     end = time.time()
-#     for batch_idx, (inputs, targets, indexes) in enumerate(trainloader):
-#         data_time.update(time.time() - end)
-#         inputs, targets, indexes = inputs.to(device), targets.to(device), indexes.to(device)
-#
-#         optimizer.zero_grad()
-#         features = net(inputs)
-#         loss = criterion(features, indexes)
-#
-#         loss.backward()
-#         optimizer.step()
-#         train_loss.update(loss.item(), inputs.size(0))
-#
-#         batch_time.update(time.time() - end)
-#         end = time.time()
-#
-#         msg = ('Epoch: [{}][{}/{}]'
-#               'Time: {batch_time.val:.3f} ({batch_time.avg:.3f}) '
-#               'Data: {data_time.val:.3f} ({data_time.avg:.3f}) '
-#               'Loss: {train_loss.val:.3f} ({train_loss.avg:.3f})'.format(
-#               epoch, batch_idx, len(trainloader), batch_time=batch_time, data_time=data_time, train_loss=train_loss))
-#         for metric in metrics:
-#             msg += '\t{}: {}'.format(metric.name(), metric.value())
-#         print(msg)
-#
-# metric = AccumulatedAccuracyMetric()
-# def test(epoch):
-#     with torch.no_grad():
-#         net.eval()
-#         metric.reset()
-#         test_loss = 0
-#         for batch_idx, (inputs, targets, indexes) in enumerate(testloader):
-#             inputs, targets, indexes = inputs.to(device), targets.to(device), indexes.to(device)
-#             features = net(inputs)
-#             loss = criterion(features, indexes)
-#             test_loss += loss.item()
-#             acc = metric(features, indexes, loss)
-#         return test_loss / len(testloader), acc
-#
-# for epoch in range(start_epoch, start_epoch+200):
-#     train(epoch)
-#     test_loss, acc = test(epoch)
-#
-#     if acc > best_acc:
-#         print('Saving..')
-#         state = {
-#             'net': net.state_dict(),
-#             'lemniscate': lemniscate,
-#             'acc': acc,
-#             'epoch': epoch,
-#         }
-#         if not os.path.isdir('checkpoint'):
-#             os.mkdir('checkpoint')
-#         torch.save(state, './checkpoint/ckpt.t7')
-#         best_acc = acc
-#
-#     print('test_loss: {:4f}; best accuracy: {:.2f}'.format(test_loss, best_acc*100))
 
 # Training
 def train(epoch):
