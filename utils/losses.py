@@ -80,12 +80,12 @@ class OnlineContrastiveLoss(nn.Module):
         ).pow(2).view(batchSize, 1)
         # print("1 ", negative_pairs[:, 0])
         # print("2 ", negative_pairs[:, 1])
-        x = torch.bmm(
-                        embeddings[negative_pairs[:, 0]].view(batchSize, 1, embeddingsDim),
-                        embeddings[negative_pairs[:, 1]].view(batchSize, embeddingsDim, 1)
-                        ).view(batchSize, 1)
-        norm = x.pow(2).sum(1, keepdim = True).pow(1./2)
-        print("norm of memory bank ", [n.item() for n in norm][:10], "shape ", x.shape)
+        # x = torch.bmm(
+        #                 embeddings[negative_pairs[:, 0]].view(batchSize, 1, embeddingsDim),
+        #                 embeddings[negative_pairs[:, 1]].view(batchSize, embeddingsDim, 1)
+        #                 ).view(batchSize, 1)
+        # norm = x.pow(2).sum(1, keepdim = True).pow(1./2)
+        # print("norm of memory bank ", [n.item() for n in norm][:10], "shape ", x.shape)
 
         # print(negative_loss)
         # loss = torch.cat([positive_loss, negative_loss], dim=0)
