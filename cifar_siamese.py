@@ -178,7 +178,7 @@ def train(epoch):
                 features[all_pairs[:, 1]],
                 torch.Tensor([-1] * len(all_pairs)).cuda()
         )
-        print(torch.Tensor([-1] * len(all_pairs)).shape, features.shape)
+        print(torch.Tensor([-1] * len(all_pairs)).shape, features.shape )
 
         with torch.no_grad():
             # pass
