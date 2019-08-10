@@ -171,8 +171,8 @@ def train(epoch):
         outputs = lemniscate(features, indexes)
 
         # loss = criterion(outputs, indexes)
-        all_pairs = np.array(list(combinations(range(len(indexes)), 2)))
-        # all_pairs = np.array([(2*i, 2*i+1) for i in range( math.floor(len(labels) / 2) )])
+        # all_pairs = np.array(list(combinations(range(len(indexes)), 2)))
+        all_pairs = np.array([(2*i, 2*i+1) for i in range( math.floor(len(labels) / 2) )])
         loss = criterion(
                 features[all_pairs[:, 0]],
                 features[all_pairs[:, 1]],
