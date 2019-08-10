@@ -154,9 +154,9 @@ def train(epoch):
     correct = 0
     total = 0
 
-    # myCriterion = nn.CrossEntropyLoss()
-    # myLemniscate = LinearAverage(args.low_dim, ndata, args.nce_t, args.nce_m)
-    # train_myLoss = AverageMeter()
+    myCriterion = nn.CrossEntropyLoss()
+    myLemniscate = LinearAverage(args.low_dim, ndata, args.nce_t, args.nce_m)
+    train_myLoss = AverageMeter()
 
     # switch to train mode
     net.train()
@@ -169,15 +169,21 @@ def train(epoch):
 
         features = net(inputs)
         outputs = lemniscate(features, indexes)
-        all_pairs = np.array(list(combinations(range(len(indexes)), 2)))
+
         # loss = criterion(outputs, indexes)
-        loss = criterion(features[all_pairs[:, 0]], features[all_pairs[:, 1]], torch.Tensor([-1] * len(all_pairs)).cuda() )
+        all_pairs = np.array(list(combinations(range(len(indexes)), 2)))
+        # all_pairs = np.array([(2*i, 2*i+1) for i in range( math.floor(len(labels) / 2) )])
+        loss = criterion(
+                features[all_pairs[:, 0]],
+                features[all_pairs[:, 1]],
+                torch.Tensor([-1] * len(all_pairs)).cuda()
+        )
 
         with torch.no_grad():
-            pass
-            # os = myLemniscate(features, indexes)
-            # myLoss = myCriterion(os, indexes)
-            # train_myLoss.update(myLoss.item(), inputs.size(0))
+            # pass
+            os = myLemniscate(features, indexes)
+            myLoss = myCriterion(os, indexes)
+            train_myLoss.update(myLoss.item(), inputs.size(0))
 
         loss.backward()
         optimizer.step()
