@@ -171,7 +171,7 @@ def train(epoch):
         outputs = lemniscate(features, indexes)
         all_pairs = np.array(list(combinations(range(len(indexes)), 2)))
         # loss = criterion(outputs, indexes)
-        loss = criterion(features[all_pairs[:, 0]], features[all_pairs[:, 1]], torch.Tensor([-1] * len(all_pairs)) )
+        loss = criterion(features[all_pairs[:, 0]], features[all_pairs[:, 1]], torch.Tensor([-1] * len(all_pairs)).cuda() )
 
         with torch.no_grad():
             pass
