@@ -120,7 +120,8 @@ if hasattr(lemniscate, 'K'):
     criterion = NCECriterion(ndata)
 else:
     # criterion = nn.CrossEntropyLoss()
-    criterion = OnlineContrastiveLoss(args.margin, AllNegativePairSelector())
+    # criterion = OnlineContrastiveLoss(args.margin, AllNegativePairSelector())
+    criterion = nn.CosineEmbeddingLoss(args.margin)
 
 net.to(device)
 lemniscate.to(device)
@@ -167,7 +168,9 @@ def train(epoch):
 
         features = net(inputs)
         outputs = lemniscate(features, indexes)
-        loss = criterion(outputs, indexes)
+        all_pairs = np.array(list(combinations(range(len(indexes)), 2)))
+        # loss = criterion(outputs, indexes)
+        loss = criterion(features[all_pairs[:, 0]], features[all_pairs[:, 1]], torch.Tensor([-1] * len(all_pairs)) )
 
         with torch.no_grad():
             pass
