@@ -77,14 +77,14 @@ trainset = datasets.CIFAR10Instance(root='./data', train=True, download=True, tr
 # trainset = datasets.CIFAR100Instance(root='./data', train=True, download=True, transform=transform_train)
 # train_batch_sampler = BalancedBatchSampler_CIFAR(trainset.indices, n_classes=10*25, n_samples=1)
 # trainloader = torch.utils.data.DataLoader(trainset, batch_sampler = train_batch_sampler, num_workers=2, pin_memory = True)
-trainloader = torch.utils.data.DataLoader(trainset, batch_size=128*1, shuffle=True, num_workers=2)
+trainloader = torch.utils.data.DataLoader(trainset, batch_size=128*4, shuffle=True, num_workers=2)
 
 testset = datasets.CIFAR10Instance(root='./data', train=False, download=True, transform=transform_test)
 # testset.init()
 # testset = datasets.CIFAR100Instance(root='./data', train=False, download=True, transform=transform_test)
 # test_batch_sampler = BalancedBatchSampler_CIFAR(testset.indices, n_classes=10*25, n_samples=1)
 # testloader = torch.utils.data.DataLoader(testset, batch_sampler = test_batch_sampler, num_workers=2, pin_memory = True)
-testloader = torch.utils.data.DataLoader(testset, batch_size=100*1, shuffle=False, num_workers=2)
+testloader = torch.utils.data.DataLoader(testset, batch_size=100*4, shuffle=False, num_workers=2)
 
 classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
 ndata = trainset.__len__()
@@ -171,8 +171,8 @@ def train(epoch):
         outputs = lemniscate(features, indexes)
 
         # loss = criterion(outputs, indexes)
-        # all_pairs = np.array(list(combinations(range(len(indexes)), 2)))
-        all_pairs = np.array([(2*i, 2*i+1) for i in range( math.floor(len(indexes) / 2) )])
+        all_pairs = np.array(list(combinations(range(len(indexes)), 2)))
+        # all_pairs = np.array([(2*i, 2*i+1) for i in range( math.floor(len(indexes) / 2) )])
         loss = criterion(
                 features[all_pairs[:, 0]],
                 features[all_pairs[:, 1]],
