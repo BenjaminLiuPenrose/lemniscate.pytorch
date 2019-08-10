@@ -1,5 +1,6 @@
 '''Train CIFAR100 with PyTorch.'''
 from __future__ import print_function
+from itertools import combinations
 
 import sys
 import torch
