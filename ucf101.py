@@ -27,7 +27,7 @@ from lib.NCEAverage import NCEAverage
 from lib.LinearAverage import LinearAverage, LinearAverageWithWeights
 from lib.NCECriterion import NCECriterion
 from lib.utils import AverageMeter
-from test import NN, kNN
+from test import NN, kNN, kNN_ucf101
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "0,1"
 parser = argparse.ArgumentParser(description='PyTorch UCF101 Training')
@@ -230,7 +230,7 @@ def train(epoch):
 
 for epoch in range(start_epoch, start_epoch+100):
     train(epoch)
-    acc = kNN(epoch, net, lemniscate, trainloader, testloader, 200, args.nce_t, 0)
+    acc = kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, 200, args.nce_t, 0)
 
     if acc > best_acc:
         print('Saving..')
@@ -250,5 +250,5 @@ for epoch in range(start_epoch, start_epoch+100):
 
     print('best accuracy: {:.2f}'.format(best_acc*100))
 
-acc = kNN(0, net, lemniscate, trainloader, testloader, 200, args.nce_t, 1)
+acc = kNN_ucf101(0, net, lemniscate, trainloader, testloader, 200, args.nce_t, 1)
 print('last accuracy: {:.2f}'.format(acc*100))
