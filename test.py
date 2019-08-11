@@ -166,10 +166,6 @@ def kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, K, sigma, recomp
     else:
         trainLabels = torch.LongTensor(trainloader.dataset.targets).cuda()
     C = trainLabels.max() + 1
-    # print(C.cpu())
-    # print(C.shape)
-    # print(C.cpu().data)
-    # print(int(C.data))
 
     if recompute_memory:
         transform_bak = trainloader.dataset.transform
@@ -188,7 +184,7 @@ def kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, K, sigma, recomp
     top5 = 0.
     end = time.time()
     with torch.no_grad():
-        retrieval_one_hot = torch.zeros(2 * K, C).cuda()
+        retrieval_one_hot = torch.zeros(K, C).cuda()
 
         for batch_idx, (inputs, targets, indexes) in enumerate(testloader):
             end = time.time()
@@ -211,11 +207,7 @@ def kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, K, sigma, recomp
                 norm = x.pow(2).sum(1, keepdim = True).pow(1./2)
                 print("norm of feature vector ", [n.item() for n in norm][:5] )
 
-            # print("debug", batchSize, K)
-            # print(int(C.data) )
-            # print(retrieval_one_hot.shape)
-
-            # retrieval_one_hot.resize_(batchSize * K, int(C.data) ).zero_()
+            retrieval_one_hot.resize_(batchSize * K, C ).zero_()
             retrieval_one_hot.scatter_(1, retrieval.view(-1, 1), 1)
             yd_transform = yd.clone().div_(sigma).exp_()
             probs = torch.sum(torch.mul(retrieval_one_hot.view(batchSize, -1 , C), yd_transform.view(batchSize, -1, 1)), 1)
@@ -223,8 +215,8 @@ def kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, K, sigma, recomp
 
             # Find which predictions match the target
             correct = predictions.eq(targets.data.view(-1,1))
-            print("="*50, predictions)
-            print("="*50, targets)
+            # print("="*50, predictions)
+            # print("="*50, targets)
             cls_time.update(time.time() - end)
 
             top1 = top1 + correct.narrow(1,0,1).sum().item()
