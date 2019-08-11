@@ -92,8 +92,8 @@ ndata = trainset.__len__()
 
 print('==> Building model..')
 # net = models.__dict__['ResNet18'](low_dim=args.low_dim)
-# net = EmbeddingNet()
-snet = SiameseNet(EmbeddingNet())
+net = EmbeddingNet()
+snet = SiameseNet(net)
 
 # define lemniscate
 if args.nce_k > 0:
