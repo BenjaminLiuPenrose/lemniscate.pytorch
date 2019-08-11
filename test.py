@@ -121,8 +121,6 @@ def kNN(epoch, net, lemniscate, trainloader, testloader, K, sigma, recompute_mem
                 norm = x.pow(2).sum(1, keepdim = True).pow(1./2)
                 print("norm of feature vector ", [n.item() for n in norm][:5] )
 
-            print("debug", batchSize, K, C)
-            time.sleep(30)
             retrieval_one_hot.resize_(batchSize * K, C).zero_()
             retrieval_one_hot.scatter_(1, retrieval.view(-1, 1), 1)
             yd_transform = yd.clone().div_(sigma).exp_()
@@ -206,7 +204,8 @@ def kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, K, sigma, recomp
                 norm = x.pow(2).sum(1, keepdim = True).pow(1./2)
                 print("norm of feature vector ", [n.item() for n in norm][:5] )
 
-
+            print("debug", batchSize, K, C)
+            time.sleep(30)
             retrieval_one_hot.resize_(batchSize * K, C).zero_()
             retrieval_one_hot.scatter_(1, retrieval.view(-1, 1), 1)
             yd_transform = yd.clone().div_(sigma).exp_()
