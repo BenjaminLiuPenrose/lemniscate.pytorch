@@ -215,8 +215,8 @@ def kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, K, sigma, recomp
 
             # Find which predictions match the target
             correct = predictions.eq(targets.data.view(-1,1))
-            # print("="*50, predictions)
-            # print("="*50, targets)
+            print("="*50, predictions)
+            print("="*50, targets)
             cls_time.update(time.time() - end)
 
             top1 = top1 + correct.narrow(1,0,1).sum().item()
