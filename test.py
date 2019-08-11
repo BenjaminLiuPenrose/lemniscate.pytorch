@@ -187,6 +187,7 @@ def kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, K, sigma, recomp
     end = time.time()
     with torch.no_grad():
         retrieval_one_hot = torch.zeros(K, C).cuda()
+        st()
 
         for batch_idx, (inputs, targets, indexes) in enumerate(testloader):
             end = time.time()
