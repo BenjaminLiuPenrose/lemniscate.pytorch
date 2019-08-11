@@ -91,8 +91,8 @@ classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship'
 ndata = trainset.__len__()
 
 print('==> Building model..')
-net = models.__dict__['ResNet18'](low_dim=args.low_dim)
-# embedding_net = EmbeddingNet()
+# net = models.__dict__['ResNet18'](low_dim=args.low_dim)
+embedding_net = EmbeddingNet()
 snet = SiameseNet(net)
 
 # define lemniscate
