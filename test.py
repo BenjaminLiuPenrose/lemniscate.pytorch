@@ -186,7 +186,7 @@ def kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, K, sigma, recomp
     end = time.time()
     with torch.no_grad():
         retrieval_one_hot = torch.zeros(K, C).cuda()
-        print(len(testloader))
+
         for batch_idx, (inputs, targets, indexes) in enumerate(testloader):
             end = time.time()
             targets = targets.cuda(non_blocking=True)
@@ -209,7 +209,8 @@ def kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, K, sigma, recomp
                 print("norm of feature vector ", [n.item() for n in norm][:5] )
 
 
-            print("debug", batchSize, K, int(C.data) )
+            print("debug", batchSize, K)
+            # print(int(C.data) )
 
             retrieval_one_hot.resize_(batchSize * K, int(C.data) ).zero_()
             retrieval_one_hot.scatter_(1, retrieval.view(-1, 1), 1)
