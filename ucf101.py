@@ -228,8 +228,8 @@ def train(epoch):
               'Loss: {train_loss.val:.4f} ({train_loss.avg:.4f})'.format(
               epoch, batch_idx, len(trainloader), batch_time=batch_time, data_time=data_time, train_loss=train_loss))
 
-        # if batch_idx >= 100:
-        #     break
+        if batch_idx >= 100:
+            break
 
 for epoch in range(start_epoch, start_epoch+100):
     train(epoch)

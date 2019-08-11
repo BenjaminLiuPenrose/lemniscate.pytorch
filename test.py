@@ -201,7 +201,7 @@ def kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, K, sigma, recomp
             dist = torch.mm(features, trainFeatures)
             yd, yi = dist.topk(K, dim=1, largest=True, sorted=True)
             candidates = trainLabels.view(1,-1).expand(batchSize, -1)
-            st()
+            # st()
             retrieval = torch.gather(candidates, 1, yi)
             if batch_idx == len(testloader) - 1:
                 x = retrieval
@@ -211,7 +211,6 @@ def kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, K, sigma, recomp
                 norm = x.pow(2).sum(1, keepdim = True).pow(1./2)
                 print("norm of feature vector ", [n.item() for n in norm][:5] )
 
-            st()
             # print("debug", batchSize, K)
             # print(int(C.data) )
             # print(retrieval_one_hot.shape)
