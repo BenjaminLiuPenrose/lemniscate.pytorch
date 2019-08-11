@@ -105,7 +105,7 @@ def kNN(epoch, net, lemniscate, trainloader, testloader, K, sigma, recompute_mem
             end = time.time()
             targets = targets.cuda(non_blocking=True)
             batchSize = inputs.size(0)
-            print(batchSize)
+            print("+"8100, batchSize)
             features = net(inputs)
             net_time.update(time.time() - end)
             end = time.time()
