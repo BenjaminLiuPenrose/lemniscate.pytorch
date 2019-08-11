@@ -221,6 +221,7 @@ def kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, K, sigma, recomp
                 print("norm of feature vector ", [n.item() for n in norm][:5] )
                 print("="*50, predictions, predictions.shape)
                 print("="*50, targets, targets.shape)
+                st()
                 print(correct)
             cls_time.update(time.time() - end)
 
