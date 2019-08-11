@@ -50,7 +50,7 @@ parser.add_argument('--annotation_path', '-anno',
                     default='./data/UCF-101-Annotate/UCF101_Action_detection_splits/',
                     type=str, help='annotation path')
 parser.add_argument('--norm_value', default=255, type=int, help='Divide inputs by 255 or 1')
-parser.add_argument('--sample_duration', default=50, type=int, help='Temporal duration of inputs')
+parser.add_argument('--sample_duration', default=32, type=int, help='Temporal duration of inputs')
 parser.add_argument('--spatial_size', default=224, type=int, help='Height and width of inputs')
 parser.add_argument('--initial_scale', default=1.0, type=float, help='Initial scale for multiscale cropping')
 parser.add_argument('--num_scales', default=5, type=int, help='Number of scales for multiscale cropping')
@@ -112,6 +112,7 @@ trainset = datasets.UCF101Instance(
             spatial_transform=transform_train["spatial"],
             temporal_transform=transform_train["temporal"],
             target_transform=transform_train["target"],
+            sample_duration = args.sample_duration
             )
 trainloader = torch.utils.data.DataLoader(trainset, batch_size=4, shuffle=False, num_workers=2)
 # trainset = datasets.CIFAR100Instance(root='./data', train=True, download=True, transform=transform_train)
@@ -125,6 +126,7 @@ testset = datasets.UCF101Instance(
             spatial_transform=transform_test["spatial"],
             temporal_transform=transform_test["temporal"],
             target_transform=transform_test["target"],
+            sample_duration = args.sample_duration
             )
 testloader = torch.utils.data.DataLoader(testset, batch_size=4, shuffle=False, num_workers=2)
 # testset = datasets.CIFAR100Instance(root='./data', train=False, download=True, transform=transform_test)

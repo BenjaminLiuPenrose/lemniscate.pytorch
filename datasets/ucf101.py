@@ -151,7 +151,6 @@ def make_dataset(root_path, annotation_path, subset, n_samples_for_each_video,
             sample_j['frame_indices'] = list(
                 range(j, min(n_frames + 1, j + sample_duration), step))
             dataset.append(sample_j)
-            print(len(sample_j['frame_indices']))
 
 
     return dataset, targets
@@ -178,12 +177,12 @@ class UCF101Instance(data.Dataset):
                  root_path,
                  annotation_path,
                  subset,
-                 n_samples_for_each_video=10,
+                 n_samples_for_each_video=1,
                  transform = None,
                  spatial_transform=None,
                  temporal_transform=None,
                  target_transform=None,
-                 sample_duration=50, #16
+                 sample_duration=16, #16
                  get_loader=get_default_video_loader):
         # self.data, self.class_names = make_dataset(
         #     root_path, annotation_path, subset, n_samples_for_each_video,
