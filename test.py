@@ -100,7 +100,7 @@ def kNN(epoch, net, lemniscate, trainloader, testloader, K, sigma, recompute_mem
     top5 = 0.
     end = time.time()
     with torch.no_grad():
-        retrieval_one_hot = torch.zeros( K, C).cuda()
+        retrieval_one_hot = torch.zeros(K, C).cuda()
         for batch_idx, (inputs, targets, indexes) in enumerate(testloader):
             end = time.time()
             targets = targets.cuda(non_blocking=True)
@@ -123,7 +123,7 @@ def kNN(epoch, net, lemniscate, trainloader, testloader, K, sigma, recompute_mem
                 print("norm of feature vector ", [n.item() for n in norm][:5] )
 
             print("+"*100, retrieval_one_hot.shape, batchSize * K, K, C)
-            # retrieval_one_hot.resize_(batchSize * K, C).zero_()
+            retrieval_one_hot.resize_(batchSize * K, C).zero_()
             retrieval_one_hot.scatter_(1, retrieval.view(-1, 1), 1)
             yd_transform = yd.clone().div_(sigma).exp_()
             probs = torch.sum(torch.mul(retrieval_one_hot.view(batchSize, -1 , C), yd_transform.view(batchSize, -1, 1)), 1)
