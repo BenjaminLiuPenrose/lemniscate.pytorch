@@ -91,9 +91,9 @@ classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship'
 ndata = trainset.__len__()
 
 print('==> Building model..')
-# net = models.__dict__['ResNet18'](low_dim=args.low_dim)
-net = EmbeddingNet()
-snet = SiameseNet(net)
+net = models.__dict__['ResNet18'](low_dim=args.low_dim)
+# net = EmbeddingNet()
+# snet = SiameseNet(net)
 
 # define lemniscate
 if args.nce_k > 0:
@@ -105,7 +105,7 @@ else:
 metrics = []
 
 if device == 'cuda':
-    snet = torch.nn.DataParallel(snet, device_ids=range(torch.cuda.device_count()))
+    net = torch.nn.DataParallel(net, device_ids=range(torch.cuda.device_count()))
     cudnn.benchmark = True
 
 # Model
@@ -169,18 +169,19 @@ def train(epoch):
     for batch_idx, (inputs, targets, indexes) in enumerate(trainloader):
         data_time.update(time.time() - end)
 
-        all_pairs = np.array(list(combinations(range(len(indexes)), 2)))
+        # all_pairs = np.array(list(combinations(range(len(indexes)), 2)))
+        all_pairs = np.array([(2*i, 2*i+1) for i in range( math.floor(len(indexes) / 2) )])
         inputs, targets, indexes = inputs.to(device), targets.to(device), indexes.to(device)
         inputs_1 = inputs[all_pairs[:, 0]]
         inputs_2 = inputs[all_pairs[:, 1]]
         optimizer.zero_grad()
 
-        features_1, features_2 = snet(inputs_1, inputs_2)
+        features_1 = net(inputs_1)
+        features_2 = net(inputs_2)
         outputs = lemniscate(features_1, features_2, indexes[all_pairs[:, 0]])
 
         # loss = criterion(outputs, indexes)
 
-        # all_pairs = np.array([(2*i, 2*i+1) for i in range( math.floor(len(indexes) / 2) )])
         loss = criterion(
                 features_1,
                 features_2,
