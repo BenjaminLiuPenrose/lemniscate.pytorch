@@ -7,6 +7,7 @@ import numpy as np
 import torch.nn.functional as F
 from utils.losses import OnlineContrastiveLoss
 from utils.utils import AllPositivePairSelector, HardNegativePairSelector, AllNegativePairSelector # Strategies for selecting pairs within a minibatch
+from pdb import set_trace as st
 
 def NN(epoch, net, lemniscate, trainloader, testloader, recompute_memory=0, async_bank = False):
     net.eval()
@@ -213,6 +214,7 @@ def kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, K, sigma, recomp
             # print(int(C.data) )
             print(retrieval_one_hot.shape)
 
+            st()
             retrieval_one_hot.resize_(batchSize * K, int(C.data) ).zero_()
             retrieval_one_hot.scatter_(1, retrieval.view(-1, 1), 1)
             yd_transform = yd.clone().div_(sigma).exp_()
