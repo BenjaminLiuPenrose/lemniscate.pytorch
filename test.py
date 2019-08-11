@@ -198,12 +198,11 @@ def kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, K, sigma, recomp
             end = time.time()
 
             dist = torch.mm(features, trainFeatures)
-            st()
             yd, yi = dist.topk(K, dim=1, largest=True, sorted=True)
             candidates = trainLabels.view(1,-1).expand(batchSize, -1)
             st()
             retrieval = torch.gather(candidates, 1, yi)
-            if batch_idx == 0:
+            if batch_idx == len():
                 x = retrieval
                 norm = x.pow(2).sum(1, keepdim = True).pow(1./2)
                 print("norm of memory bank ", [n.item() for n in norm][:5] )
