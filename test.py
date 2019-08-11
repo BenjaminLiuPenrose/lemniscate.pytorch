@@ -163,7 +163,8 @@ def kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, K, sigma, recomp
     else:
         trainLabels = torch.LongTensor(trainloader.dataset.targets).cuda()
     C = trainLabels.max() + 1
-    print(C.cpu())
+    # print(C.cpu())
+    print(C.shape)
 
     if recompute_memory:
         transform_bak = trainloader.dataset.transform
@@ -208,7 +209,6 @@ def kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, K, sigma, recomp
 
             print("debug", batchSize, K )
             # print(int(C.cpu().numpy()))
-            print(C.shape)
 
             # retrieval_one_hot.resize_(batchSize * K, int(C.data) ).zero_()
             # retrieval_one_hot.scatter_(1, retrieval.view(-1, 1), 1)
@@ -222,8 +222,8 @@ def kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, K, sigma, recomp
             # print("="*50, targets)
             cls_time.update(time.time() - end)
 
-            top1 = top1 + correct.narrow(1,0,1).sum().item()
-            top5 = top5 + correct.narrow(1,0,5).sum().item()
+            # top1 = top1 + correct.narrow(1,0,1).sum().item()
+            # top5 = top5 + correct.narrow(1,0,5).sum().item()
 
             # total += targets.size(0)
 
