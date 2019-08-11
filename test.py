@@ -115,13 +115,6 @@ def kNN(epoch, net, lemniscate, trainloader, testloader, K, sigma, recompute_mem
             candidates = trainLabels.view(1,-1).expand(batchSize, -1)
             # st()
             retrieval = torch.gather(candidates, 1, yi)
-            if batch_idx == len(testloader) - 1:
-                x = retrieval
-                norm = x.pow(2).sum(1, keepdim = True).pow(1./2)
-                print("norm of memory bank ", [n.item() for n in norm][:5] )
-                x = features
-                norm = x.pow(2).sum(1, keepdim = True).pow(1./2)
-                print("norm of feature vector ", [n.item() for n in norm][:5] )
 
             # print("+"*100, retrieval_one_hot.shape, batchSize * K, K, C)
             retrieval_one_hot.resize_(batchSize * K, C).zero_()
@@ -132,6 +125,18 @@ def kNN(epoch, net, lemniscate, trainloader, testloader, K, sigma, recompute_mem
 
             # Find which predictions match the target
             correct = predictions.eq(targets.data.view(-1,1))
+
+            if batch_idx == len(testloader) - 1:
+                x = retrieval
+                norm = x.pow(2).sum(1, keepdim = True).pow(1./2)
+                print("norm of memory bank ", [n.item() for n in norm][:5] )
+                x = features
+                norm = x.pow(2).sum(1, keepdim = True).pow(1./2)
+                print("norm of feature vector ", [n.item() for n in norm][:5] )
+                print("="*50, predictions, predictions.shape)
+                print("="*50, targets, targets.shape)
+                print(correct)
+                            
             cls_time.update(time.time() - end)
 
             top1 = top1 + correct.narrow(1,0,1).sum().item()
