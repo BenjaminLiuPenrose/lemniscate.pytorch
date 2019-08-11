@@ -103,7 +103,9 @@ def make_dataset(root_path, annotation_path, subset, n_samples_for_each_video,
 
 
     dataset = []
+    targets = []
     for i in range(len(video_names)):
+        targets.append( class_to_idx[ video_names[i].split("/")[0] ]  )
         if i % 1000 == 0:
             print('dataset loading [{}/{}]'.format(i, len(video_names)))
 
@@ -146,7 +148,7 @@ def make_dataset(root_path, annotation_path, subset, n_samples_for_each_video,
                     range(j, min(n_frames + 1, j + sample_duration)))
                 dataset.append(sample_j)
 
-    return dataset, idx_to_class
+    return dataset, targets
 
 
 class UCF101Instance(data.Dataset):
