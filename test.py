@@ -207,7 +207,7 @@ def kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, K, sigma, recomp
 
 
             print("debug", batchSize, K )
-            print(int(C.data))
+            print(int(C.cpu().numpy()))
             time.sleep(30)
             retrieval_one_hot.resize_(batchSize * K, int(C.data) ).zero_()
             retrieval_one_hot.scatter_(1, retrieval.view(-1, 1), 1)
