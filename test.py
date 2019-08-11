@@ -219,10 +219,9 @@ def kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, K, sigma, recomp
                 x = features
                 norm = x.pow(2).sum(1, keepdim = True).pow(1./2)
                 print("norm of feature vector ", [n.item() for n in norm][:5] )
-                print("="*50, predictions, predictions.shape)
-                print("="*50, targets, targets.shape)
-                st()
-                print(correct)
+                # print("="*50, predictions, predictions.shape)
+                # print("="*50, targets, targets.shape)
+                # st()
             cls_time.update(time.time() - end)
 
             top1 = top1 + correct.narrow(1,0,1).sum().item()
