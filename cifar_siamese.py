@@ -1,6 +1,7 @@
 '''Train CIFAR100 with PyTorch.'''
 from __future__ import print_function
 from itertools import combinations
+from models.networks import EmbeddingNet, SiameseNet
 
 import sys
 import torch
@@ -91,6 +92,9 @@ ndata = trainset.__len__()
 
 print('==> Building model..')
 net = models.__dict__['ResNet18'](low_dim=args.low_dim)
+# embedding_net = EmbeddingNet()
+snet = SiameseNet(embedding_net)
+
 # define lemniscate
 if args.nce_k > 0:
     assert False
@@ -132,7 +136,7 @@ if args.test_only:
     acc = kNN(0, net, lemniscate, trainloader, testloader, 200, args.nce_t, 1, async_bank = True)
     sys.exit(0)
 
-optimizer = optim.SGD(list(net.parameters())+list(lemniscate.parameters()), lr=args.lr, momentum=0.9, weight_decay=5e-4)
+optimizer = optim.SGD(net.parameters(), lr=args.lr, momentum=0.9, weight_decay=5e-4)
 # optimizer = optim.SGD(list(net.parameters())+list(lemniscate.parameters()), lr=args.lr, momentum=0.9, weight_decay=5e-4)
 
 def adjust_learning_rate(optimizer, epoch):
@@ -164,27 +168,30 @@ def train(epoch):
     end = time.time()
     for batch_idx, (inputs, targets, indexes) in enumerate(trainloader):
         data_time.update(time.time() - end)
+
+        all_pairs = np.array(list(combinations(range(len(indexes)), 2)))
         inputs, targets, indexes = inputs.to(device), targets.to(device), indexes.to(device)
+        inputs_1 = inputs[all_pairs[:, 0]]
+        inputs_2 = inputs[all_pairs[:, 1]]
         optimizer.zero_grad()
 
-        features = net(inputs)
-        outputs = lemniscate(features, indexes)
+        features_1, features_2 = snet(inputs_1, inputs_2)
+        outputs = lemniscate(features_1, features_2, indexes[all_pairs[:, 0]])
 
         # loss = criterion(outputs, indexes)
-        all_pairs = np.array(list(combinations(range(len(indexes)), 2)))
+
         # all_pairs = np.array([(2*i, 2*i+1) for i in range( math.floor(len(indexes) / 2) )])
         loss = criterion(
-                features[all_pairs[:, 0]],
-                features[all_pairs[:, 1]],
+                features_1,
+                features_2,
                 torch.Tensor([-1] * len(all_pairs)).cuda()
         )
-        print(loss.shape)
 
         with torch.no_grad():
-            # pass
-            os = myLemniscate(features, indexes)
-            myLoss = myCriterion(os, indexes)
-            train_myLoss.update(myLoss.item(), inputs.size(0))
+            pass
+            # os = myLemniscate(features, indexes)
+            # myLoss = myCriterion(os, indexes)
+            # train_myLoss.update(myLoss.item(), inputs.size(0))
 
         loss.backward()
         optimizer.step()

@@ -152,7 +152,7 @@ class LinearAverageWithoutWeights(nn.Module):
         self.register_buffer('memory2', torch.rand(outputSize, inputSize).mul_(2*stdv).add_(-stdv))
         self.params = nn.Parameter(torch.tensor([T, momentum]), requires_grad = False)
 
-    def forward(self, x, y):
+    def forward(self, x1, x2, y):
         T = self.params[0].item()
         momentum = self.params[1].item()
 
@@ -162,7 +162,7 @@ class LinearAverageWithoutWeights(nn.Module):
         # out = torch.mm(x, F.normalize(self.weights).t() )
         # out = torch.mm(x, self.weights.t() )
 
-        out = x
+        out = (x1, x2)
 
         with torch.no_grad():
             weight_pos = self.memory.index_select(0, y.data.view(-1))
