@@ -142,12 +142,13 @@ def make_dataset(root_path, annotation_path, subset, n_samples_for_each_video,
                                      (n_samples_for_each_video - 1)))
             else:
                 step = sample_duration
-            for j in range(1, n_frames, step):
-                sample_j = copy.deepcopy(sample)
-                sample_j['frame_indices'] = list(
-                    range(j, min(n_frames + 1, j + sample_duration)))
-                dataset.append(sample_j)
-                break
+            # for j in range(1, n_frames, step):
+            j = 1
+            sample_j = copy.deepcopy(sample)
+            sample_j['frame_indices'] = list(
+                range(j, min(n_frames + 1, j + sample_duration), step))
+            dataset.append(sample_j)
+
 
     return dataset, targets
 

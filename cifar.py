@@ -148,7 +148,7 @@ def train(epoch):
     for batch_idx, (inputs, targets, indexes) in enumerate(trainloader):
         data_time.update(time.time() - end)
         inputs, targets, indexes = inputs.to(device), targets.to(device), indexes.to(device)
-        print("="*50, inputs.shape, targets.shape, indexes.shape)
+        # print("="*50, inputs.shape, targets.shape, indexes.shape)
         optimizer.zero_grad()
 
         features = net(inputs)
