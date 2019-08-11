@@ -217,7 +217,7 @@ def kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, K, sigma, recomp
             probs = torch.sum(torch.mul(retrieval_one_hot.view(batchSize, -1 , C), yd_transform.view(batchSize, -1, 1)), 1)
             _, predictions = probs.sort(1, True)
 
-            Find which predictions match the target
+            # Find which predictions match the target
             correct = predictions.eq(targets.data.view(-1,1))
             print("="*50, predictions)
             print("="*50, targets)
