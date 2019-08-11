@@ -226,7 +226,6 @@ def kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, K, sigma, recomp
 
             top1 = top1 + correct.narrow(1,0,1).sum().item()
             top5 = top5 + correct.narrow(1,0,5).sum().item()
-            print("-"*50, correct.narrow(1,0,1).sum().item(), correct.narrow(1,0,5).sum().item())
 
             total += targets.size(0)
 
