@@ -1,5 +1,7 @@
 import torch.nn as nn
 import torch.nn.functional as F
+from lib.normalize import Normalize
+
 
 
 class EmbeddingNet(nn.Module):
