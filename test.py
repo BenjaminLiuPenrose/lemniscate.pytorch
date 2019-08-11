@@ -165,6 +165,7 @@ def kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, K, sigma, recomp
     C = trainLabels.max() + 1
     print(C.cpu())
     print(C.shape)
+    print(C.data)
 
     # if recompute_memory:
     #     transform_bak = trainloader.dataset.transform
