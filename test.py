@@ -215,7 +215,7 @@ def kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, K, sigma, recomp
             # print(int(C.data) )
             print(retrieval_one_hot.shape)
 
-            retrieval_one_hot.resize_(batchSize * K, int(C.data) ).zero_()
+            # retrieval_one_hot.resize_(batchSize * K, int(C.data) ).zero_()
             retrieval_one_hot.scatter_(1, retrieval.view(-1, 1), 1)
             yd_transform = yd.clone().div_(sigma).exp_()
             probs = torch.sum(torch.mul(retrieval_one_hot.view(batchSize, -1 , C), yd_transform.view(batchSize, -1, 1)), 1)
