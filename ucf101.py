@@ -119,7 +119,7 @@ trainloader = torch.utils.data.DataLoader(trainset, batch_size=2, shuffle=False,
 testset = datasets.UCF101Instance(
             args.video_path,
             args.annotation_path,
-            'testing',
+            'validation',
             # transform = transform_test,
             spatial_transform=transform_test["spatial"],
             temporal_transform=transform_test["temporal"],
