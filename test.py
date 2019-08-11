@@ -209,23 +209,23 @@ def kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, K, sigma, recomp
             print("debug", batchSize, K )
             # print(int(C.cpu().numpy()))
             print(C.shape)
-            time.sleep(30)
+
             # retrieval_one_hot.resize_(batchSize * K, int(C.data) ).zero_()
             # retrieval_one_hot.scatter_(1, retrieval.view(-1, 1), 1)
-            yd_transform = yd.clone().div_(sigma).exp_()
-            probs = torch.sum(torch.mul(retrieval_one_hot.view(batchSize, -1 , C), yd_transform.view(batchSize, -1, 1)), 1)
-            _, predictions = probs.sort(1, True)
+            # yd_transform = yd.clone().div_(sigma).exp_()
+            # probs = torch.sum(torch.mul(retrieval_one_hot.view(batchSize, -1 , C), yd_transform.view(batchSize, -1, 1)), 1)
+            # _, predictions = probs.sort(1, True)
 
             # Find which predictions match the target
-            correct = predictions.eq(targets.data.view(-1,1))
-            print("="*50, predictions)
-            print("="*50, targets)
+            # correct = predictions.eq(targets.data.view(-1,1))
+            # print("="*50, predictions)
+            # print("="*50, targets)
             cls_time.update(time.time() - end)
 
             top1 = top1 + correct.narrow(1,0,1).sum().item()
             top5 = top5 + correct.narrow(1,0,5).sum().item()
 
-            total += targets.size(0)
+            # total += targets.size(0)
 
             # print(predictions.)
 
