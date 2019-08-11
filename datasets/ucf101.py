@@ -22,7 +22,6 @@ def pil_loader(path):
         with Image.open(f) as img:
             return img.convert('RGB')
 
-
 def accimage_loader(path):
     try:
         import accimage
@@ -98,7 +97,7 @@ def make_dataset(root_path, annotation_path, subset, n_samples_for_each_video,
     class_to_idx = get_class_labels(data)
     # idx_to_class = {}
     # for name, label in class_to_idx.items():
-    #     idx_to_class[label] = name
+    #     idx_to_class[label] = nam
     idx_to_class = get_labels_class(data)
 
 
@@ -151,6 +150,7 @@ def make_dataset(root_path, annotation_path, subset, n_samples_for_each_video,
             sample_j['frame_indices'] = list(
                 range(j, min(n_frames + 1, j + sample_duration), step))
             dataset.append(sample_j)
+            print(len(sample_j['frame_indices']))
 
 
     return dataset, targets
