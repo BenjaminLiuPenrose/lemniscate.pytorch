@@ -227,13 +227,11 @@ def kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, K, sigma, recomp
 
             # total += targets.size(0)
 
-            # print(predictions.)
-
-            print('Test [{}/{}]\t'
-                  'Net Time {net_time.val:.3f} ({net_time.avg:.3f})\t'
-                  'Cls Time {cls_time.val:.3f} ({cls_time.avg:.3f})\t'
-                  'Top1: {:.2f}  Top5: {:.2f}'.format(
-                  total, testsize, top1*100./total, top5*100./total, net_time=net_time, cls_time=cls_time))
+            # print('Test [{}/{}]\t'
+            #       'Net Time {net_time.val:.3f} ({net_time.avg:.3f})\t'
+            #       'Cls Time {cls_time.val:.3f} ({cls_time.avg:.3f})\t'
+            #       'Top1: {:.2f}  Top5: {:.2f}'.format(
+            #       total, testsize, top1*100./total, top5*100./total, net_time=net_time, cls_time=cls_time))
 
 
     print(top1*100./(total + 1e-8), total, top1 )
