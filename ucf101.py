@@ -114,7 +114,7 @@ trainset = datasets.UCF101Instance(
             target_transform=transform_train["target"],
             sample_duration = args.sample_duration
             )
-trainloader = torch.utils.data.DataLoader(trainset, batch_size=4, shuffle=False, num_workers=2)
+trainloader = torch.utils.data.DataLoader(trainset, batch_size=8, shuffle=False, num_workers=2)
 # trainset = datasets.CIFAR100Instance(root='./data', train=True, download=True, transform=transform_train)
 # trainloader = torch.utils.data.DataLoader(trainset, batch_size=128, shuffle=True, num_workers=2)
 
@@ -128,7 +128,7 @@ testset = datasets.UCF101Instance(
             target_transform=transform_test["target"],
             sample_duration = args.sample_duration
             )
-testloader = torch.utils.data.DataLoader(testset, batch_size=4, shuffle=False, num_workers=2)
+testloader = torch.utils.data.DataLoader(testset, batch_size=8, shuffle=False, num_workers=2)
 # testset = datasets.CIFAR100Instance(root='./data', train=False, download=True, transform=transform_test)
 # testloader = torch.utils.data.DataLoader(testset, batch_size=100, shuffle=False, num_workers=2)
 
@@ -209,7 +209,7 @@ def train(epoch):
     for batch_idx, (inputs, targets, indexes) in enumerate(trainloader):
         data_time.update(time.time() - end)
         inputs, targets, indexes = inputs.to(device), targets.to(device), indexes.to(device)
-        print("="*50, inputs.shape, targets.shape, indexes.shape)
+        # print("="*50, inputs.shape, targets.shape, indexes.shape)
         optimizer.zero_grad()
 
         # print("targets: {}; indexes : {}".format(targets[:10], indexes[:10]) )
