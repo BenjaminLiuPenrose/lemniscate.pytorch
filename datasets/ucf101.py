@@ -137,9 +137,12 @@ def make_dataset(root_path, annotation_path, subset, n_samples_for_each_video,
             dataset.append(sample)
         else:
             if n_samples_for_each_video > 1:
+                # step = max(1,
+                #            math.ceil((n_frames - 1 - sample_duration) /
+                #                      (n_samples_for_each_video - 1)))
                 step = max(1,
-                           math.ceil((n_frames - 1 - sample_duration) /
-                                     (n_samples_for_each_video - 1)))
+                           math.ceil((n_frames ) /
+                                     (n_samples_for_each_video )))
             else:
                 step = sample_duration
             # for j in range(1, n_frames, step):
