@@ -105,7 +105,6 @@ def kNN(epoch, net, lemniscate, trainloader, testloader, K, sigma, recompute_mem
             end = time.time()
             targets = targets.cuda(non_blocking=True)
             batchSize = inputs.size(0)
-            print("+"*100, batchSize)
             features = net(inputs)
             net_time.update(time.time() - end)
             end = time.time()
@@ -123,6 +122,7 @@ def kNN(epoch, net, lemniscate, trainloader, testloader, K, sigma, recompute_mem
                 norm = x.pow(2).sum(1, keepdim = True).pow(1./2)
                 print("norm of feature vector ", [n.item() for n in norm][:5] )
 
+            print("+"*100, retrieval_one_hot.shape, batchSize * K, C)
             retrieval_one_hot.resize_(batchSize * K, C).zero_()
             retrieval_one_hot.scatter_(1, retrieval.view(-1, 1), 1)
             yd_transform = yd.clone().div_(sigma).exp_()
