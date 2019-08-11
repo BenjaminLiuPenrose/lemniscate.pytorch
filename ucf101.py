@@ -50,7 +50,7 @@ parser.add_argument('--annotation_path', '-anno',
                     default='./data/UCF-101-Annotate/UCF101_Action_detection_splits/',
                     type=str, help='annotation path')
 parser.add_argument('--norm_value', default=255, type=int, help='Divide inputs by 255 or 1')
-parser.add_argument('--sample_duration', default=64, type=int, help='Temporal duration of inputs')
+parser.add_argument('--sample_duration', default=50, type=int, help='Temporal duration of inputs')
 parser.add_argument('--spatial_size', default=224, type=int, help='Height and width of inputs')
 parser.add_argument('--initial_scale', default=1.0, type=float, help='Initial scale for multiscale cropping')
 parser.add_argument('--num_scales', default=5, type=int, help='Number of scales for multiscale cropping')

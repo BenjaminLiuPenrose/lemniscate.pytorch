@@ -175,12 +175,12 @@ class UCF101Instance(data.Dataset):
                  root_path,
                  annotation_path,
                  subset,
-                 n_samples_for_each_video=1,
+                 n_samples_for_each_video=10,
                  transform = None,
                  spatial_transform=None,
                  temporal_transform=None,
                  target_transform=None,
-                 sample_duration=5, #16
+                 sample_duration=50, #16
                  get_loader=get_default_video_loader):
         # self.data, self.class_names = make_dataset(
         #     root_path, annotation_path, subset, n_samples_for_each_video,
