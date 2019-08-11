@@ -17,6 +17,7 @@ import lib.custom_transforms as custom_transforms
 import os
 import argparse
 import time
+import numpy as np
 
 import models
 from models import resnet_ucf101
