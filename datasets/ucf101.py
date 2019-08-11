@@ -150,7 +150,7 @@ def make_dataset(root_path, annotation_path, subset, n_samples_for_each_video,
             sample_j['frame_indices'] = list(
                 range(j, min(n_frames + 1, j + sample_duration), step))
             dataset.append(sample_j)
-            print("="*50, len(sample_j['frame_indices']))
+            
 
 
     return dataset, targets
@@ -177,7 +177,7 @@ class UCF101Instance(data.Dataset):
                  root_path,
                  annotation_path,
                  subset,
-                 n_samples_for_each_video=8,
+                 n_samples_for_each_video=1,
                  transform = None,
                  spatial_transform=None,
                  temporal_transform=None,
@@ -211,7 +211,7 @@ class UCF101Instance(data.Dataset):
         if self.temporal_transform is not None:
             frame_indices = self.temporal_transform(frame_indices)
         clip = self.loader(path, frame_indices)
-        print("+"*50, len(frame_indices), len(clip))
+
         if self.spatial_transform is not None:
             self.spatial_transform.randomize_parameters()
             clip = [self.spatial_transform(img) for img in clip]
