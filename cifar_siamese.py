@@ -188,10 +188,11 @@ def train(epoch):
         )
 
         with torch.no_grad():
-            pass
-            # os = myLemniscate(features, indexes)
-            # myLoss = myCriterion(os, indexes)
-            # train_myLoss.update(myLoss.item(), inputs.size(0))
+            # pass
+            features = net(inputs)
+            os = myLemniscate(features, indexes)
+            myLoss = myCriterion(os, indexes)
+            train_myLoss.update(myLoss.item(), inputs.size(0))
 
         loss.backward()
         optimizer.step()
