@@ -199,14 +199,6 @@ def kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, K, sigma, recomp
             candidates = trainLabels.view(1,-1).expand(batchSize, -1)
             # st()
             retrieval = torch.gather(candidates, 1, yi)
-            if batch_idx == len(testloader) - 1:
-                x = retrieval
-                norm = x.pow(2).sum(1, keepdim = True).pow(1./2)
-                print("norm of memory bank ", [n.item() for n in norm][:5] )
-                x = features
-                norm = x.pow(2).sum(1, keepdim = True).pow(1./2)
-                print("norm of feature vector ", [n.item() for n in norm][:5] )
-
             retrieval_one_hot.resize_(batchSize * K, C ).zero_()
             retrieval_one_hot.scatter_(1, retrieval.view(-1, 1), 1)
             yd_transform = yd.clone().div_(sigma).exp_()
@@ -215,8 +207,15 @@ def kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, K, sigma, recomp
 
             # Find which predictions match the target
             correct = predictions.eq(targets.data.view(-1,1))
-            print("="*50, predictions)
-            print("="*50, targets)
+            if batch_idx == len(testloader) - 1:
+                x = retrieval
+                norm = x.pow(2).sum(1, keepdim = True).pow(1./2)
+                print("norm of memory bank ", [n.item() for n in norm][:5] )
+                x = features
+                norm = x.pow(2).sum(1, keepdim = True).pow(1./2)
+                print("norm of feature vector ", [n.item() for n in norm][:5] )
+                print("="*50, predictions)
+                print("="*50, targets)
             cls_time.update(time.time() - end)
 
             top1 = top1 + correct.narrow(1,0,1).sum().item()
