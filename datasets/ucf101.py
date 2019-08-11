@@ -216,7 +216,6 @@ class UCF101Instance(data.Dataset):
         if self.target_transform is not None:
             target = self.target_transform(target)
 
-        print(target, video_index)
         return clip, target, video_index
 
     def __len__(self):
