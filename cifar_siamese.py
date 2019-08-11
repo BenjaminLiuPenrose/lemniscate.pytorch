@@ -105,7 +105,7 @@ else:
 metrics = []
 
 if device == 'cuda':
-    net = torch.nn.DataParallel(net, device_ids=range(torch.cuda.device_count()))
+    snet = torch.nn.DataParallel(snet, device_ids=range(torch.cuda.device_count()))
     cudnn.benchmark = True
 
 # Model
