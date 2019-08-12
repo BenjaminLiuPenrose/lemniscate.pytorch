@@ -90,7 +90,7 @@ transform_train = {
                         ToTensor(args.norm_value),
                         Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
                 ]),
-    "temporal": TemporalRandomCrop(args.sample_duration),
+    "temporal": None, # TemporalRandomCrop(args.sample_duration),
     "target": None,
 }
 
@@ -100,7 +100,7 @@ transform_test = {
                         ToTensor(args.norm_value),
                         Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
                         ]),
-    'temporal': TemporalRandomCrop(args.sample_duration),
+    'temporal': None, #TemporalRandomCrop(args.sample_duration),
     'target':  None,
 }
 
@@ -142,7 +142,7 @@ net = resnet_ucf101.resnet18(
                 num_classes=args.low_dim,
                 shortcut_type=args.resnet_shortcut,
                 spatial_size=args.spatial_size,
-                sample_duration=args.sample_duration
+                sample_duration=1 #args.sample_duration
 )
 # define leminiscate
 if args.nce_k > 0:
