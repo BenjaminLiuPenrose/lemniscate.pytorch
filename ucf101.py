@@ -84,7 +84,7 @@ transform_test = transforms.Compose([
     transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
 ])
 
-transform_train = {
+transformTrain = {
     "spatial": None, # Compose([
                         # MultiScaleRandomCrop(args.scales, args.spatial_size),
                         # RandomHorizontalFlip(),
@@ -95,7 +95,7 @@ transform_train = {
     "target": None,
 }
 
-transform_test = {
+transformTest = {
     'spatial': None,  # Compose([
                         # CenterCrop(args.spatial_size),
                         # ToTensor(args.norm_value),
@@ -110,9 +110,9 @@ trainset = datasets.UCF101Instance(
             args.annotation_path,
             'training',
             transform = transform_train,
-            spatial_transform=transform_train["spatial"],
-            temporal_transform=transform_train["temporal"],
-            target_transform=transform_train["target"],
+            spatial_transform=transformTrain["spatial"],
+            temporal_transform=transformTrain["temporal"],
+            target_transform=transformTrain["target"],
             sample_duration = args.sample_duration
             )
 # trainloader = torch.utils.data.DataLoader(trainset, batch_size=int(128 / args.sample_duration), shuffle=True, num_workers=2)
@@ -123,10 +123,10 @@ testset = datasets.UCF101Instance(
             args.video_path,
             args.annotation_path,
             'validation',
-            # transform = transform_test,
-            spatial_transform=transform_test["spatial"],
-            temporal_transform=transform_test["temporal"],
-            target_transform=transform_test["target"],
+            transform = transform_test,
+            spatial_transform=transformTest["spatial"],
+            temporal_transform=transformTest["temporal"],
+            target_transform=transformTest["target"],
             sample_duration = args.sample_duration
             )
 # testloader = torch.utils.data.DataLoader(testset, batch_size=int(128 / args.sample_duration), shuffle=False, num_workers=2)
