@@ -132,7 +132,7 @@ def make_dataset(root_path, annotation_path, subset, n_samples_for_each_video,
             sample['label'] = -1
 
         if n_samples_for_each_video == 1:
-            sample['frame_indices'] = list(range(1, n_frames + 1))
+            sample['frame_indices'] = list(range(1, min(n_frames, sample_duration) + 1))
             for j in range(1, n_frames+1):
                 sample_j = copy.deepcopy(sample)
                 sample_j['frame_index_local'] = [j]
