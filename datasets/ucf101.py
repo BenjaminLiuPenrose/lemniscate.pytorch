@@ -205,6 +205,7 @@ class UCF101Instance(data.Dataset):
             sample_duration)
 
         self.transform = transform
+        self.target_transform = target_transform
         self.loader = get_loader()
 
     def __getitem__(self, index):
