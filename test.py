@@ -195,6 +195,7 @@ def kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, K, sigma, recomp
             end = time.time()
             targets = targets.cuda(non_blocking=True)
             batchSize = inputs.size(0)
+            st()
             features = net(inputs)
             net_time.update(time.time() - end)
             end = time.time()

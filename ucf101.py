@@ -120,7 +120,7 @@ testset = datasets.UCF101Instance(
             )
 # testloader = torch.utils.data.DataLoader(testset, batch_size=int(128 / args.sample_duration), shuffle=False, num_workers=2)
 # testset = datasets.CIFAR100Instance(root='./data', train=False, download=True, transform=transform_test)
-testloader = torch.utils.data.DataLoader(testset, batch_size=100, shuffle=False, num_workers=2)
+testloader = torch.utils.data.DataLoader(testset, batch_size=128, shuffle=False, num_workers=2)
 
 ndata = trainset.__len__()
 
