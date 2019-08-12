@@ -103,8 +103,8 @@ def make_dataset(root_path, annotation_path, subset, n_samples_for_each_video,
 
     dataset = []
     targets = []
-    frame_index = 0
     for i in range(len(video_names)):
+        targets.append( class_to_idx[ video_names[i].split("/")[0] ]  )
         if i % 1000 == 0:
             print('dataset loading [{}/{}]'.format(i, len(video_names)))
 
@@ -133,12 +133,7 @@ def make_dataset(root_path, annotation_path, subset, n_samples_for_each_video,
 
         if n_samples_for_each_video == 1:
             sample['frame_indices'] = list(range(1, n_frames + 1))
-            for j in range(n_frames):
-                smaple_j = copy.deepcopy(sample)
-                sample_j['frame_index'] = [frame_index]
-                frame_index += 1
-                dataset.append(sample_j)
-                targets.append( class_to_idx[ video_names[i].split("/")[0] ]  )
+            dataset.append(sample)
         else:
             if n_samples_for_each_video > 1:
                 # step = max(1,
@@ -151,14 +146,12 @@ def make_dataset(root_path, annotation_path, subset, n_samples_for_each_video,
                 step = sample_duration
             # for j in range(1, n_frames, step):
             j = 1
-            sample['frame_indices'] = list(
+            sample_j = copy.deepcopy(sample)
+            sample_j['frame_indices'] = list(
                 range(j, min(n_frames + 1, j + sample_duration), step))
-            for j in range(1, min(n_frames + 1, j + sample_duration), step):
-                sample_j = copy.deepcopy(sample)
-                sample_j['frame_index'] = [frame_index]
-                frame_index += 1
-                dataset.append(sample_j)
-                targets.append( class_to_idx[ video_names[i].split("/")[0] ]  )
+            dataset.append(sample_j)
+            
+
 
     return dataset, targets
 
