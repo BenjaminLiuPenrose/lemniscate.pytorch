@@ -195,6 +195,7 @@ class UCF101Instance(data.Dataset):
                  annotation_path,
                  subset,
                  transform = None,
+                 target_transform=None,
                  n_samples_for_each_video=1,
                  sample_duration=16, #16
                  get_loader=get_default_video_loader):
