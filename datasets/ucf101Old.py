@@ -150,7 +150,7 @@ def make_dataset(root_path, annotation_path, subset, n_samples_for_each_video,
             sample_j['frame_indices'] = list(
                 range(j, min(n_frames + 1, j + sample_duration), step))
             dataset.append(sample_j)
-            
+
 
 
     return dataset, targets
@@ -218,6 +218,7 @@ class UCF101Instance(data.Dataset):
         if self.transform is not None:
             clip = [self.transform(img) for img in clip]
         clip = torch.stack(clip, 0).permute(1, 0, 2, 3)
+        img = clip[np.random.randint(0, len(clip))]
         # print("image", video_index, clip[0].shape, "video index", video_index)
 
         target = self.data[index]['label'] # video_id

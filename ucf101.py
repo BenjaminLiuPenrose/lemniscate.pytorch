@@ -30,8 +30,18 @@ from lib.LinearAverage import LinearAverage, LinearAverageWithWeights
 from lib.NCECriterion import NCECriterion
 from lib.utils import AverageMeter
 from test import NN, kNN, kNN_ucf101
+from tensorboardX import SummaryWriter
 
+########
+### add SummaryWriter
+#######
+#######
+### add gpu device
+#######
 os.environ["CUDA_VISIBLE_DEVICES"] = "0,1"
+if not os.exists('./checkpoint'):
+    os.mkdir('./checkpoint')
+writer = SummaryWriter(logdir = './checkpoint', comment = 'UCF101')
 parser = argparse.ArgumentParser(description='PyTorch UCF101 Training')
 parser.add_argument('--lr', default=0.03, type=float, help='learning rate')
 parser.add_argument('--resume', '-r', default='', type=str, help='resume from checkpoint')
@@ -210,9 +220,12 @@ def train(epoch):
               epoch, batch_idx, len(trainloader), batch_time=batch_time, data_time=data_time, train_loss=train_loss))
 
 
+
 for epoch in range(start_epoch, start_epoch+200):
     train(epoch)
-    acc = kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, 200, args.nce_t, 0)
+    acc, acc_top5 = kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, 200, args.nce_t, 0)
+    writer.add_scalar('data/acc', acc, epoch)
+    writer.add_scalar('data/acc_top5', acc_top5, epoch)
 
     if acc > best_acc:
         print('Saving..')
@@ -231,6 +244,8 @@ for epoch in range(start_epoch, start_epoch+200):
         np.save("best_acc_ucf.npy", X)
 
     print('best accuracy: {:.2f}'.format(best_acc*100))
+writer.export_scalars_to_json("./all_scalars.json")
+writer.close()
 
 acc = kNN_ucf101(0, net, lemniscate, trainloader, testloader, 200, args.nce_t, 1)
 print('last accuracy: {:.2f}'.format(acc*100))

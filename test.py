@@ -239,4 +239,4 @@ def kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, K, sigma, recomp
     print(top1*100./(total + 1e-8), total, top1 )
     print(top1/(total + 1e-8))
 
-    return top1/(total + 1e-8)
+    return top1/(total + 1e-8), top5/(total + 1e-8)
