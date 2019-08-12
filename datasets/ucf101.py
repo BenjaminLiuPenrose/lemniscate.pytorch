@@ -225,14 +225,15 @@ class UCF101Instance(data.Dataset):
             clip = [self.spatial_transform(img) for img in clip]
         if self.transform is not None:
             clip = [self.transform(img) for img in clip]
-        clip = torch.stack(clip, 0).permute(1, 0, 2, 3)
+        # clip = torch.stack(clip, 0).permute(1, 0, 2, 3)
+        img = clip[0]
         # print("image", video_index, clip[0].shape, "video index", video_index)
 
         target = self.data[index]['label'] # video_id
         if self.target_transform is not None:
             target = self.target_transform(target)
 
-        return clip, target, video_index
+        return img, target, video_index
 
     def __len__(self):
         return len(self.data)
