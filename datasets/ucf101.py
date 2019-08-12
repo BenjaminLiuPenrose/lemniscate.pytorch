@@ -215,9 +215,10 @@ class UCF101Instance(data.Dataset):
 
         frame_indices = self.data[index]['frame_indices']
         video_index = self.data[index]['video_index']
+        frame_index = self.data[index]['frame_index']
         if self.temporal_transform is not None:
             frame_indices = self.temporal_transform(frame_indices)
-        clip = self.loader(path, frame_indices)
+        clip = self.loader(path, frame_index)
 
         if self.spatial_transform is not None:
             self.spatial_transform.randomize_parameters()
