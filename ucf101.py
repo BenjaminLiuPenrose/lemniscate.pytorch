@@ -39,7 +39,7 @@ from tensorboardX import SummaryWriter
 ### add gpu device
 #######
 os.environ["CUDA_VISIBLE_DEVICES"] = "0,1"
-if not os.exists('./checkpoint'):
+if not os.path.exists('./checkpoint'):
     os.mkdir('./checkpoint')
 writer = SummaryWriter(logdir = './checkpoint', comment = 'UCF101')
 parser = argparse.ArgumentParser(description='PyTorch UCF101 Training')
