@@ -133,8 +133,9 @@ def make_dataset(root_path, annotation_path, subset, n_samples_for_each_video,
 
         if n_samples_for_each_video == 1:
             sample['frame_indices'] = list(range(1, n_frames + 1))
-            for j in range(n_frames):
+            for j in range(1, n_frames+1):
                 sample_j = copy.deepcopy(sample)
+                sample_j['frame_index_local'] = j
                 sample_j['frame_index'] = [frame_index]
                 frame_index += 1
                 dataset.append(sample_j)
@@ -155,6 +156,7 @@ def make_dataset(root_path, annotation_path, subset, n_samples_for_each_video,
                 range(j, min(n_frames + 1, j + sample_duration), step))
             for j in range(1, min(n_frames + 1, j + sample_duration), step):
                 sample_j = copy.deepcopy(sample)
+                sample_j['frame_index_local'] = j
                 sample_j['frame_index'] = [frame_index]
                 frame_index += 1
                 dataset.append(sample_j)
@@ -216,9 +218,10 @@ class UCF101Instance(data.Dataset):
         frame_indices = self.data[index]['frame_indices']
         video_index = self.data[index]['video_index']
         frame_index = self.data[index]['frame_index']
+        frame_index_local = self.data[index]['frame_index_local']
         if self.temporal_transform is not None:
             frame_indices = self.temporal_transform(frame_indices)
-        clip = self.loader(path, frame_index)
+        clip = self.loader(path, frame_index_local)
 
         if self.spatial_transform is not None:
             self.spatial_transform.randomize_parameters()
