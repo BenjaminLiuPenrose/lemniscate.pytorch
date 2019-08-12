@@ -70,37 +70,37 @@ start_epoch = 0  # start from epoch 0 or last checkpoint epoch
 
 # Data
 print('==> Preparing data..')
-# transform_train = transforms.Compose([
-#     transforms.RandomResizedCrop(size=32, scale=(0.2,1.)),
-#     transforms.ColorJitter(0.4, 0.4, 0.4, 0.4),
-#     transforms.RandomGrayscale(p=0.2),
-#     #transforms.RandomHorizontalFlip(),
-#     transforms.ToTensor(),
-#     transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
-# ])
-#
-# transform_test = transforms.Compose([
-#     transforms.ToTensor(),
-#     transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
-# ])
+transform_train = transforms.Compose([
+    transforms.RandomResizedCrop(size=32, scale=(0.2,1.)),
+    transforms.ColorJitter(0.4, 0.4, 0.4, 0.4),
+    transforms.RandomGrayscale(p=0.2),
+    #transforms.RandomHorizontalFlip(),
+    transforms.ToTensor(),
+    transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
+])
+
+transform_test = transforms.Compose([
+    transforms.ToTensor(),
+    transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
+])
 
 transform_train = {
-    "spatial": Compose([
-                        MultiScaleRandomCrop(args.scales, args.spatial_size),
-                        RandomHorizontalFlip(),
-                        ToTensor(args.norm_value),
-                        Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
+    "spatial": None, # Compose([
+                        # MultiScaleRandomCrop(args.scales, args.spatial_size),
+                        # RandomHorizontalFlip(),
+                        # ToTensor(args.norm_value),
+                        # Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
                 ]),
     "temporal": None, # TemporalRandomCrop(args.sample_duration),
     "target": None,
 }
 
 transform_test = {
-    'spatial':  Compose([
-                        CenterCrop(args.spatial_size),
-                        ToTensor(args.norm_value),
-                        Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
-                        ]),
+    'spatial': None,  # Compose([
+                        # CenterCrop(args.spatial_size),
+                        # ToTensor(args.norm_value),
+                        # Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
+                        # ]),
     'temporal': None, #TemporalRandomCrop(args.sample_duration),
     'target':  None,
 }
@@ -109,15 +109,15 @@ trainset = datasets.UCF101Instance(
             args.video_path,
             args.annotation_path,
             'training',
-            # transform = transform_train,
+            transform = transform_train,
             spatial_transform=transform_train["spatial"],
             temporal_transform=transform_train["temporal"],
             target_transform=transform_train["target"],
             sample_duration = args.sample_duration
             )
-trainloader = torch.utils.data.DataLoader(trainset, batch_size=int(128 / args.sample_duration), shuffle=True, num_workers=2)
+# trainloader = torch.utils.data.DataLoader(trainset, batch_size=int(128 / args.sample_duration), shuffle=True, num_workers=2)
 # trainset = datasets.CIFAR100Instance(root='./data', train=True, download=True, transform=transform_train)
-# trainloader = torch.utils.data.DataLoader(trainset, batch_size=128, shuffle=True, num_workers=2)
+trainloader = torch.utils.data.DataLoader(trainset, batch_size=128, shuffle=True, num_workers=2)
 
 testset = datasets.UCF101Instance(
             args.video_path,
@@ -129,22 +129,24 @@ testset = datasets.UCF101Instance(
             target_transform=transform_test["target"],
             sample_duration = args.sample_duration
             )
-testloader = torch.utils.data.DataLoader(testset, batch_size=int(128 / args.sample_duration), shuffle=False, num_workers=2)
+# testloader = torch.utils.data.DataLoader(testset, batch_size=int(128 / args.sample_duration), shuffle=False, num_workers=2)
 # testset = datasets.CIFAR100Instance(root='./data', train=False, download=True, transform=transform_test)
-# testloader = torch.utils.data.DataLoader(testset, batch_size=100, shuffle=False, num_workers=2)
+testloader = torch.utils.data.DataLoader(testset, batch_size=100, shuffle=False, num_workers=2)
 
 ndata = trainset.__len__()
 
-print(type(trainloader.dataset.targets), type(trainloader.dataset.targets[1]))
+print(type(trainloader.dataset.targets), type(trainloader.dataset.targets[1])
 
 print('==> Building model..')
-# net = models.__dict__['ResNet18'](low_dim=args.low_dim)
-net = resnet_ucf101.resnet18(
-                num_classes=args.low_dim,
-                shortcut_type=args.resnet_shortcut,
-                spatial_size=args.spatial_size,
-                sample_duration=1 #args.sample_duration
-)
+net = models.__dict__['ResNet18'](low_dim=args.low_dim)
+### ROLLBACK
+# net = resnet_ucf101.resnet18(
+#                 num_classes=args.low_dim,
+#                 shortcut_type=args.resnet_shortcut,
+#                 spatial_size=args.spatial_size,
+#                 sample_duration=1 #args.sample_duration
+# )
+
 # define leminiscate
 if args.nce_k > 0:
     lemniscate = NCEAverage(args.low_dim, ndata, args.nce_k, args.nce_t, args.nce_m)
