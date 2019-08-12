@@ -135,8 +135,8 @@ def make_dataset(root_path, annotation_path, subset, n_samples_for_each_video,
             sample['frame_indices'] = list(range(1, n_frames + 1))
             for j in range(1, n_frames+1):
                 sample_j = copy.deepcopy(sample)
-                sample_j['frame_index_local'] = j
-                sample_j['frame_index'] = [frame_index]
+                sample_j['frame_index_local'] = [j]
+                sample_j['frame_index'] = frame_index
                 frame_index += 1
                 dataset.append(sample_j)
                 targets.append( class_to_idx[ video_names[i].split("/")[0] ]  )
@@ -156,8 +156,8 @@ def make_dataset(root_path, annotation_path, subset, n_samples_for_each_video,
                 range(j, min(n_frames + 1, j + sample_duration), step))
             for j in range(1, min(n_frames + 1, j + sample_duration), step):
                 sample_j = copy.deepcopy(sample)
-                sample_j['frame_index_local'] = j
-                sample_j['frame_index'] = [frame_index]
+                sample_j['frame_index_local'] = [j]
+                sample_j['frame_index'] = frame_index
                 frame_index += 1
                 dataset.append(sample_j)
                 targets.append( class_to_idx[ video_names[i].split("/")[0] ]  )
