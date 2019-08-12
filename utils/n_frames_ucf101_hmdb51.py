@@ -22,7 +22,7 @@ def class_process(dir_path, class_name):
       n_frames = 0
     else:
       image_indices.sort(reverse=True)
-      n_frames = np.min([image_indices[0], 50])
+      n_frames = np.min([image_indices[0], 64])
       print(video_dir_path, n_frames)
     with open(os.path.join(video_dir_path, 'n_frames'), 'w') as dst_file:
       dst_file.write(str(n_frames))
