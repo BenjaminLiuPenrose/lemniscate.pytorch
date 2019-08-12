@@ -8,8 +8,6 @@ import json
 import copy
 import numpy as np
 
-# from utils import load_value_file, tmp fix
-
 def load_value_file(file_path):
     with open(file_path, 'r') as input_file:
         value = float(input_file.read().rstrip('\n\r'))
@@ -40,15 +38,23 @@ def get_default_image_loader():
 
 
 def video_loader(video_dir_path, frame_indices, image_loader):
-    video = []
-    for i in frame_indices:
-        image_path = os.path.join(video_dir_path, 'image_{:05d}.jpg'.format(i))
+    if isinstance(frame_indices, int):
+        img = None
+        image_path = os.path.join(video_dir_path, 'image_{:05d}.jpg'.format(frame_indices))
         if os.path.exists(image_path):
-            video.append(image_loader(image_path))
+            img = image_loader(image_path)
+            return img
         else:
-            return video
-
-    return video
+            return img
+    else:
+        video = []
+        for i in frame_indices:
+            image_path = os.path.join(video_dir_path, 'image_{:05d}.jpg'.format(i))
+            if os.path.exists(image_path):
+                video.append(image_loader(image_path))
+            else:
+                return video
+        return video
 
 
 def get_default_video_loader():
@@ -95,16 +101,12 @@ def make_dataset(root_path, annotation_path, subset, n_samples_for_each_video,
     data = load_annotation_data(annotation_path)
     video_names, annotations = get_video_names_and_annotations(data, subset)
     class_to_idx = get_class_labels(data)
-    # idx_to_class = {}
-    # for name, label in class_to_idx.items():
-    #     idx_to_class[label] = nam
     idx_to_class = get_labels_class(data)
-
 
     dataset = []
     targets = []
+    frame_index = 0
     for i in range(len(video_names)):
-        targets.append( class_to_idx[ video_names[i].split("/")[0] ]  )
         if i % 1000 == 0:
             print('dataset loading [{}/{}]'.format(i, len(video_names)))
 
@@ -119,39 +121,54 @@ def make_dataset(root_path, annotation_path, subset, n_samples_for_each_video,
 
         begin_t = 1
         end_t = n_frames
-        sample = {
-            'video': video_path,
-            'segment': [begin_t, end_t],
-            'n_frames': n_frames,
-            'video_id': video_names[i].split('/')[1],
-            'video_index': i,
-        }
-        if len(annotations) != 0:
-            sample['label'] = class_to_idx[annotations[i]['label']]
-        else:
-            sample['label'] = -1
 
         if n_samples_for_each_video == 1:
-            sample['frame_indices'] = list(range(1, n_frames + 1))
-            dataset.append(sample)
+            for j in range(1, n_frames+1):
+                sample = {
+                    'video': video_path,
+                    'segment': [begin_t, end_t],
+                    'n_frames': n_frames,
+                    'video_id': video_names[i].split('/')[1],
+                    'video_index': i,
+                }
+                if len(annotations) != 0:
+                    sample['label'] = class_to_idx[annotations[i]['label']]
+                else:
+                    sample['label'] = -1
+                sample['frame_indices'] = list(range(1, min(n_frames, sample_duration) + 1))
+
+                sample['frame_index_local'] = j
+                sample['frame_index'] = frame_index
+                frame_index += 1
+                dataset.append(sample)
+                targets.append( class_to_idx[ video_names[i].split("/")[0] ]  )
         else:
             if n_samples_for_each_video > 1:
-                # step = max(1,
-                #            math.ceil((n_frames - 1 - sample_duration) /
-                #                      (n_samples_for_each_video - 1)))
                 step = max(1,
                            math.ceil((n_frames ) /
                                      (n_samples_for_each_video )))
             else:
                 step = sample_duration
-            # for j in range(1, n_frames, step):
-            j = 1
-            sample_j = copy.deepcopy(sample)
-            sample_j['frame_indices'] = list(
-                range(j, min(n_frames + 1, j + sample_duration), step))
-            dataset.append(sample_j)
-
-
+                for j in range(1, min(n_frames + 1, j + sample_duration), step):
+                    sample = {
+                        'video': video_path,
+                        'segment': [begin_t, end_t],
+                        'n_frames': n_frames,
+                        'video_id': video_names[i].split('/')[1],
+                        'video_index': i,
+                    }
+                    if len(annotations) != 0:
+                        sample['label'] = class_to_idx[annotations[i]['label']]
+                    else:
+                        sample['label'] = -1
+                    sample['frame_indices'] = list(
+                        range(j, min(n_frames + 1, j + sample_duration), step))
+                    sample_j = copy.deepcopy(sample)
+                    sample_j['frame_index_local'] = j
+                    sample_j['frame_index'] = frame_index
+                    frame_index += 1
+                    dataset.append(sample_j)
+                    targets.append( class_to_idx[ video_names[i].split("/")[0] ]  )
 
     return dataset, targets
 
@@ -177,23 +194,17 @@ class UCF101Instance(data.Dataset):
                  root_path,
                  annotation_path,
                  subset,
-                 n_samples_for_each_video=1,
                  transform = None,
-                 spatial_transform=None,
-                 temporal_transform=None,
                  target_transform=None,
+                 n_samples_for_each_video=1,
                  sample_duration=16, #16
                  get_loader=get_default_video_loader):
-        # self.data, self.class_names = make_dataset(
-        #     root_path, annotation_path, subset, n_samples_for_each_video,
-        #     sample_duration)
+        ### load all the available frame and do the transformation
         self.data, self.targets = make_dataset(
             root_path, annotation_path, subset, n_samples_for_each_video,
             sample_duration)
 
         self.transform = transform
-        self.spatial_transform = spatial_transform
-        self.temporal_transform = temporal_transform
         self.target_transform = target_transform
         self.loader = get_loader()
 
@@ -206,26 +217,21 @@ class UCF101Instance(data.Dataset):
         """
         path = self.data[index]['video']
 
-        frame_indices = self.data[index]['frame_indices']
-        video_index = self.data[index]['video_index']
-        if self.temporal_transform is not None:
-            frame_indices = self.temporal_transform(frame_indices)
-        clip = self.loader(path, frame_indices)
-
-        if self.spatial_transform is not None:
-            self.spatial_transform.randomize_parameters()
-            clip = [self.spatial_transform(img) for img in clip]
-        if self.transform is not None:
-            clip = [self.transform(img) for img in clip]
-        clip = torch.stack(clip, 0).permute(1, 0, 2, 3)
-        img = clip[np.random.randint(0, len(clip))]
-        # print("image", video_index, clip[0].shape, "video index", video_index)
-
         target = self.data[index]['label'] # video_id
+        video_index = self.data[index]['video_index']
+        frame_index = self.data[index]['frame_index']
+        frame_index_local = self.data[index]['frame_index_local']
+        frame_indices = self.data[index]['frame_indices']
+
+        img = self.loader(path, frame_index_local)
+
+        if self.transform is not None:
+            img = self.transform(img)
+
         if self.target_transform is not None:
             target = self.target_transform(target)
 
-        return clip, target, video_index
+        return img, target, video_index
 
     def __len__(self):
         return len(self.data)
