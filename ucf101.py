@@ -239,7 +239,7 @@ def train(epoch):
 
 for epoch in range(start_epoch, start_epoch+200):
     train(epoch)
-    acc， acc_top5 = kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, 200, args.nce_t, 0)
+    acc, acc_top5 = kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, 200, args.nce_t, 0)
 
     if acc > best_acc:
         print('Saving..')
