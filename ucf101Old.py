@@ -68,6 +68,8 @@ best_acc = 0  # best test accuracy
 start_epoch = 0  # start from epoch 0 or last checkpoint epoch
 
 # Data
+start_glob = time.time()
+
 print('==> Preparing data..')
 # transform_train = transforms.Compose([
 #     transforms.RandomResizedCrop(size=32, scale=(0.2,1.)),
@@ -259,3 +261,6 @@ for epoch in range(start_epoch, start_epoch+200):
 
 acc = kNN_ucf101(0, net, lemniscate, trainloader, testloader, 200, args.nce_t, 1)
 print('last accuracy: {:.2f}'.format(acc*100))
+
+end_glob = time.time()
+print('total Training time: {}'.format(end_glob - start_glob) )
