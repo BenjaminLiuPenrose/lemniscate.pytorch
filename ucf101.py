@@ -84,35 +84,13 @@ transform_test = transforms.Compose([
     transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
 ])
 
-transformTrain = {
-    "spatial": None, # Compose([
-                        # MultiScaleRandomCrop(args.scales, args.spatial_size),
-                        # RandomHorizontalFlip(),
-                        # ToTensor(args.norm_value),
-                        # Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
-                # ]),
-    "temporal": None, # TemporalRandomCrop(args.sample_duration),
-    "target": None,
-}
-
-transformTest = {
-    'spatial': None,  # Compose([
-                        # CenterCrop(args.spatial_size),
-                        # ToTensor(args.norm_value),
-                        # Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
-                        # ]),
-    'temporal': None, #TemporalRandomCrop(args.sample_duration),
-    'target':  None,
-}
 
 trainset = datasets.UCF101Instance(
             args.video_path,
             args.annotation_path,
             'training',
             transform = transform_train,
-            spatial_transform=transformTrain["spatial"],
-            temporal_transform=transformTrain["temporal"],
-            target_transform=transformTrain["target"],
+            n_samples_for_each_video = 1,
             sample_duration = args.sample_duration
             )
 # trainloader = torch.utils.data.DataLoader(trainset, batch_size=int(128 / args.sample_duration), shuffle=True, num_workers=2)
@@ -124,9 +102,7 @@ testset = datasets.UCF101Instance(
             args.annotation_path,
             'validation',
             transform = transform_test,
-            spatial_transform=transformTest["spatial"],
-            temporal_transform=transformTest["temporal"],
-            target_transform=transformTest["target"],
+            n_samples_for_each_video = 1,
             sample_duration = args.sample_duration
             )
 # testloader = torch.utils.data.DataLoader(testset, batch_size=int(128 / args.sample_duration), shuffle=False, num_workers=2)
@@ -134,8 +110,6 @@ testset = datasets.UCF101Instance(
 testloader = torch.utils.data.DataLoader(testset, batch_size=100, shuffle=False, num_workers=2)
 
 ndata = trainset.__len__()
-
-print(type(trainloader.dataset.targets), type(trainloader.dataset.targets[1]))
 
 print('==> Building model..')
 net = models.__dict__['ResNet18'](low_dim=args.low_dim)
@@ -216,7 +190,6 @@ def train(epoch):
         # print("="*50, inputs.shape, targets.shape, indexes.shape)
         optimizer.zero_grad()
 
-        # print("targets: {}; indexes : {}".format(targets[:10], indexes[:10]) )
         features = net(inputs)
         outputs = lemniscate(features, indexes)
         loss = criterion(outputs, indexes)
@@ -236,10 +209,8 @@ def train(epoch):
               'Loss: {train_loss.val:.4f} ({train_loss.avg:.4f})'.format(
               epoch, batch_idx, len(trainloader), batch_time=batch_time, data_time=data_time, train_loss=train_loss))
 
-        # if batch_idx >= 100:
-        #     break
 
-for epoch in range(start_epoch, start_epoch+100):
+for epoch in range(start_epoch, start_epoch+200):
     train(epoch)
     acc = kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, 200, args.nce_t, 0)
 
