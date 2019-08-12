@@ -1,6 +1,5 @@
 '''Train UCF101 with PyTorch.'''
 from __future__ import print_function
-from pdb import set_trace as st
 
 import sys
 import torch
@@ -30,18 +29,8 @@ from lib.LinearAverage import LinearAverage, LinearAverageWithWeights
 from lib.NCECriterion import NCECriterion
 from lib.utils import AverageMeter
 from test import NN, kNN, kNN_ucf101
-from tensorboardX import SummaryWriter
 
-########
-### add SummaryWriter
-#######
-#######
-### add gpu device
-#######
 os.environ["CUDA_VISIBLE_DEVICES"] = "0,1"
-if not os.path.exists('./checkpoint'):
-    os.mkdir('./checkpoint')
-writer = SummaryWriter(logdir = './checkpoint', comment = 'UCF101')
 parser = argparse.ArgumentParser(description='PyTorch UCF101 Training')
 parser.add_argument('--lr', default=0.03, type=float, help='learning rate')
 parser.add_argument('--resume', '-r', default='', type=str, help='resume from checkpoint')
@@ -78,62 +67,85 @@ device = 'cuda' if torch.cuda.is_available() else 'cpu'
 best_acc = 0  # best test accuracy
 start_epoch = 0  # start from epoch 0 or last checkpoint epoch
 
-
 # Data
 start_glob = time.time()
 
 print('==> Preparing data..')
-transform_train = transforms.Compose([
-    transforms.RandomResizedCrop(size=32, scale=(0.2,1.)),
-    transforms.ColorJitter(0.4, 0.4, 0.4, 0.4),
-    transforms.RandomGrayscale(p=0.2),
-    #transforms.RandomHorizontalFlip(),
-    transforms.ToTensor(),
-    transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
-])
+# transform_train = transforms.Compose([
+#     transforms.RandomResizedCrop(size=32, scale=(0.2,1.)),
+#     transforms.ColorJitter(0.4, 0.4, 0.4, 0.4),
+#     transforms.RandomGrayscale(p=0.2),
+#     #transforms.RandomHorizontalFlip(),
+#     transforms.ToTensor(),
+#     transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
+# ])
+#
+# transform_test = transforms.Compose([
+#     transforms.ToTensor(),
+#     transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
+# ])
 
-transform_test = transforms.Compose([
-    transforms.ToTensor(),
-    transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
-])
+transform_train = {
+    "spatial": Compose([
+                        MultiScaleRandomCrop(args.scales, args.spatial_size),
+                        RandomHorizontalFlip(),
+                        ToTensor(args.norm_value),
+                        Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
+                ]),
+    "temporal": TemporalRandomCrop(args.sample_duration),
+    "target": None,
+}
 
+transform_test = {
+    'spatial':  Compose([
+                        CenterCrop(args.spatial_size),
+                        ToTensor(args.norm_value),
+                        Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
+                        ]),
+    'temporal': TemporalRandomCrop(args.sample_duration),
+    'target':  None,
+}
 
 trainset = datasets.UCF101Instance(
             args.video_path,
             args.annotation_path,
             'training',
-            transform = transform_train,
-            n_samples_for_each_video = 1,
+            # transform = transform_train,
+            spatial_transform=transform_train["spatial"],
+            temporal_transform=transform_train["temporal"],
+            target_transform=transform_train["target"],
             sample_duration = args.sample_duration
             )
-# trainloader = torch.utils.data.DataLoader(trainset, batch_size=int(128 / args.sample_duration), shuffle=True, num_workers=2)
+trainloader = torch.utils.data.DataLoader(trainset, batch_size=int(128 / args.sample_duration), shuffle=False, num_workers=2)
 # trainset = datasets.CIFAR100Instance(root='./data', train=True, download=True, transform=transform_train)
-trainloader = torch.utils.data.DataLoader(trainset, batch_size=128, shuffle=True, num_workers=2)
+# trainloader = torch.utils.data.DataLoader(trainset, batch_size=128, shuffle=True, num_workers=2)
 
 testset = datasets.UCF101Instance(
             args.video_path,
             args.annotation_path,
             'validation',
-            transform = transform_test,
-            n_samples_for_each_video = 1,
+            # transform = transform_test,
+            spatial_transform=transform_test["spatial"],
+            temporal_transform=transform_test["temporal"],
+            target_transform=transform_test["target"],
             sample_duration = args.sample_duration
             )
-# testloader = torch.utils.data.DataLoader(testset, batch_size=int(128 / args.sample_duration), shuffle=False, num_workers=2)
+testloader = torch.utils.data.DataLoader(testset, batch_size=int(128 / args.sample_duration), shuffle=False, num_workers=2)
 # testset = datasets.CIFAR100Instance(root='./data', train=False, download=True, transform=transform_test)
-testloader = torch.utils.data.DataLoader(testset, batch_size=128, shuffle=False, num_workers=2)
+# testloader = torch.utils.data.DataLoader(testset, batch_size=100, shuffle=False, num_workers=2)
 
 ndata = trainset.__len__()
 
-print('==> Building model..')
-net = models.__dict__['ResNet18'](low_dim=args.low_dim)
-### ROLLBACK
-# net = resnet_ucf101.resnet18(
-#                 num_classes=args.low_dim,
-#                 shortcut_type=args.resnet_shortcut,
-#                 spatial_size=args.spatial_size,
-#                 sample_duration=1 #args.sample_duration
-# )
+print(type(trainloader.dataset.targets), type(trainloader.dataset.targets[1]))
 
+print('==> Building model..')
+# net = models.__dict__['ResNet18'](low_dim=args.low_dim)
+net = resnet_ucf101.resnet18(
+                num_classes=args.low_dim,
+                shortcut_type=args.resnet_shortcut,
+                spatial_size=args.spatial_size,
+                sample_duration=args.sample_duration
+)
 # define leminiscate
 if args.nce_k > 0:
     lemniscate = NCEAverage(args.low_dim, ndata, args.nce_k, args.nce_t, args.nce_m)
@@ -199,10 +211,10 @@ def train(epoch):
     for batch_idx, (inputs, targets, indexes) in enumerate(trainloader):
         data_time.update(time.time() - end)
         inputs, targets, indexes = inputs.to(device), targets.to(device), indexes.to(device)
-        # st()
         # print("="*50, inputs.shape, targets.shape, indexes.shape)
         optimizer.zero_grad()
 
+        # print("targets: {}; indexes : {}".format(targets[:10], indexes[:10]) )
         features = net(inputs)
         outputs = lemniscate(features, indexes)
         loss = criterion(outputs, indexes)
@@ -222,13 +234,12 @@ def train(epoch):
               'Loss: {train_loss.val:.4f} ({train_loss.avg:.4f})'.format(
               epoch, batch_idx, len(trainloader), batch_time=batch_time, data_time=data_time, train_loss=train_loss))
 
-
+        # if batch_idx >= 100:
+        #     break
 
 for epoch in range(start_epoch, start_epoch+200):
     train(epoch)
-    acc, acc_top5 = kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, 200, args.nce_t, 0)
-    writer.add_scalar('data/acc', acc, epoch)
-    writer.add_scalar('data/acc_top5', acc_top5, epoch)
+    acc = kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, 200, args.nce_t, 0)
 
     if acc > best_acc:
         print('Saving..')
@@ -247,8 +258,6 @@ for epoch in range(start_epoch, start_epoch+200):
         np.save("best_acc_ucf.npy", X)
 
     print('best accuracy: {:.2f}'.format(best_acc*100))
-writer.export_scalars_to_json("./all_scalars.json")
-writer.close()
 
 acc = kNN_ucf101(0, net, lemniscate, trainloader, testloader, 200, args.nce_t, 1)
 print('last accuracy: {:.2f}'.format(acc*100))
