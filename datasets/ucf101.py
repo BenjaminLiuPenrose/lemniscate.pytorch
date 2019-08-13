@@ -226,8 +226,8 @@ class UCF101Instance(data.Dataset):
         target = self.data[index]['label'] # video_id
         if self.target_transform is not None:
             target = self.target_transform(target)
-        target = [target for i in range(clip.shape[1])]
-        video_index = [video_index for i in range(clip.shape[1])]
+        target = torch.Tensor( [target for i in range(clip.shape[1])] )
+        video_index = torch.Tensor([video_index for i in range(clip.shape[1])] )
         return clip, target, video_index
 
     def __len__(self):
