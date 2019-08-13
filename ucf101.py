@@ -115,7 +115,7 @@ trainset = datasets.UCF101Instance(
             spatial_transform=transform_train["spatial"],
             temporal_transform=transform_train["temporal"],
             target_transform=transform_train["target"],
-            sample_duration = args.sample_duration
+            sample_duration = 1
             )
 trainloader = torch.utils.data.DataLoader(trainset, batch_size=int(128 / args.sample_duration), shuffle=False, num_workers=2)
 # trainset = datasets.CIFAR100Instance(root='./data', train=True, download=True, transform=transform_train)
@@ -129,7 +129,7 @@ testset = datasets.UCF101Instance(
             spatial_transform=transform_test["spatial"],
             temporal_transform=transform_test["temporal"],
             target_transform=transform_test["target"],
-            sample_duration = args.sample_duration
+            sample_duration = 1
             )
 testloader = torch.utils.data.DataLoader(testset, batch_size=int(128 / args.sample_duration), shuffle=False, num_workers=2)
 # testset = datasets.CIFAR100Instance(root='./data', train=False, download=True, transform=transform_test)
