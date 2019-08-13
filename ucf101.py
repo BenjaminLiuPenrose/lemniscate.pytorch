@@ -214,7 +214,7 @@ def train(epoch):
         inputs, targets, indexes = inputs.to(device), targets.to(device), indexes.to(device)
         # print("="*50, inputs.shape, targets.shape, indexes.shape)
         optimizer.zero_grad()
-        st()
+        # st()
 
         # print("targets: {}; indexes : {}".format(targets[:10], indexes[:10]) )
         features = net(inputs)
