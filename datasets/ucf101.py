@@ -219,8 +219,9 @@ class UCF101Instance(data.Dataset):
         if self.transform is not None:
             clip = [self.transform(img) for img in clip]
         clip = torch.stack(clip, 0).permute(1, 0, 2, 3)
-        img = clip[np.random.randint(0, len(clip))]
+
         st()
+        img = clip[np.random.randint(0, len(clip))]
         img = clip[0]
         # print("image", video_index, clip[0].shape, "video index", video_index)
 
