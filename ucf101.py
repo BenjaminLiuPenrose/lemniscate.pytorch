@@ -1,5 +1,6 @@
 '''Train UCF101 with PyTorch.'''
 from __future__ import print_function
+from pdb import set_trace as st
 
 import sys
 import torch
@@ -213,6 +214,7 @@ def train(epoch):
         inputs, targets, indexes = inputs.to(device), targets.to(device), indexes.to(device)
         # print("="*50, inputs.shape, targets.shape, indexes.shape)
         optimizer.zero_grad()
+        st()
 
         # print("targets: {}; indexes : {}".format(targets[:10], indexes[:10]) )
         features = net(inputs)
