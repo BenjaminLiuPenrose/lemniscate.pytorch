@@ -7,6 +7,7 @@ import functools
 import json
 import copy
 import numpy as np
+from pdb import set_trace as st
 
 # from utils import load_value_file, tmp fix
 
@@ -219,6 +220,7 @@ class UCF101Instance(data.Dataset):
             clip = [self.transform(img) for img in clip]
         clip = torch.stack(clip, 0).permute(1, 0, 2, 3)
         img = clip[np.random.randint(0, len(clip))]
+        st()
         img = clip[0]; print("="*50, img.shape)
         # print("image", video_index, clip[0].shape, "video index", video_index)
 
