@@ -225,7 +225,7 @@ class UCF101Instance(data.Dataset):
         if self.target_transform is not None:
             target = self.target_transform(target)
 
-        return clip, target, video_index
+        return img, target, video_index
 
     def __len__(self):
         return len(self.data)
