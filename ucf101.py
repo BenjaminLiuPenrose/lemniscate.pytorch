@@ -212,6 +212,7 @@ def train(epoch):
     for batch_idx, (inputs, targets, indexes) in enumerate(trainloader):
         data_time.update(time.time() - end)
         inputs, targets, indexes = inputs.to(device), targets.to(device), indexes.to(device)
+        inputs = inputs.view(inputs.shape[0] * inputs.shape[2], inputs.shape[1], 1, inputs.shape[3], inputs.shape[4])
         # print("="*50, inputs.shape, targets.shape, indexes.shape)
         optimizer.zero_grad()
         st()
