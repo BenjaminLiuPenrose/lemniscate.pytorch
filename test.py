@@ -194,6 +194,11 @@ def kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, K, sigma, recomp
         for batch_idx, (inputs, targets, indexes) in enumerate(testloader):
             end = time.time()
             targets = targets.cuda(non_blocking=True)
+
+            inputs = inputs.view(inputs.shape[0] * inputs.shape[2], inputs.shape[1], 1, inputs.shape[3], inputs.shape[4])
+            targets = targets.view(targets.shape[0] * targets.shape[1] )
+            indexes = indexes.view(indexes.shape[0] * indexes.shape[1] )
+            
             batchSize = inputs.size(0)
             # st()
             features = net(inputs)
