@@ -24,6 +24,7 @@ import datasets
 from lib.NCEAverage import NCEAverage
 from lib.LinearAverage import LinearAverage, LinearAverageWithWeights
 from lib.NCECriterion import NCECriterion
+from lib.SmoothCrossEntropy import SmoothCrossEntropy
 from lib.utils import AverageMeter
 from test import NN, kNN, kNN_ucf101
 
@@ -75,7 +76,7 @@ transform_train = {
         ToTensor(args.norm_value),
         Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
     ]),
-    'temporal': TemporalRandomCrop(args.sample_duration),
+    'temporal': None, # TemporalRandomCrop(args.sample_duration),
     'target': None,
 }
 transform_test = {
@@ -84,7 +85,7 @@ transform_test = {
         ToTensor(args.norm_value),
         Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
     ]),
-    'temporal': TemporalRandomCrop(args.sample_duration),
+    'temporal': None, # TemporalRandomCrop(args.sample_duration),
     'target': None,
 }
 
@@ -126,13 +127,14 @@ ndata = trainset.__len__()
 ### Build Model
 print('==> Building model..')
 ### Define net
-# net = models.__dict__['ResNet18'](low_dim=args.low_dim)
-net = resnet_ucf101.resnet18(
-            num_classes = args.low_dim,
-            shortcut_type = args.resnet_shortcut,
-            spatial_size = args.spatial_size,
-            sample_duration = args.sample_duration
-        )
+net = models.__dict__['ResNet18'](low_dim=args.low_dim)
+### modify 0813
+# net = resnet_ucf101.resnet18(
+#             num_classes = args.low_dim,
+#             shortcut_type = args.resnet_shortcut,
+#             spatial_size = args.spatial_size,
+#             sample_duration = args.sample_duration
+#         )
 
 ### Define lemniscate
 if args.nce_k > 0:
@@ -165,6 +167,7 @@ if hasattr(lemniscate, 'K'):
     assert False
 else:
     criterion = nn.CrossEntropyLoss()
+    # criterion = SmoothCrossEntropy()
 
 net.to(device)
 lemniscate.to(device)
@@ -197,9 +200,16 @@ def train(epoch):
 
     net.train()
     end = time.time()
-    for batch_idx, (inputs, targets, indexes) in enumerate(trainloader):
+    for batch_idx, (inputs, targets, indexes, findexes) in enumerate(trainloader):
         data_time.update(time.time() - end)
-        inputs, targets, indexes = inputs.to(device), targets.to(device), indexes.to(device)
+        inputs, targets, indexes, findexes = inputs.to(device), targets.to(device), indexes.to(device), findexes.to(device)
+        ### modify 0813
+        b, d, c, w, h = inputs.shape; inputs = inputs.view(b*d, c, w, h)
+        b, d = targets.shape; targets = targets.view(b*d)
+        b, d = indexes.shape; indexes = indexes.view(b*d)
+        b, d = findexes.shape; findexes = findexes.view(b*d)
+        st() # view targets
+        ### modify 0813
         optimizer.zero_grad()
 
         features = net(inputs)

@@ -85,7 +85,7 @@ class LinearAverage(nn.Module):
 # =======================================================================================
 # ================== 0801 workable version ==================================================
 class LinearAverageWithWeights(nn.Module):
-    def __init__(self, inputSize, outputSize, T = 0.07, momentum = 0.5):
+    def __init__(self, inputSize, outputSize, T = 0.07, momentum = 0.5, sample_duration = 1):
         super(LinearAverageWithWeights, self).__init__()
         stdv = 1. / math.sqrt(inputSize/3)
         # if torch.cuda.is_available():
@@ -96,6 +96,11 @@ class LinearAverageWithWeights(nn.Module):
                         )
         self.memory =  nn.Parameter(
                         F.normalize(torch.rand(outputSize, inputSize).mul_(2*stdv).add_(-stdv)) ,
+                        requires_grad = False
+                        )
+        ### modify 0813
+        self.vectorBank = nn.Parameter(
+                        F.normalize(torch.rand(outputSize, inputSize * sample_duration).mul_(2*stdv).add_(-stdv)) ,
                         requires_grad = False
                         )
         self.register_buffer('memory2', torch.rand(outputSize, inputSize).mul_(2*stdv).add_(-stdv))
@@ -130,6 +135,8 @@ class LinearAverageWithWeights(nn.Module):
             # updated_weight = F.normalize(weight_pos) # TOODO
             self.memory.index_copy_(0, y.data.view(-1), updated_weight )
             # self.memory = nn.Parameter(self.weights, requires_grad = False)
+
+            ### modify 0813
 
         # loss(x, class) = -log(exp(x[class]) / (\sum_j exp(x[j]))) = -x[class] + log(\sum_j exp(x[j]))
 

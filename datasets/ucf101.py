@@ -120,13 +120,25 @@ def make_dataset(
             sample['label'] = class_to_idx[annotations[i]['label']]
         else:
             sample['label'] = -1
-        # if n_samples_for_each_video == 1:
-        sample['frame_indices_local'] = list(range(1, n_frames + 1))
-        sample['frame_indices_global'] = list(range(frame_index_global, n_frames + frame_index_global))
-        sample['frame_indices_global2'] = [i*100 + x  for x in range(1, n_frames + 1)]
-        frame_index_global += n_frames
-        dataset.append(sample)
-        targets.append( sample['label'] )
+        if n_samples_for_each_video == 1:
+            n_frames = min(n_frames, sample_duration)
+            sample['frame_indices_local'] = list(range(1, n_frames + 1))
+            sample['frame_indices_global'] = list(range(frame_index_global, n_frames + frame_index_global))
+            sample['frame_indices_global2'] = [i*100 + x  for x in range(1, n_frames + 1)]
+            frame_index_global += n_frames
+            dataset.append(sample)
+            targets.append( sample['label'] )
+        else: ### modify 0813
+            ### case one: vector embedding
+            n_frames = min(n_frames, sample_duration)
+            width = n_samples_for_each_video # 2 * 4 + 1, overwrite
+            for j in range(1, n_frames + 1 - width):
+                sample_j = copy.deepcopy(sample)
+                sample_j['frame_indices_local'] = list(range(j, width + j))
+                sample_j['frame_indices_global'] = -1 ### this one should not be used
+                sample_j['frame_indices_global2'] = [i*100 + x  for x in range(j, width + j)]
+                dataset.append(sample_j)
+                targets.append(sample_j['label'])
     return dataset, targets
 
 class UCF101Instance(data.Dataset):
@@ -176,9 +188,9 @@ class UCF101Instance(data.Dataset):
             tuple: (clip, target) where target is class_index of the target class.
         """
         path = self.data[index]['video']
-        frame_indices = self.data[index]['frame_indices_local']
-        frame_indices_global = self.data[index]['frame_indices_global']
-        frame_indices_global2 = self.data[index]['frame_indices_global2']
+        frame_indices = self.data[index]['frame_indices_local'] # index 1 ... n_frames
+        frame_indices_global = self.data[index]['frame_indices_global'] # index 1 ... 9700 x n_frames
+        frame_indices_global2 = self.data[index]['frame_indices_global2'] # video_index xxx
         video_index = self.data[index]['video_index'] # index 0...9700
         target = self.data[index]['label'] # video_id index 0...101
         if self.target_transform is not None:
@@ -192,9 +204,13 @@ class UCF101Instance(data.Dataset):
             clip = [self.spatial_transform(img) for img in clip]
         if self.transform is not None:
             clip = [self.transform(img) for img in clip]
-        clip = torch.stack(clip, 0).permute(1, 0, 2, 3)
-        
-        return clip, target, video_index
+
+        # clip = torch.stack(clip, 0).permute(1, 0, 2, 3) # like volume
+        clip = torch.stack(clip, 0)
+        target = torch.tensor([target for i in range(clip.shape[0])], dtype=torch.long)
+        video_index = torch.tensor([video_index for i in range(clip.shape[0])], dtype=torch.long)
+        frame_index = torch.tensor(frame_indices_global2, dtype=torch.long)
+        return clip, target, video_index, frame_index
 
     def __len__(self):
         return len(self.data)
