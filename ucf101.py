@@ -18,6 +18,7 @@ import argparse
 import numpy as np
 
 import models
+from models.resnet import resnet18
 from models import resnet_ucf101
 import datasets
 
@@ -127,7 +128,7 @@ ndata = trainset.__len__()
 ### Build Model
 print('==> Building model..')
 ### Define net
-net = models.__dict__['ResNet18'](low_dim=args.low_dim, spatial_size = args.spatial_size)
+net = resnet18(low_dim=args.low_dim, spatial_size = args.spatial_size)
 ### modify 0813
 # net = resnet_ucf101.resnet18(
 #             num_classes = args.low_dim,
