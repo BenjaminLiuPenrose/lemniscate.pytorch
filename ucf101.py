@@ -204,11 +204,11 @@ def train(epoch):
         data_time.update(time.time() - end)
         inputs, targets, indexes, findexes = inputs.to(device), targets.to(device), indexes.to(device), findexes.to(device)
         ### modify 0813
+        st() # view targets
         b, d, c, w, h = inputs.shape; inputs = inputs.view(b*d, c, w, h)
         b, d = targets.shape; targets = targets.view(b*d)
         b, d = indexes.shape; indexes = indexes.view(b*d)
         b, d = findexes.shape; findexes = findexes.view(b*d)
-        st() # view targets
         ### modify 0813
         optimizer.zero_grad()
 
