@@ -101,7 +101,7 @@ trainset = datasets.UCF101Instance(
             )
 trainloader = torch.utils.data.DataLoader(
                 trainset,
-                batch_size = int( 64 / args.sample_duration ),
+                batch_size = int( 128 / args.sample_duration ),
                 shuffle = True,
                 num_workers =  2
             )
@@ -118,7 +118,7 @@ testset = datasets.UCF101Instance(
             )
 testloader = torch.utils.data.DataLoader(
                 testset,
-                batch_size = int( 64 / args.sample_duration ),
+                batch_size = int( 128 / args.sample_duration ),
                 shuffle = False,
                 num_workers = 2
             )
@@ -204,7 +204,7 @@ def train(epoch):
         data_time.update(time.time() - end)
         inputs, targets, indexes, findexes = inputs.to(device), targets.to(device), indexes.to(device), findexes.to(device)
         ### modify 0813
-        # st() # view targets
+        st() # view targets
         b, d, c, w, h = inputs.shape; inputs = inputs.view(b*d, c, w, h)
         b, d = targets.shape; targets = targets.view(b*d)
         b, d = indexes.shape; indexes = indexes.view(b*d)
