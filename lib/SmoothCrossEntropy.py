@@ -11,7 +11,7 @@ class SmoothCrossEntropy(nn.Module):
     """
     def __init__(self, lambd):
         super(SmoothCrossEntropy, self).__init__()
-        self.lambda = lambd
+        self.lambd = lambd
 
     def forward(outputs, targets, findexes, lemniscate): # indexes
         loss = nn.CrossEntropyLoss(outputs, targets)
