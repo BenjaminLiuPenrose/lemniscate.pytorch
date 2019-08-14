@@ -129,7 +129,7 @@ testset = datasets.UCF101Instance(
             spatial_transform=transform_test["spatial"],
             temporal_transform=transform_test["temporal"],
             target_transform=transform_test["target"],
-            sample_duration = args.sample_durations
+            sample_duration = args.sample_duration
             )
 testloader = torch.utils.data.DataLoader(testset, batch_size=int(128 / args.sample_duration), shuffle=False, num_workers=2)
 # testset = datasets.CIFAR100Instance(root='./data', train=False, download=True, transform=transform_test)
@@ -147,7 +147,7 @@ net = resnet_ucf101.resnet18(
                 spatial_size=args.spatial_size,
                 sample_duration=args.sample_duration
 )
-# define leminiscate
+# define lemniscate
 if args.nce_k > 0:
     lemniscate = NCEAverage(args.low_dim, ndata, args.nce_k, args.nce_t, args.nce_m)
 else:
