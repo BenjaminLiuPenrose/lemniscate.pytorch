@@ -101,7 +101,7 @@ trainset = datasets.UCF101Instance(
             )
 trainloader = torch.utils.data.DataLoader(
                 trainset,
-                batch_size = int( 128 / args.sample_duration ),
+                batch_size = int( 64 / args.sample_duration ),
                 shuffle = True,
                 num_workers =  2
             )
@@ -118,7 +118,7 @@ testset = datasets.UCF101Instance(
             )
 testloader = torch.utils.data.DataLoader(
                 testset,
-                batch_size = int( 128 / args.sample_duration ),
+                batch_size = int( 64 / args.sample_duration ),
                 shuffle = False,
                 num_workers = 2
             )
