@@ -202,9 +202,9 @@ def train(epoch):
     end = time.time()
     for batch_idx, (inputs, targets, indexes, findexes) in enumerate(trainloader):
         data_time.update(time.time() - end)
+        st() # view targets
         inputs, targets, indexes, findexes = inputs.to(device), targets.to(device), indexes.to(device), findexes.to(device)
         ### modify 0813
-        st() # view targets
         b, d, c, w, h = inputs.shape; inputs = inputs.view(b*d, c, w, h)
         b, d = targets.shape; targets = targets.view(b*d)
         b, d = indexes.shape; indexes = indexes.view(b*d)
