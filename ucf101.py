@@ -232,7 +232,7 @@ for epoch in range(start_epoch, start_epoch + 100):
         }
         if not os.path.isdir('checkpoint'):
             os.mkdir('checkpoint')
-        torch.svae(state, './checkpoint/ckpt_ucf101.t7')
+        torch.save(state, './checkpoint/ckpt_ucf101.t7')
         best_acc = acc
         print("="*100+"saving best_acc_ucf.npy"+"="*100)
         X = np.append(lemniscate.memory.cpu().detach().numpy(), np.array([trainset.targets]).T, axis = 1)
