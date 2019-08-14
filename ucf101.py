@@ -154,11 +154,11 @@ if device == 'cuda':
 if args.test_only or len(args.resume) > 0:
     print('==> Resuming from checkpoint..')
     assert os.path.isdir('checkpoint'), 'Error: no checkpoint directory found!'
-        checkpoint = torch.load('./checkpoint/' + args.resume)
-        net.load_state_dict(checkpoint['net'])
-        lemniscate = checkpoint['lemniscate']
-        best_acc = checkpoint['acc']
-        start_epoch = checkpoint['epoch']
+    checkpoint = torch.load('./checkpoint/' + args.resume)
+    net.load_state_dict(checkpoint['net'])
+    lemniscate = checkpoint['lemniscate']
+    best_acc = checkpoint['acc']
+    start_epoch = checkpoint['epoch']
 
 ### Dfine criterion/loss
 if hasattr(lemniscate, 'K'):
