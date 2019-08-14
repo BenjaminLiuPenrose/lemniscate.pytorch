@@ -127,7 +127,7 @@ ndata = trainset.__len__()
 print('==> Building model..')
 ### Define net
 # net = models.__dict__['ResNet18'](low_dim=args.low_dim)
- net = resnet_ucf101.resnet18(
+net = resnet_ucf101.resnet18(
             num_classes = args.low_dim,
             shortcut_type = args.resnet_shortcut,
             spatial_size = args.spatial_size,
