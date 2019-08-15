@@ -144,7 +144,7 @@ def make_dataset(
                 sample_j['frame_indices_global'] = list(range(frame_index_global + j - 1, frame_index_global + width + j - 1 )) ### this one should not be used
                 sample_j['frame_indices_global2'] = [i*100 + x  for x in range(j, width + j)]
                 sample_j['video_index_v'] = sample_j['video_index'] * (n_frames - width) + j
-                sample_j['video_index_v2'] = sample_j['video_index'] * 100 + j 
+                sample_j['video_index_v2'] = sample_j['video_index'] * 100 + j
                 dataset.append(sample_j)
                 targets.append(sample_j['label'])
             frame_index_global += n_frames
@@ -222,7 +222,7 @@ class UCF101Instance(data.Dataset):
         video_index_v = torch.tensor([video_index_v for i in range(clip.shape[0])], dtype=torch.long)
         frame_index = torch.tensor(frame_indices_global, dtype=torch.long)
         ### modify 0814, video_index_v vector embedding
-        return clip, target, video_index_v, frame_index
+        return clip, target, video_index, frame_index
 
     def __len__(self):
         return len(self.data)
