@@ -117,7 +117,7 @@ def make_dataset(
             'video_index': i
         }
         if len(annotations) != 0:
-            sample['label'] = class_to_idx[annotations[i]['label']]
+            sample['label'] = class_to_idx[ annotations[i]['label'] ]
         else:
             sample['label'] = -1
         if n_samples_for_each_video == 1:
@@ -137,6 +137,7 @@ def make_dataset(
                 sample_j['frame_indices_local'] = list(range(j, width + j))
                 sample_j['frame_indices_global'] = -1 ### this one should not be used
                 sample_j['frame_indices_global2'] = [i*100 + x  for x in range(j, width + j)]
+                sample_j['video_index_v'] = sample_j['video_index'] * 100 + j
                 dataset.append(sample_j)
                 targets.append(sample_j['label'])
     return dataset, targets
@@ -192,6 +193,7 @@ class UCF101Instance(data.Dataset):
         frame_indices_global = self.data[index]['frame_indices_global'] # index 1 ... 9700 x n_frames
         frame_indices_global2 = self.data[index]['frame_indices_global2'] # video_index xxx
         video_index = self.data[index]['video_index'] # index 0...9700
+        video_index_v = self.data[index]['video_index_v'] # video index v, 0...9700 xxx
         target = self.data[index]['label'] # video_id index 0...101
         if self.target_transform is not None:
             target = self.target_transform(target)
@@ -209,6 +211,7 @@ class UCF101Instance(data.Dataset):
         clip = torch.stack(clip, 0)
         target = torch.tensor([target for i in range(clip.shape[0])], dtype=torch.long)
         video_index = torch.tensor([video_index for i in range(clip.shape[0])], dtype=torch.long)
+        video_index_v = torch.tensor([video_index_v for i in range(clip.shape[0])], dtype=torch.long)
         frame_index = torch.tensor(frame_indices_global, dtype=torch.long)
         return clip, target, video_index, frame_index
 
