@@ -121,6 +121,7 @@ class LinearAverageWithWeights(nn.Module):
         out.div_(T)
 
         with torch.no_grad():
+            print(y.data.view(-1), self.memory.shape)
             weight_pos = self.memory.index_select(0, y.data.view(-1)) #.resize_as_(x)
             weight_pos.mul_(momentum)
             # weight_pos.add_(torch.mul(x.data, 1-momentum))
