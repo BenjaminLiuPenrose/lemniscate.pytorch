@@ -222,7 +222,7 @@ class UCF101Instance(data.Dataset):
         video_index_v = torch.tensor([video_index_v for i in range(clip.shape[0])], dtype=torch.long)
         frame_index = torch.tensor(frame_indices_global, dtype=torch.long)
         ### modify 0814, video_index_v vector embedding
-        return clip, target, video_index, frame_index
+        return clip, target, video_index_v, frame_index
 
     def __len__(self):
         return len(self.data)
