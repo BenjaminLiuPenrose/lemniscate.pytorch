@@ -215,7 +215,7 @@ def train(epoch):
         optimizer.zero_grad()
 
         features = net(inputs)
-        outputs = lemniscate(features, indexes, findexes)
+        outputs = lemniscate(features, indexes)
         loss = criterion(outputs, indexes)
 
         loss.backward()
@@ -247,11 +247,13 @@ for epoch in range(start_epoch, start_epoch + 100):
         torch.save(state, './checkpoint/ckpt_ucf101_cls.t7')
         best_acc = acc
         print("="*100+"saving best_acc_ucf_cls.npy"+"="*100)
-        # X = np.append(lemniscate.memory.cpu().detach().numpy(), np.array([trainset.targets]).T, axis = 1)
-        X = lemniscate.vectorBank.cpu().detach().numpy()
-        y = np.array([trainset.targets]).T
-        np.save("best_acc_ucf_cls.npy", X)
-        np.save("best_acc_ucf_clsy.npy", y)
+        ### modify 0814
+        X = np.append(lemniscate.memory.cpu().detach().numpy(), np.array([trainset.targets]).T, axis = 1)
+        # X = lemniscate.vectorBank.cpu().detach().numpy()
+        # y = np.array([trainset.targets]).T
+        # np.save("best_acc_ucf_cls.npy", X)
+        # np.save("best_acc_ucf_clsy.npy", y)
+        ### modify 0814
     print('best accuracy: {:.2f}'.format(best_acc*100))
 
 acc, acc_top5 = kNN_ucf101(0, net, lemniscate, trainloader, testloader, 200, args.nce_t, 1)
