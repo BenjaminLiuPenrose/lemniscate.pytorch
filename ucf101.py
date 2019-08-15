@@ -147,7 +147,8 @@ else:
         ndata,
         args.nce_t,
         args.nce_m,
-        sample_duration = args.sample_duration
+        sample_duration = args.sample_duration,
+        n_samples_for_each_video = args.n_samples_for_each_video
     )
 
 if device == 'cuda':

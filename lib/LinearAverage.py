@@ -85,7 +85,7 @@ class LinearAverage(nn.Module):
 # =======================================================================================
 # ================== 0801 workable version ==================================================
 class LinearAverageWithWeights(nn.Module):
-    def __init__(self, inputSize, outputSize, T = 0.07, momentum = 0.5, sample_duration = 1):
+    def __init__(self, inputSize, outputSize, T = 0.07, momentum = 0.5, sample_duration = 1, n_samples_for_each_video = 1):
         super(LinearAverageWithWeights, self).__init__()
         stdv = 1. / math.sqrt(inputSize/3)
         # if torch.cuda.is_available():
@@ -95,7 +95,7 @@ class LinearAverageWithWeights(nn.Module):
                         requires_grad = True
                         )
         self.memory =  nn.Parameter(
-                        F.normalize(torch.rand(outputSize, inputSize).mul_(2*stdv).add_(-stdv)) ,
+                        F.normalize(torch.rand(outputSize, inputSize * n_samples_for_each_video).mul_(2*stdv).add_(-stdv)) ,
                         requires_grad = False
                         )
         ### modify 0813
