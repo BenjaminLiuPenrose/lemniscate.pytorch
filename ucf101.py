@@ -49,6 +49,7 @@ parser.add_argument('--annotation_path', '-anno',
                     type=str, help='annotation path')
 parser.add_argument('--norm_value', default=255, type=int, help='Divide inputs by 255 or 1')
 parser.add_argument('--sample_duration', default=32, type=int, help='Temporal duration of inputs')
+parser.add_argument('--n_samples_for_each_video', default=1, type=int, help='Temporal duration of inputs')
 parser.add_argument('--spatial_size', default=224, type=int, help='Height and width of inputs')
 parser.add_argument('--initial_scale', default=1.0, type=float, help='Initial scale for multiscale cropping')
 parser.add_argument('--num_scales', default=5, type=int, help='Number of scales for multiscale cropping')
@@ -98,7 +99,7 @@ trainset = datasets.UCF101Instance(
                 temporal_transform = transform_train['temporal'],
                 target_transform = transform_train['target'],
                 sample_duration = args.sample_duration,
-                n_samples_for_each_video = 1
+                n_samples_for_each_video = args.n_samples_for_each_video
             )
 trainloader = torch.utils.data.DataLoader(
                 trainset,
@@ -115,7 +116,7 @@ testset = datasets.UCF101Instance(
                 temporal_transform = transform_test['temporal'],
                 target_transform = transform_test['target'],
                 sample_duration = args.sample_duration,
-                n_samples_for_each_video = 1
+                n_samples_for_each_video = args.n_samples_for_each_video
             )
 testloader = torch.utils.data.DataLoader(
                 testset,
