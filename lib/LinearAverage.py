@@ -108,7 +108,7 @@ class LinearAverageWithWeights(nn.Module):
         # self.l2norm = Normalize(2)
         self.params = nn.Parameter(torch.tensor([T, momentum]), requires_grad = False)
 
-    def forward(self, x, y):
+    def forward(self, x, y, y2 = None):
         T = self.params[0].item()
         momentum = self.params[1].item()
 
@@ -137,6 +137,17 @@ class LinearAverageWithWeights(nn.Module):
             # self.memory = nn.Parameter(self.weights, requires_grad = False)
 
             ### modify 0813
+            if y2 is not None:
+                vector_pos = self.vectorBank.index_select(0, y2.data.view(-1))
+                vector_pos.mul_(momentum)
+                vector_pos.add_(torch.mul(
+                    x.data,
+                    1 - momentum
+                    )
+                )
+                v_norm = vector_pos.pow(2).sum(1, keepdim = True).pow(0.5)
+                updated_vector = vector_pos.div(v_norm)
+                self.vectorBank.index_copy_(0, y2.data.view(-1), updated_vector)
 
         # loss(x, class) = -log(exp(x[class]) / (\sum_j exp(x[j]))) = -x[class] + log(\sum_j exp(x[j]))
 

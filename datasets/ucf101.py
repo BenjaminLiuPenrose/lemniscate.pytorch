@@ -209,7 +209,7 @@ class UCF101Instance(data.Dataset):
         clip = torch.stack(clip, 0)
         target = torch.tensor([target for i in range(clip.shape[0])], dtype=torch.long)
         video_index = torch.tensor([video_index for i in range(clip.shape[0])], dtype=torch.long)
-        frame_index = torch.tensor(frame_indices_global2, dtype=torch.long)
+        frame_index = torch.tensor(frame_indices_global, dtype=torch.long)
         return clip, target, video_index, frame_index
 
     def __len__(self):
