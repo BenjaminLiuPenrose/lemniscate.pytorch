@@ -101,7 +101,7 @@ class LinearAverageWithWeights(nn.Module):
                         )
         ### modify 0813
         self.vectorBank = nn.Parameter(
-                        F.normalize(torch.rand(outputSize * sample_duratio, inputSizen).mul_(2*stdv).add_(-stdv)) ,
+                        F.normalize(torch.rand(outputSize * sample_duration, inputSize).mul_(2*stdv).add_(-stdv)) ,
                         requires_grad = False
                         )
         self.register_buffer('memory2', torch.rand(outputSize, inputSize).mul_(2*stdv).add_(-stdv))
