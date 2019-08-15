@@ -91,7 +91,7 @@ class LinearAverageWithWeights(nn.Module):
         # if torch.cuda.is_available():
         #     torch.cuda.manual_seed_all(42)
         self.weights =  nn.Parameter(
-                        F.normalize(torch.rand(outputSize, inputSize).mul_(2*stdv).add_(-stdv)) ,
+                        F.normalize(torch.rand(outputSize, inputSize * n_samples_for_each_video).mul_(2*stdv).add_(-stdv)) ,
                         requires_grad = True
                         )
         self.memory =  nn.Parameter(
