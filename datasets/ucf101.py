@@ -107,6 +107,11 @@ def make_dataset(
         if n_frames <= 0:
             continue
 
+        ### modify 0814, skip too short video
+        if n_frames < sample_duration:
+            print("[ERR] {} {}-{}".format(video_names[i], n_frames, sample_duration))
+            continue
+
         begin_t = 1
         end_t = n_frames # 64
         sample = {
@@ -122,8 +127,6 @@ def make_dataset(
         else:
             sample['label'] = -1
         if n_samples_for_each_video == 1:
-            if n_frames < sample_duration:
-                print("[ERR] {} {}-{}".format(video_names[i], n_frames, sample_duration))
             n_frames = min(n_frames, sample_duration)
             sample['frame_indices_local'] = list(range(1, n_frames + 1))
             sample['frame_indices_global'] = list(range(frame_index_global, n_frames + frame_index_global))
