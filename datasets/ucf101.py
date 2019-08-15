@@ -114,7 +114,8 @@ def make_dataset(
             'segment': [begin_t, end_t],
             'n_frames': n_frames,
             'video_id': video_names[i].split('/')[1],
-            'video_index': i
+            'video_index': i,
+            'video_index_v': i
         }
         if len(annotations) != 0:
             sample['label'] = class_to_idx[ annotations[i]['label'] ]
