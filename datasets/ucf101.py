@@ -141,11 +141,12 @@ def make_dataset(
             for j in range(1, n_frames + 1 - width):
                 sample_j = copy.deepcopy(sample)
                 sample_j['frame_indices_local'] = list(range(j, width + j))
-                sample_j['frame_indices_global'] = -1 ### this one should not be used
+                sample_j['frame_indices_global'] = list(range(frame_index_global + j - 1, frame_index_global + width + j - 1 )) ### this one should not be used
                 sample_j['frame_indices_global2'] = [i*100 + x  for x in range(j, width + j)]
                 sample_j['video_index_v'] = sample_j['video_index'] * 100 + j
                 dataset.append(sample_j)
                 targets.append(sample_j['label'])
+            frame_index_global += n_frames
     return dataset, targets
 
 class UCF101Instance(data.Dataset):
