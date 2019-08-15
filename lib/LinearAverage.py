@@ -138,6 +138,7 @@ class LinearAverageWithWeights(nn.Module):
 
             ### modify 0813
             if y2 is not None:
+                print("updating weights...")
                 vector_pos = self.vectorBank.index_select(0, y2.data.view(-1))
                 vector_pos.mul_(momentum)
                 vector_pos.add_(torch.mul(

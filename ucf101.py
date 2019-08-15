@@ -145,7 +145,8 @@ else:
         args.low_dim,
         ndata,
         args.nce_t,
-        args.nce_m
+        args.nce_m,
+        sample_duration = args.sample_duration
     )
 
 if device == 'cuda':
