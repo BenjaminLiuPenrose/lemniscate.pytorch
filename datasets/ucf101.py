@@ -109,7 +109,7 @@ def make_dataset(
 
         ### modify 0814, skip too short video
         if n_frames < sample_duration:
-            print("[ERR] {} {}-{}".format(video_names[i], n_frames, sample_duration))
+            print("[ERR] {} {}-{}, skipped".format(video_names[i], n_frames, sample_duration))
             continue
 
         begin_t = 1
