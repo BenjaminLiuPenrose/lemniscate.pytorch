@@ -201,7 +201,7 @@ class UCF101Instance(data.Dataset):
         frame_indices_global = self.data[index]['frame_indices_global'] # index 1 ... 9700 x n_frames
         frame_indices_global2 = self.data[index]['frame_indices_global2'] # video_index xxx
         video_index = self.data[index]['video_index'] # index 0...9700
-        video_index_v = self.data[index]['video_index_v'] # video index v, 0...9700 xxx
+        video_index_v = self.data[index]['video_index_v'] # video index v, 0...9700 xxx ++, 2 xxx
         target = self.data[index]['label'] # video_id index 0...101
         if self.target_transform is not None:
             target = self.target_transform(target)
@@ -221,8 +221,14 @@ class UCF101Instance(data.Dataset):
         video_index = torch.tensor([video_index for i in range(clip.shape[0])], dtype=torch.long)
         video_index_v = torch.tensor([video_index_v for i in range(clip.shape[0])], dtype=torch.long)
         frame_index = torch.tensor(frame_indices_global, dtype=torch.long)
-        ### modify 0814, video_index_v vector embedding
-        return clip, target, video_index_v, frame_index
+        frame_index2 = torch.tensor(frame_indices_global2, dtype=torch.long)
+        ### modify 0814, video_index_v vector embedding, 2, v
+        ### smooth loss
+        return clip, target, video_index, frame_index2
+        ### vector embedding
+        # return clip, target, video_index_v, frame_index
+        ### original
+        # return clip, target, video_index, frame_index
 
     def __len__(self):
         return len(self.data)
