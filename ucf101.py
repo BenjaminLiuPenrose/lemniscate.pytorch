@@ -225,9 +225,9 @@ def train(epoch):
         ### smooth loss
         outputs = lemniscate(features, indexes, findexes)
         ### vector embedding, original
-        # loss = criterion(outputs, indexes)
+        loss = criterion(outputs, indexes)
         ### smooth loss
-        loss = criterion(outputs, indexes, findexes, lemniscate, args.sample_duration)
+        # loss = criterion(outputs, indexes, findexes, lemniscate, args.sample_duration)
 
         loss.backward()
         optimizer.step()
