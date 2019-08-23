@@ -221,9 +221,9 @@ def train(epoch):
         features = net(inputs)
 
         ### vector embedding, original
-        # outputs = lemniscate(features, indexes)
+        outputs = lemniscate(features, indexes)
         ### smooth loss
-        outputs = lemniscate(features, indexes, findexes)
+        # outputs = lemniscate(features, indexes, findexes)
         ### vector embedding, original
         loss = criterion(outputs, indexes)
         ### smooth loss
