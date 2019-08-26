@@ -208,7 +208,7 @@ def train(epoch):
     end = time.time()
     for batch_idx, (inputs, targets, indexes, findexes) in enumerate(trainloader):
         data_time.update(time.time() - end)
-        st() # view targets
+        # view targets
         inputs, targets, indexes, findexes = inputs.to(device), targets.to(device), indexes.to(device), findexes.to(device)
         ### modify 0813
         b, d, c, w, h = inputs.shape; inputs = inputs.view(b*d, c, w, h)
@@ -217,7 +217,7 @@ def train(epoch):
         b, d = findexes.shape; findexes = findexes.view(b*d)
         ### modify 0813
         optimizer.zero_grad()
-
+        st()
         features = net(inputs)
 
         ### vector embedding, original
