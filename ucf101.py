@@ -217,7 +217,7 @@ def train(epoch):
         b, d = findexes.shape; findexes = findexes.view(b*d)
         ### modify 0813
         optimizer.zero_grad()
-        st()
+        # st()
         features = net(inputs)
 
         ### vector embedding, original
