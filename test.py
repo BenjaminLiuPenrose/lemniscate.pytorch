@@ -298,14 +298,15 @@ def kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, K, sigma, recomp
             ### modify 0813
 
             batchSize = inputs.size(0)
-            st()
+            # st()
             features = net(inputs)
             net_time.update(time.time() - end)
             end = time.time()
 
             dist = torch.mm(features, trainFeatures)
             yd, yi = dist.topk(K, dim=1, largest=True, sorted=True)
-            candidates = trainLabels.view(1,-1).expand(batchSize, -1)
+            ### original, vector embedding
+            candidates = trainLabels.repeat(lemniscate.n_samples_for_each_video).view(1,-1).expand(batchSize, -1)
             # st()
             retrieval = torch.gather(candidates, 1, yi)
             retrieval_one_hot.resize_(batchSize * K, C ).zero_()
