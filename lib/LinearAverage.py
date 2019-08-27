@@ -109,6 +109,7 @@ class LinearAverageWithWeights(nn.Module):
         # self.l2norm = Normalize(2)
         self.params = nn.Parameter(torch.tensor([T, momentum]), requires_grad = False)
         self.n_samples_for_each_video = n_samples_for_each_video
+        self.sample_duration = sample_duration
 
     def forward(self, x, y, y2 = None):
         T = self.params[0].item()
