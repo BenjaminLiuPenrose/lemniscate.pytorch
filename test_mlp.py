@@ -137,13 +137,13 @@ with torch.no_grad():
         b, d = targets.shape; targets = targets.view(b*d)
         b, d = indexes.shape; indexes = indexes.view(b*d)
         b, d = findexes.shape; findexes = findexes.view(b*d)
-        st()
+        # st()
         features = resnet(inputs)
         outputs = net(features)
         _, predicted = torch.max(outputs, 1)
         for fi in range(features.shape[0]):
             y_hat.append(
-                net(predicted[fi])
+                predicted[fi]
             )
             y_test.append(
                 targets[fi]
