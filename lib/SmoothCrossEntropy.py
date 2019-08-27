@@ -5,6 +5,7 @@ from torch import nn
 import math
 from lib.normalize import Normalize
 import copy
+from pdb import set_trace as st
 
 class SmoothCrossEntropy(nn.Module):
     """
@@ -18,6 +19,7 @@ class SmoothCrossEntropy(nn.Module):
         criterion = nn.CrossEntropyLoss()
         criterion_aux = nn.MSELoss(reduction = "sum")
         loss = criterion(outputs, targets)
+        st()
         vector_x = [lemniscate.vectorBank[fi, :] for fi in range(len(findexes)) if (fi+1) % sample_duration != 0 ]
         vector_y = [lemniscate.vectorBank[fi, :] for fi in range(len(findexes)) if fi % sample_duration != 0]
         vector_x = torch.tensor(vector_x)
