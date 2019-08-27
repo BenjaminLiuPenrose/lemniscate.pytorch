@@ -140,7 +140,7 @@ with torch.no_grad():
         _, predicted = torch.max(features, 1)
         for fi in range(features.shape[0]):
             y_hat.append(
-                net(predicted[fi, :])
+                net(predicted[fi])
             )
             y_test.append(
                 targets[fi]
