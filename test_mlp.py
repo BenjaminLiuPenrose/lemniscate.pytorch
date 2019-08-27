@@ -130,6 +130,7 @@ for epoch in range(num_epoch):
 
 ### evaluate mlp
 y_hat = []
+y_test = []
 with torch.no_grad():
     for batch_idx, (inputs, targets, indexes, findexes) in enumerate(testloader):
         b, d, c, w, h = inputs.shape; inputs = inputs.view(b*d, c, w, h)
