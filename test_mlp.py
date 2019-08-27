@@ -112,7 +112,7 @@ optimizer = optim.SGD(net.parameters(), lr=learning_rate, momentum=0.9)
 criterion = nn.CrossEntropyLoss()
 
 ### train mlp
-bsize = 1
+bsize = 128
 for epoch in range(num_epoch):
     for fi in range( int(X.shape[0] / bsize) ):
         optimizer.zero_grad()  # zero the gradient buffer
