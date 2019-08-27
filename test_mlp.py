@@ -92,6 +92,7 @@ class mlp(nn.Module):
             out = self.fc[i+1](out)
             out = self.relu[i+1](out)
         out = self.fcl(out)
+        # out = nn.LogSoftmax(out)
         # out = F.log_softmax(out)
         return out
 
@@ -110,6 +111,7 @@ learning_rate = 0.3
 num_epoch = 100
 optimizer = optim.SGD(net.parameters(), lr=learning_rate, momentum=0.9)
 criterion = nn.CrossEntropyLoss()
+# criterion = nn.NLLLoss()
 
 ### train mlp
 bsize = 128
@@ -135,9 +137,10 @@ with torch.no_grad():
         b, d = indexes.shape; indexes = indexes.view(b*d)
         b, d = findexes.shape; findexes = findexes.view(b*d)
         features = resnet(inputs)
+        _, predicted = torch.max(features, 1)
         for fi in range(features.shape[0]):
             y_hat.append(
-                net(features[fi, :])
+                net(predicted[fi, :])
             )
 
 y_test = np.array(y_test)

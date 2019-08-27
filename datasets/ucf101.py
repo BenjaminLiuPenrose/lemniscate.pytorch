@@ -224,9 +224,9 @@ class UCF101Instance(data.Dataset):
         frame_index2 = torch.tensor(frame_indices_global2, dtype=torch.long)
         ### modify 0814, video_index_v vector embedding, 2, v
         ### smooth loss
-        # return clip, target, video_index, frame_index2
+        return clip, target, video_index, frame_index2
         ### vector embedding
-        return clip, target, video_index_v, frame_index
+        # return clip, target, video_index_v, frame_index
         ### original
         # return clip, target, video_index, frame_index
 

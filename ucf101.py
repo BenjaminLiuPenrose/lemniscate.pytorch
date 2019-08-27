@@ -171,9 +171,9 @@ if hasattr(lemniscate, 'K'):
     assert False
 else:
     ### vector embedding, original
-    criterion = nn.CrossEntropyLoss()
+    # criterion = nn.CrossEntropyLoss()
     ### smooth loss
-    # criterion = SmoothCrossEntropy(lambd = .3)
+    criterion = SmoothCrossEntropy(lambd = .3)
 
 net.to(device)
 lemniscate.to(device)
@@ -221,13 +221,13 @@ def train(epoch):
         features = net(inputs)
 
         ### vector embedding, original
-        outputs = lemniscate(features, indexes)
+        # outputs = lemniscate(features, indexes)
         ### smooth loss
-        # outputs = lemniscate(features, indexes, findexes)
+        outputs = lemniscate(features, indexes, findexes)
         ### vector embedding, original
-        loss = criterion(outputs, indexes)
+        # loss = criterion(outputs, indexes)
         ### smooth loss
-        # loss = criterion(outputs, indexes, findexes, lemniscate, args.sample_duration)
+        loss = criterion(outputs, indexes, findexes, lemniscate, args.sample_duration)
 
         loss.backward()
         optimizer.step()
@@ -255,15 +255,15 @@ for epoch in range(start_epoch, start_epoch + 100):
         }
         if not os.path.isdir('checkpoint'):
             os.mkdir('checkpoint')
-        torch.save(state, './checkpoint/ckpt_ucf101_test34.t7')
+        torch.save(state, './checkpoint/ckpt_ucf101_test35.t7')
         best_acc = acc
         print("="*100+"saving best_acc_ucf.npy"+"="*100)
         ### modify 0814
         # X = np.append(lemniscate.memory.cpu().detach().numpy(), np.array([trainset.targets]).T, axis = 1)
         X = lemniscate.vectorBank.cpu().detach().numpy()
         y = np.array([trainset.targets]).T
-        np.save("best_acc_ucf_cls_test34.npy", X)
-        np.save("best_acc_ucf_clsy_test34.npy", y)
+        np.save("best_acc_ucf_cls_test35.npy", X)
+        np.save("best_acc_ucf_clsy_test35.npy", y)
         ### modify 0814
     print('best accuracy: {:.2f}'.format(best_acc*100))
 
