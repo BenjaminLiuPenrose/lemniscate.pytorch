@@ -142,6 +142,9 @@ with torch.no_grad():
             y_hat.append(
                 net(predicted[fi, :])
             )
+            y_test.append(
+                targets[fi]
+            )
 
 y_test = np.array(y_test)
 y_test2 = np.array([y_test[i * sample_duration] for i in range(  int(len(y_test) / sample_duration)) ])
