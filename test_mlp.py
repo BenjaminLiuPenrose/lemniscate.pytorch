@@ -139,7 +139,8 @@ with torch.no_grad():
         b, d = findexes.shape; findexes = findexes.view(b*d)
         st()
         features = resnet(inputs)
-        _, predicted = torch.max(features, 1)
+        outputs = net(features)
+        _, predicted = torch.max(outputs, 1)
         for fi in range(features.shape[0]):
             y_hat.append(
                 net(predicted[fi])
