@@ -7,6 +7,7 @@ import numpy as np
 import torch.nn.functional as F
 from utils.losses import OnlineContrastiveLoss
 from utils.utils import AllPositivePairSelector, HardNegativePairSelector, AllNegativePairSelector # Strategies for selecting pairs within a minibatch
+import math
 from pdb import set_trace as st
 
 def NN(epoch, net, lemniscate, trainloader, testloader, recompute_memory=0, async_bank = False):
