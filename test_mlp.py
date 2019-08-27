@@ -153,7 +153,7 @@ y_test = np.array(y_test)
 y_test2 = np.array([y_test[i * sample_duration] for i in range(  int(len(y_test) / sample_duration)) ])
 
 y_hat2 = []
-for i in range(len(y_hat) / sample_duration):
+for i in range(int(len(y_hat) / sample_duration)):
     bg = i * sample_duration
     ed = i * sample_duration + sample_duration
     y_hat_selected = y_hat[bg: ed]
