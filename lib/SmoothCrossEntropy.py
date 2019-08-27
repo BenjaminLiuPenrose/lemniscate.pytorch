@@ -13,7 +13,7 @@ class SmoothCrossEntropy(nn.Module):
         super(SmoothCrossEntropy, self).__init__()
         self.lambd = lambd
 
-    def forward(outputs, targets, findexes, lemniscate, sample_duration): # indexes
+    def forward(self, outputs, targets, findexes, lemniscate, sample_duration): # indexes
         lambd = self.lambd
         criterion = nn.CrossEntropyLoss()
         criterion_aux = nn.MSELoss(reduction = "sum")
