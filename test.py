@@ -264,7 +264,7 @@ def kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, K, sigma, recomp
     if recompute_memory:
         transform_bak = trainloader.dataset.transform
         trainloader.dataset.transform = testloader.dataset.transform
-        temploader = torch.utils.data.DataLoader(trainloader.dataset, batch_size=100, shuffle=False, num_workers=1)
+        temploader = torch.utils.data.DataLoader(trainloader.dataset, batch_size=100, shuffle=False, num_workers=2)
         for batch_idx, (inputs, targets, indexes, findexes) in enumerate(temploader):
             targets = targets.cuda(non_blocking=True)
             batchSize = inputs.size(0)
@@ -298,7 +298,7 @@ def kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, K, sigma, recomp
             ### modify 0813
 
             batchSize = inputs.size(0)
-            # st()
+            st()
             features = net(inputs)
             net_time.update(time.time() - end)
             end = time.time()
