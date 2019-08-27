@@ -18,7 +18,7 @@ class SmoothCrossEntropy(nn.Module):
         lambd = self.lambd
         criterion = nn.CrossEntropyLoss()
         criterion_aux = nn.MSELoss(reduction = "sum")
-        # st()
+        st()
         loss = criterion(outputs, targets)
         vector_x = [lemniscate.vectorBank[findexes[fi], :] for fi in range(len(findexes)) if (fi+1) % sample_duration != 0 ]
         vector_y = [lemniscate.vectorBank[findexes[fi], :] for fi in range(len(findexes)) if fi % sample_duration != 0]

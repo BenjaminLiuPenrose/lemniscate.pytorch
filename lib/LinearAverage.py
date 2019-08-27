@@ -154,7 +154,7 @@ class LinearAverageWithWeights(nn.Module):
                 )
                 v_norm = vector_pos.pow(2).sum(1, keepdim = True).pow(0.5)
                 updated_vector = vector_pos.div(v_norm)
-                st()
+                # st()
                 # self.vectorBank.index_copy_(0, y2.data.view(-1), updated_vector)
                 self.vectorBank[y2.data.view(-1), :] = updated_vector
 
