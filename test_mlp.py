@@ -124,7 +124,7 @@ for epoch in range(num_epoch):
         loss.backward()
         optimizer.step()
 
-        if (fi+1) % 100 == 0:
+        if (fi+1) % 10 == 0:
             print ('Epoch [%d/%d], Step [%d/%d], Loss: %.4f'
                    %(epoch+1, num_epochs, fi+1, X.shape[0]//bsize, loss.data[0]))
 
