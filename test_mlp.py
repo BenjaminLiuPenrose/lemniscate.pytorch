@@ -92,7 +92,7 @@ class mlp(nn.Module):
             out = self.fc[i+1](out)
             out = self.relu[i+1](out)
         out = self.fcl(out)
-        out = F.log_softmax(out)
+        # out = F.log_softmax(out)
         return out
 
 ### build mlp
