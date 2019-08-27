@@ -246,7 +246,7 @@ def train(epoch):
 
 for epoch in range(start_epoch, start_epoch + 100):
     train(epoch)
-    acc, acc_top5 = kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, 200, args.nce_t, 1)
+    acc, acc_top5 = kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, 200, args.nce_t, 0)
     if acc > best_acc:
         print('Saving..')
         state = {
@@ -269,7 +269,7 @@ for epoch in range(start_epoch, start_epoch + 100):
         ### modify 0814
     print('best accuracy: {:.2f}'.format(best_acc*100))
 
-acc, acc_top5 = kNN_ucf101(0, net, lemniscate, trainloader, testloader, 200, args.nce_t, 1)
+acc, acc_top5 = kNN_ucf101(0, net, lemniscate, trainloader, testloader, 200, args.nce_t, 0)
 print('last accuracy: {:.2f}'.format(acc*100))
 end_glob = time.time()
 print('total Training time: {}'.format(end_glob - start_glob) )

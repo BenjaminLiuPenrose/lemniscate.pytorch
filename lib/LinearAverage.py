@@ -95,16 +95,11 @@ class LinearAverageWithWeights(nn.Module):
                         F.normalize(torch.rand(outputSize * n_samples_for_each_video, inputSize).mul_(2*stdv).add_(-stdv)) ,
                         requires_grad = True
                         )
-        if n_samples_for_each_video != 1:
-            self.memory =  nn.Parameter(
-                            F.normalize(torch.rand(outputSize * n_samples_for_each_video, inputSize).mul_(2*stdv).add_(-stdv)) ,
-                            requires_grad = False
-                            )
-        else:
-            self.memory =  nn.Parameter(
-                            F.normalize(torch.rand(outputSize * sample_duration, inputSize).mul_(2*stdv).add_(-stdv)) ,
-                            requires_grad = False
-                            )
+        self.memory =  nn.Parameter(
+                        F.normalize(torch.rand(outputSize * n_samples_for_each_video, inputSize).mul_(2*stdv).add_(-stdv)) ,
+                        requires_grad = False
+                        )
+
         ### modify 0813
         self.vectorBank = nn.Parameter(
                         F.normalize(torch.rand(outputSize * sample_duration, inputSize).mul_(2*stdv).add_(-stdv)) ,
