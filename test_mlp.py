@@ -122,9 +122,9 @@ for epoch in range(num_epoch):
         loss.backward()
         optimizer.step()
 
-        if (i+1) % 100 == 0:
+        if (fi+1) % 100 == 0:
             print ('Epoch [%d/%d], Step [%d/%d], Loss: %.4f'
-                   %(epoch+1, num_epochs, i+1, len(train_dataset)//batch_size, loss.data[0]))
+                   %(epoch+1, num_epochs, fi+1, X.shape[0]//bsize, loss.data[0]))
 
 ### evaluate mlp
 y_hat = []
