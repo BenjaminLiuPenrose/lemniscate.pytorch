@@ -112,13 +112,13 @@ optimizer = optim.SGD(net.parameters(), lr=learning_rate, momentum=0.9)
 criterion = nn.CrossEntropyLoss()
 
 ### train mlp
-bsize = 128
+bsize = 1
 for epoch in range(num_epoch):
     for fi in range( int(X.shape[0] / bsize) ):
         optimizer.zero_grad()  # zero the gradient buffer
         output = net( torch.tensor(X[(fi * bsize):(fi * bsize + bsize), :]) )
         st()
-        loss = criterion(output, torch.tensor(y[(fi * bsize):(fi * bsize + bsize)]))
+        loss = criterion(output, torch.tensor(y[(fi * bsize):(fi * bsize + bsize)]).view(-1))
         loss.backward()
         optimizer.step()
 
