@@ -276,7 +276,6 @@ def kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, K, sigma, recomp
 
             features = net(inputs)
             # stop w = v process to make w stand alone
-            st()
             trainFeatures[:, batch_idx*batchSize*lemniscate.sample_duration:batch_idx*batchSize*lemniscate.sample_duration+batchSize*lemniscate.sample_duration] = features.data.t()
         trainLabels = torch.LongTensor(temploader.dataset.targets).cuda()
         trainloader.dataset.transform = transform_bak
