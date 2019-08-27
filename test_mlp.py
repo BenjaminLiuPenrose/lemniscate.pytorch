@@ -22,12 +22,12 @@ from models.resnet import resnet18
 low_dim = 128
 spatial_size = 224
 norm_value = 255
-sample_duration = 8
+sample_duration = 1
 video_path = './data/UCF-101-Frame/'
 annotation_path = './data/UCF-101-Annotate/ucfTrainTestlist/ucf101_01.json'
 
 resnet = resnet18(low_dim = low_dim, spatial_size = spatial_size)
-checkpoint = torch.load('./checkpoint/' + 'ckpt_ucf101_test32.t7')
+checkpoint = torch.load('./checkpoint/' + 'ckpt_ucf101_test31.t7')
 checkpoint2 = copy.deepcopy(checkpoint)
 checkpoint2['net'] = OrderedDict([(".".join(k.split('.')[1:]), v) for k, v in checkpoint['net'].items()])
 resnet.load_state_dict(checkpoint2['net'])
@@ -67,26 +67,66 @@ testloader = torch.utils.data.DataLoader(
                 num_workers = 2
             )
 
-X = np.load("best_acc_ucf_cls_test32.npy")
-y = np.load("best_acc_ucf_clsy_test32.npy")
+X = np.load("best_acc_ucf_cls_test31.npy")
+y = np.load("best_acc_ucf_clsy_test31.npy")
 # X = X[:, :-1]
 X.shape, y.shape
 
-### SVM
-def svc_param_selection(X, y, nfolds, verbose = True):
-    Cs = [0.001, 0.01, 0.1, 1, 10]
-    gammas = [0.001, 0.01, 0.1, 1]
-    param_grid = {'C': Cs, 'gamma' : gammas}
-    grid_search = GridSearchCV(SVC(kernel='rbf'), param_grid,  cv=nfolds, verbose = 2) # scoring='accuracy',
-    grid_search.fit(X, y)
-    grid_search.best_params_
-    if verbose:
-        from IPython.display import display
-        display(pd.DataFrame.from_dict( grid_search.cv_results_ ))
-    return grid_search.best_params_
+### MLP
+### MLP
+class mlp(nn.Module):
+    def __init__(self, input_size, layers, num_classes):
+        super(mlp, self).__init__()
+        self.fc = {}
+        self.relu = {}
+        self.layers = layers
+        for i, hidden_size in enumerate(layers):
+            self.fc[i+1] = nn.Linear(input_size, hidden_size)
+            self.relu[i+1] = nn.ReLU()
+            input_size = hidden_size
+        self.fcl = nn.Linear(hidden_size, num_classes)
 
-### prepare X_test, y_test
-X_test, y_test = [], []
+    def forward(self, x):
+        out = x
+        for i, hidden_size in enumerate(self.layers):
+            out = self.fc[i+1](out)
+            out = self.relu[i+1](out)
+        out = self.fcl(out)
+        out = F.log_softmax(out)
+        return out
+
+### build mlp
+input_size = 128
+layers = [
+    64,
+    32
+]
+n_classes = 101
+net = mlp(input_size, layers, n_classes)
+# net.cuda()
+
+import torch.optim as optim
+learning_rate = 0.3
+num_epoch = 100
+optimizer = optim.SGD(net.parameters(), lr=learning_rate, momentum=0.9)
+criterion = nn.CrossEntropyLoss()
+
+### train mlp
+for epoch in range(num_epoch):
+    for fi in range(X.shape[0]):
+        optimizer.zero_grad()  # zero the gradient buffer
+        output = net( torch.tensor(X[fi, :]) )
+        st()
+        loss = criterion(output, torch.tensor(y[fi]))
+        loss.backward()
+        optimizer.step()
+
+        if (i+1) % 100 == 0:
+            print ('Epoch [%d/%d], Step [%d/%d], Loss: %.4f'
+                   %(epoch+1, num_epochs, i+1, len(train_dataset)//batch_size, loss.data[0]))
+
+### evaluate mlp
+y_hat = []
 with torch.no_grad():
     for batch_idx, (inputs, targets, indexes, findexes) in enumerate(testloader):
         b, d, c, w, h = inputs.shape; inputs = inputs.view(b*d, c, w, h)
@@ -94,28 +134,16 @@ with torch.no_grad():
         b, d = indexes.shape; indexes = indexes.view(b*d)
         b, d = findexes.shape; findexes = findexes.view(b*d)
         features = resnet(inputs)
-#         st()
-        features = features.cpu().numpy()
-        targets = targets.cpu().numpy()
         for fi in range(features.shape[0]):
-            X_test.append( features[fi, :] )
-            y_test.append( targets[fi] )
-X_test = np.array(X_test)
+            y_hat.append(
+                net(features[fi, :])
+            )
+
 y_test = np.array(y_test)
-y_test2 = np.array([y_test[i * sample_duration] for i in range(  int(len(y_test) / sample_duration))] )
+y_test2 = np.array([y_test[i * sample_duration] for i in range(  int(len(y_test) / sample_duration)) ])
 
-### build and train SVM
-params = svc_param_selection(X, y, nfolds = 5)
-clf = SVC(**params)
-clf.fit(X, y);
-
-### evaluate SVM
-# X_test = X
-# y_test = y
-y_hat = clf.predict(X_test)
-### voting of each class
 y_hat2 = []
-for i in range(int( len(y_hat) / sample_duration)):
+for i in range(len(y_hat) / sample_duration):
     bg = i * sample_duration
     ed = i * sample_duration + sample_duration
     y_hat_selected = y_hat[bg: ed]
@@ -124,9 +152,3 @@ for i in range(int( len(y_hat) / sample_duration)):
 acc = accuracy_score(y_test, y_hat)
 acc2 = accuracy_score(y_test2, y_hat2)
 acc * 100, acc2 * 100
-st()
-
-### in test
-y_hat = clf.predict(X)
-acc = accuracy_score(y, y_hat)
-acc * 100
