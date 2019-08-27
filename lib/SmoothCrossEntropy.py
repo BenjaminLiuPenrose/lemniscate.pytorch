@@ -18,12 +18,12 @@ class SmoothCrossEntropy(nn.Module):
         lambd = self.lambd
         criterion = nn.CrossEntropyLoss()
         criterion_aux = nn.MSELoss(reduction = "sum")
-        st()
+        # st()
         loss = criterion(outputs, targets)
         vector_x = [lemniscate.vectorBank[findexes[fi], :] for fi in range(len(findexes)) if (fi+1) % sample_duration != 0 ]
         vector_y = [lemniscate.vectorBank[findexes[fi], :] for fi in range(len(findexes)) if fi % sample_duration != 0]
-        vector_x = torch.FloatTensor(vector_x)
-        vector_y = torch.FloatTensor(vector_y)
+        vector_x = torch.stack(vector_x)
+        vector_y = torch.stack(vector_y)
         loss_aux = criterion_aux(vector_x, vector_y)
 
         loss = loss + lambd * loss_aux

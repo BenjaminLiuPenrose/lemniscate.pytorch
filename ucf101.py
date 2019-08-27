@@ -173,7 +173,7 @@ else:
     ### vector embedding, original
     # criterion = nn.CrossEntropyLoss()
     ### smooth loss
-    criterion = SmoothCrossEntropy(lambd = .3)
+    criterion = SmoothCrossEntropy(lambd = .01)
 
 net.to(device)
 lemniscate.to(device)
