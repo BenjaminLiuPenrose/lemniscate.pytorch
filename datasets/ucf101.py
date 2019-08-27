@@ -225,10 +225,10 @@ class UCF101Instance(data.Dataset):
         ### modify 0814, video_index_v vector embedding, 2, v
         ### smooth loss
         # return clip, target, video_index, frame_index
-        ### vector embedding
-        # return clip, target, video_index_v, frame_index
+        ### vector embedding, original
+        return clip, target, video_index_v, frame_index
         ### original
-        return clip, target, video_index, frame_index
+        # return clip, target, video_index, frame_index
 
     def __len__(self):
         return len(self.data)
