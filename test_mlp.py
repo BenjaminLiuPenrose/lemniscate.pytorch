@@ -137,7 +137,7 @@ with torch.no_grad():
         b, d = targets.shape; targets = targets.view(b*d)
         b, d = indexes.shape; indexes = indexes.view(b*d)
         b, d = findexes.shape; findexes = findexes.view(b*d)
-        # st()
+        st()
         features = resnet(inputs)
         outputs = net(features)
         _, predicted = torch.max(outputs, 1)
