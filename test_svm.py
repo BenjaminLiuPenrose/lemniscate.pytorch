@@ -22,12 +22,12 @@ from models.resnet import resnet18
 low_dim = 128
 spatial_size = 224
 norm_value = 255
-sample_duration = 8
+sample_duration = 1
 video_path = './data/UCF-101-Frame/'
 annotation_path = './data/UCF-101-Annotate/ucfTrainTestlist/ucf101_01.json'
 
 resnet = resnet18(low_dim = low_dim, spatial_size = spatial_size)
-checkpoint = torch.load('./checkpoint/' + 'ckpt_ucf101_test32.t7')
+checkpoint = torch.load('./checkpoint/' + 'ckpt_ucf101_test31.t7')
 checkpoint2 = copy.deepcopy(checkpoint)
 checkpoint2['net'] = OrderedDict([(".".join(k.split('.')[1:]), v) for k, v in checkpoint['net'].items()])
 resnet.load_state_dict(checkpoint2['net'])
@@ -67,8 +67,8 @@ testloader = torch.utils.data.DataLoader(
                 num_workers = 2
             )
 
-X = np.load("best_acc_ucf_cls_test32.npy")
-y = np.load("best_acc_ucf_clsy_test32.npy")
+X = np.load("best_acc_ucf_cls_test31.npy")
+y = np.load("best_acc_ucf_clsy_test31.npy")
 # X = X[:, :-1]
 X.shape, y.shape
 
