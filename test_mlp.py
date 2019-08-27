@@ -118,7 +118,7 @@ for epoch in range(num_epoch):
         optimizer.zero_grad()  # zero the gradient buffer
         output = net( torch.tensor(X[(fi * bsize):(fi * bsize + bsize), :]) )
         st()
-        loss = criterion(output, torch.tensor(y[fi]))
+        loss = criterion(output, torch.tensor(y[(fi * bsize):(fi * bsize + bsize)]))
         loss.backward()
         optimizer.step()
 
