@@ -7,7 +7,7 @@ import numpy as np
 import torch.nn.functional as F
 from utils.losses import OnlineContrastiveLoss
 from utils.utils import AllPositivePairSelector, HardNegativePairSelector, AllNegativePairSelector # Strategies for selecting pairs within a minibatch
-import math
+import mat
 from pdb import set_trace as st
 
 def NN(epoch, net, lemniscate, trainloader, testloader, recompute_memory=0, async_bank = False):
@@ -265,7 +265,7 @@ def kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, K, sigma, recomp
     if recompute_memory:
         transform_bak = trainloader.dataset.transform
         trainloader.dataset.transform = testloader.dataset.transform
-        temploader = torch.utils.data.DataLoader(trainloader.dataset, batch_size=math.floor(128 / lemniscate.sample_duration), shuffle=False, num_workers=2)
+        temploader = torch.utils.data.DataLoader(trainloader.dataset, batch_size=int(128 / lemniscate.sample_duration), shuffle=False, num_workers=2)
         for batch_idx, (inputs, targets, indexes, findexes) in enumerate(temploader):
             targets = targets.cuda(non_blocking=True)
             batchSize = inputs.size(0)
@@ -277,6 +277,7 @@ def kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, K, sigma, recomp
 
             features = net(inputs)
             # stop w = v process to make w stand alone
+            print(features.shape, batchSize * lemniscate.sample_duration)
             trainFeatures[:, batch_idx*batchSize*lemniscate.sample_duration:batch_idx*batchSize*lemniscate.sample_duration+batchSize*lemniscate.sample_duration] = features.data.t()
         trainLabels = torch.LongTensor(temploader.dataset.targets).cuda()
         trainloader.dataset.transform = transform_bak
