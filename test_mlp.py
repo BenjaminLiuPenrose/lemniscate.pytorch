@@ -33,7 +33,7 @@ checkpoint = torch.load('./checkpoint/' + 'ckpt_ucf101_test{}.t7'.format(experim
 checkpoint2 = copy.deepcopy(checkpoint)
 checkpoint2['net'] = OrderedDict([(".".join(k.split('.')[1:]), v) for k, v in checkpoint['net'].items()])
 resnet.load_state_dict(checkpoint2['net'])
-
+sample_duration = sample_duration if n_samples_for_each_video == 1 else n_samples_for_each_video
 
 ### prepare datasets
 import datasets
@@ -101,8 +101,8 @@ class mlp(nn.Module):
 ### build mlp
 input_size = 128
 layers = [
-    64,
-    32
+    256,
+    512
 ]
 n_classes = 101
 net = mlp(input_size, layers, n_classes)
