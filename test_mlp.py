@@ -122,9 +122,11 @@ total = 1e-4
 for epoch in range(num_epoch):
     for fi in range( int(X.shape[0] / bsize) ):
         optimizer.zero_grad()  # zero the gradient buffer
-        outputs = net( torch.tensor(X[(fi * bsize):(fi * bsize + bsize), :]) )
+        targets = torch.tensor(y[(fi * bsize):(fi * bsize + bsize)]).view(-1)
+        inputs = torch.tensor(X[(fi * bsize):(fi * bsize + bsize), :])
+        outputs = net( inputs )
         # st()
-        loss = criterion(outputs, torch.tensor(y[(fi * bsize):(fi * bsize + bsize)]).view(-1))
+        loss = criterion(outputs, targets)
         loss.backward()
         optimizer.step()
 
