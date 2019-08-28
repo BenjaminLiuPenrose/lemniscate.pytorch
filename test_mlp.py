@@ -138,7 +138,7 @@ for epoch in range(num_epoch):
         if (fi+1) % 10 == 0:
             print ('Epoch [%d/%d], Step [%d/%d], Loss: %.4f'
                    %(epoch+1, num_epoch, fi+1, X.shape[0]//bsize, loss.data[0]))
-    print( 'Epoch [{}/{}]: {:2f}'.format(epoch + 1, num_epoch, correct / total) )
+    print( 'Epoch [{}/{}] accuracy: {:2f}'.format(epoch + 1, num_epoch, correct / total) )
 
 ### evaluate mlp
 y_hat = []
