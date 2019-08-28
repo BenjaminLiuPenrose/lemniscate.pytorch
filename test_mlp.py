@@ -109,7 +109,7 @@ net = mlp(input_size, layers, n_classes)
 # net.cuda()
 
 import torch.optim as optim
-learning_rate = 0.3
+learning_rate = 0.03
 num_epoch = 100
 optimizer = optim.SGD(net.parameters(), lr=learning_rate, momentum=0.9)
 criterion = nn.CrossEntropyLoss()
@@ -117,18 +117,26 @@ criterion = nn.CrossEntropyLoss()
 
 ### train mlp
 bsize = 128
+correct = 0
+total = 1e-4
 for epoch in range(num_epoch):
     for fi in range( int(X.shape[0] / bsize) ):
         optimizer.zero_grad()  # zero the gradient buffer
-        output = net( torch.tensor(X[(fi * bsize):(fi * bsize + bsize), :]) )
+        outputs = net( torch.tensor(X[(fi * bsize):(fi * bsize + bsize), :]) )
         # st()
-        loss = criterion(output, torch.tensor(y[(fi * bsize):(fi * bsize + bsize)]).view(-1))
+        loss = criterion(outputs, torch.tensor(y[(fi * bsize):(fi * bsize + bsize)]).view(-1))
         loss.backward()
         optimizer.step()
+
+        with torch.no_grad():
+            _, predicted = torch.max(outputs, 1)
+            correct += predicted.eq(targets.data.view(-1,1) ).sum().item()
+            total += targets.size(0)
 
         if (fi+1) % 10 == 0:
             print ('Epoch [%d/%d], Step [%d/%d], Loss: %.4f'
                    %(epoch+1, num_epoch, fi+1, X.shape[0]//bsize, loss.data[0]))
+    print( 'Epoch [{}/{}]: {:2f}'.format(epoch + 1, num_epoch, correct / total) )
 
 ### evaluate mlp
 y_hat = []
