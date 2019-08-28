@@ -262,7 +262,7 @@ for epoch in range(start_epoch, start_epoch + 100):
         # X = np.append(lemniscate.memory.cpu().detach().numpy(), np.array([trainset.targets]).T, axis = 1)
         X = lemniscate.vectorBank.cpu().detach().numpy()
         # X = lemniscate.memory.cpu().detach().numpy()
-        repeat_size = sample_duration if n_samples_for_each_video == 1 else n_samples_for_each_video
+        repeat_size = args.sample_duration if args.n_samples_for_each_video == 1 else args.n_samples_for_each_video
         y = np.array([trainset.targets]).repeat(repeat_size).T
         np.save("best_acc_ucf_cls_test31.npy", X)
         np.save("best_acc_ucf_clsy_test31.npy", y)
