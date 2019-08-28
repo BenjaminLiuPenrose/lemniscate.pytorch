@@ -255,7 +255,7 @@ for epoch in range(start_epoch, start_epoch + 100):
         }
         if not os.path.isdir('checkpoint'):
             os.mkdir('checkpoint')
-        torch.save(state, './checkpoint/ckpt_ucf101_test31.t7')
+        torch.save(state, './checkpoint/ckpt_ucf101_test32.t7')
         best_acc = acc
         print("="*100+"saving best_acc_ucf.npy"+"="*100)
         ### modify 0814
@@ -264,8 +264,8 @@ for epoch in range(start_epoch, start_epoch + 100):
         # X = lemniscate.memory.cpu().detach().numpy()
         repeat_size = args.sample_duration if args.n_samples_for_each_video == 1 else args.n_samples_for_each_video
         y = np.array([trainset.targets]).repeat(repeat_size).T
-        np.save("best_acc_ucf_cls_test31.npy", X)
-        np.save("best_acc_ucf_clsy_test31.npy", y)
+        np.save("best_acc_ucf_cls_test32.npy", X)
+        np.save("best_acc_ucf_clsy_test32.npy", y)
         ### modify 0814
     print('best accuracy: {:.2f}'.format(best_acc*100))
 

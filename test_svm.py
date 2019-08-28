@@ -130,6 +130,6 @@ acc * 100, acc2 * 100
 st()
 
 ### in test
-y_hat = clf.predict(X)
-acc = accuracy_score(y, y_hat)
+y_hat_t = clf.predict(X)
+acc = accuracy_score(y, y_hat_t)
 acc * 100
