@@ -171,9 +171,9 @@ if hasattr(lemniscate, 'K'):
     assert False
 else:
     ### vector embedding, original
-    # criterion = nn.CrossEntropyLoss()
+    criterion = nn.CrossEntropyLoss()
     ### smooth loss
-    criterion = SmoothCrossEntropy(lambd = .01)
+    # criterion = SmoothCrossEntropy(lambd = .01)
 
 net.to(device)
 lemniscate.to(device)
@@ -221,13 +221,13 @@ def train(epoch):
         features = net(inputs)
 
         ### vector embedding, original
-        # outputs = lemniscate(features, indexes)
-        ### smooth loss
         outputs = lemniscate(features, indexes, findexes)
-        ### vector embedding, original
-        # loss = criterion(outputs, indexes)
         ### smooth loss
-        loss = criterion(outputs, indexes, findexes, lemniscate, args.sample_duration)
+        # outputs = lemniscate(features, indexes, findexes)
+        ### vector embedding, original
+        loss = criterion(outputs, indexes)
+        ### smooth loss
+        # loss = criterion(outputs, indexes, findexes, lemniscate, args.sample_duration)
 
         loss.backward()
         optimizer.step()
@@ -260,8 +260,8 @@ for epoch in range(start_epoch, start_epoch + 100):
         print("="*100+"saving best_acc_ucf.npy"+"="*100)
         ### modify 0814
         # X = np.append(lemniscate.memory.cpu().detach().numpy(), np.array([trainset.targets]).T, axis = 1)
-        # X = lemniscate.vectorBank.cpu().detach().numpy()
-        X = lemniscate.memory.cpu().detach().numpy()
+        X = lemniscate.vectorBank.cpu().detach().numpy()
+        # X = lemniscate.memory.cpu().detach().numpy()
         y = np.array([trainset.targets]).T
         np.save("best_acc_ucf_cls_test35.npy", X)
         np.save("best_acc_ucf_clsy_test35.npy", y)
