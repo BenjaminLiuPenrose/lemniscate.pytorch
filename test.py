@@ -320,7 +320,7 @@ def kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, K, sigma, recomp
             # of sample duration to vote
             predictions_reshape =  predictions.view(lemniscate.sample_duration, int(batchSize/lemniscate.sample_duration), -1).narrow(2, 0, 1).view(lemniscate.sample_duration, int(batchSize/lemniscate.sample_duration))
             predictions_vote, _ = torch.mode(predictions_reshape, dim = 0)
-            targets_vote = torch.mode(targets.view(lemniscate.sample_duration, int(batchSize/lemniscate.sample_duration)), dim = 0)
+            targets_vote, _ = torch.mode(targets.view(lemniscate.sample_duration, int(batchSize/lemniscate.sample_duration)), dim = 0)
 
             # Find which predictions match the target
             correct = predictions_vote.eq(targets_vote)
