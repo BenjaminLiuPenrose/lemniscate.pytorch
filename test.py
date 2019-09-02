@@ -318,9 +318,12 @@ def kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, K, sigma, recomp
             _, predictions = probs.sort(1, True)
 
             # of sample duration to vote
-            predictions.view(8, 128/8, 101)
+            predictions_reshape =  predictions.view(lemniscate.sample_duration, int(batchSize/lemniscate.sample_duration), -1).narrow(2, 0, 1).view(lemniscate.sample_duration, int(batchSize/lemniscate.sample_duration))
+            predictions_vote, _ = torch.mode(predictions_reshape, dim = 0)
+            targets_vote = torch.mode(targets.view(lemniscate.sample_duration, int(batchSize/lemniscate.sample_duration)), dim = 0)
+
             # Find which predictions match the target
-            correct = predictions.eq(targets.data.view(-1,1))
+            correct = predictions_vote.eq(targets_vote)
 
 
             if batch_idx == len(testloader) - 1:
@@ -335,8 +338,8 @@ def kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, K, sigma, recomp
                 # st()
             cls_time.update(time.time() - end)
 
-            top1 = top1 + correct.narrow(1,0,1).sum().item()
-            top5 = top5 + correct.narrow(1,0,5).sum().item()
+            top1 = top1 + correct.sum().item()
+            top5 = top5 + 0.
 
             total += targets.size(0)
 
