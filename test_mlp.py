@@ -110,7 +110,7 @@ net = mlp(input_size, layers, n_classes)
 
 import torch.optim as optim
 learning_rate = 0.03
-num_epoch = 100
+num_epoch = 1000
 optimizer = optim.SGD(net.parameters(), lr=learning_rate, momentum=0.9)
 criterion = nn.CrossEntropyLoss()
 # criterion = nn.NLLLoss()
