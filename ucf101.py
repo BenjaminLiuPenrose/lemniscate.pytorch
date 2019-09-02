@@ -220,7 +220,7 @@ def train(epoch):
         # st()
         features = net(inputs)
 
-        ### vector embedding, original
+        ### vector embedding, original, smooth loss
         outputs = lemniscate(features, indexes, findexes)
         ### smooth loss
         # outputs = lemniscate(features, indexes, findexes)
