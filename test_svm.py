@@ -23,8 +23,8 @@ low_dim = 128
 spatial_size = 224
 norm_value = 255
 sample_duration = 1
-n_samples_for_each_video = 8
-experiment_num = 32
+n_samples_for_each_video = 1
+experiment_num = 31
 video_path = './data/UCF-101-Frame/'
 annotation_path = './data/UCF-101-Annotate/ucfTrainTestlist/ucf101_01.json'
 
@@ -75,14 +75,14 @@ y = np.load("best_acc_ucf_clsy_test{}.npy".format(experiment_num))
 # y = y.repeat(n_samples_for_each_video) repeat in the code
 
 ### SVM
-def svc_param_selection(X, y, nfolds, verbose = True):
-    Cs = [0.001, 0.01, 0.1, 1, 10]
-    gammas = [0.001, 0.01, 0.1, 1]
+def svc_param_selection(X, y, nfolds, verbose = 2):
+    Cs = [0.01, 0.1, 1, 10, 100]
+    gammas = [0.01, 0.1, 1, 10]
     param_grid = {'C': Cs, 'gamma' : gammas}
     grid_search = GridSearchCV(SVC(kernel='rbf'), param_grid,  cv=nfolds, verbose = 2) # scoring='accuracy',
     grid_search.fit(X, y)
     grid_search.best_params_
-    if verbose:
+    if verbose > 1:
         from IPython.display import display
         display(pd.DataFrame.from_dict( grid_search.cv_results_ ))
     return grid_search.best_params_
