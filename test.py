@@ -317,8 +317,12 @@ def kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, K, sigma, recomp
             probs = torch.sum(torch.mul(retrieval_one_hot.view(batchSize, -1 , C), yd_transform.view(batchSize, -1, 1)), 1)
             _, predictions = probs.sort(1, True)
 
+            # of sample duration to vote
+            predictions.view(8, 128/8, 101)
             # Find which predictions match the target
             correct = predictions.eq(targets.data.view(-1,1))
+
+
             if batch_idx == len(testloader) - 1:
                 x = retrieval
                 norm = x.pow(2).sum(1, keepdim = True).pow(1./2)
