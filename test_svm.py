@@ -22,9 +22,9 @@ from models.resnet import resnet18
 low_dim = 128
 spatial_size = 224
 norm_value = 255
-sample_duration = 1
+sample_duration = 8
 n_samples_for_each_video = 1
-experiment_num = 31
+experiment_num = 32
 video_path = './data/UCF-101-Frame/'
 annotation_path = './data/UCF-101-Annotate/ucfTrainTestlist/ucf101_01.json'
 
@@ -72,7 +72,7 @@ testloader = torch.utils.data.DataLoader(
 X = np.load("best_acc_ucf_cls_test{}.npy".format(experiment_num))
 y = np.load("best_acc_ucf_clsy_test{}.npy".format(experiment_num))
 # X = X[:, :-1]
-# y = y.repeat(n_samples_for_each_video) repeat in the code
+y = y.repeat(n_samples_for_each_video) repeat in the code
 
 ### SVM
 def svc_param_selection(X, y, nfolds, verbose = 2):
