@@ -133,8 +133,8 @@ for epoch in range(num_epoch):
         with torch.no_grad():
             outputs = net( inputs )
             _, predicted = torch.max(outputs, 1)
-            st()
-            correct += predicted.eq(targets.data.view(-1,1) ).sum().item()
+            # st()
+            correct += predicted.eq(targets ).sum().item()
             total += targets.size(0)
 
 
