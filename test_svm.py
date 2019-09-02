@@ -72,9 +72,7 @@ testloader = torch.utils.data.DataLoader(
 X = np.load("best_acc_ucf_cls_test{}.npy".format(experiment_num))
 y = np.load("best_acc_ucf_clsy_test{}.npy".format(experiment_num))
 # X = X[:, :-1]
-y = y.repeat(n_samples_for_each_video)
-st()
-X.shape, y.shape
+# y = y.repeat(n_samples_for_each_video) repeat in the code
 
 ### SVM
 def svc_param_selection(X, y, nfolds, verbose = True):
