@@ -341,7 +341,7 @@ def kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, K, sigma, recomp
             top1 = top1 + correct.sum().item()
             top5 = top5 + 0.
 
-            total += targets.size(0)
+            total += targets_vote.size(0)
 
             print('Test [{}/{}]\t'
                   'Net Time {net_time.val:.3f} ({net_time.avg:.3f})\t'
