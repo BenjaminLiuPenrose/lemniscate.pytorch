@@ -177,4 +177,5 @@ for i in range(int(len(y_hat) / sample_duration)):
 acc = accuracy_score(y_test, y_hat)
 acc2 = accuracy_score(y_test2, y_hat2)
 acc * 100, acc2 * 100
+st()
 print(acc, acc2)
