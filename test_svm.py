@@ -124,6 +124,8 @@ for i in range(int( len(y_hat) / sample_duration)):
     y_hat_selected = y_hat[bg: ed]
     y_hat2.append( stats.mode(y_hat_selected)[0] )
 
+y_hat2 = [stats.mode(y_hat[i * sample_duration:(i * sample_duration + sample_duration)])[0] for i in range( int(len(y_hat) / sample_duration))  ]
+
 acc = accuracy_score(y_test, y_hat)
 acc2 = accuracy_score(y_test2, y_hat2)
 acc * 100, acc2 * 100

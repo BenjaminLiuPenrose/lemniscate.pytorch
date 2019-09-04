@@ -127,8 +127,9 @@ def make_dataset(
         else:
             sample['label'] = -1
         if n_samples_for_each_video == 1:
+            step_size = 3
             n_frames = min(n_frames, sample_duration)
-            sample['frame_indices_local'] = list(range(1, n_frames + 1))
+            sample['frame_indices_local'] = list(range(1, n_frames*step_size + 1, step_size))
             sample['frame_indices_global'] = list(range(frame_index_global, n_frames + frame_index_global))
             sample['frame_indices_global2'] = [i*100 + x  for x in range(1, n_frames + 1)]
             frame_index_global += n_frames
