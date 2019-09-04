@@ -99,7 +99,7 @@ class mlp(nn.Module):
         return out
 
 ### build mlp
-input_size = 128
+input_size = low_dim
 layers = [
     256,
     512
