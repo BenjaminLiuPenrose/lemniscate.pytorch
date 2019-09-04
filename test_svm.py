@@ -19,7 +19,7 @@ warnings.filterwarnings("ignore")
 
 ### load resnet
 from models.resnet import resnet18
-low_dim = 128
+low_dim = 512
 spatial_size = 224
 norm_value = 255
 sample_duration = 1
