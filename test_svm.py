@@ -24,7 +24,7 @@ spatial_size = 224
 norm_value = 255
 sample_duration = 1
 n_samples_for_each_video = 1
-experiment_num = "41-2"
+experiment_num = "42-2"
 video_path = './data/UCF-101-Frame/'
 annotation_path = './data/UCF-101-Annotate/ucfTrainTestlist/ucf101_01.json'
 
