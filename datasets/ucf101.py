@@ -112,6 +112,8 @@ def make_dataset(
         if n_frames < sample_duration * step_size:
             print("[ERR] {} {}-{}, skipped".format(video_names[i], n_frames, sample_duration))
             continue
+        if i >= 10:
+            continue
 
         begin_t = 1
         end_t = n_frames # 64
