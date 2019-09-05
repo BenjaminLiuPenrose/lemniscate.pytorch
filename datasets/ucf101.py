@@ -112,8 +112,7 @@ def make_dataset(
         if n_frames < sample_duration * step_size:
             print("[ERR] {} {}-{}, skipped".format(video_names[i], n_frames, sample_duration))
             continue
-        if i >= 10:
-            continue
+
 
         begin_t = 1
         end_t = n_frames # 64
@@ -129,6 +128,8 @@ def make_dataset(
             sample['label'] = class_to_idx[ annotations[i]['label'] ]
         else:
             sample['label'] = -1
+        if sample['label'] >= 10 or sample['label'] < 0:
+            continue
         if n_samples_for_each_video == 1:
             n_frames = min(n_frames, sample_duration*step_size)
             sample['frame_indices_local'] = list(range(1, n_frames*step_size + 1, step_size))
