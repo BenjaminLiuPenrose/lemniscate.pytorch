@@ -318,8 +318,8 @@ def kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, K, sigma, recomp
             _, predictions = probs.sort(1, True)
 
             # of sample duration to vote
-            st()
-            sample_duration = lemniscate.sample_duration + 1 - lemniscate.n_samples_for_each_video
+            # st()
+            sample_duration = lemniscate.sample_duration if lemniscate.n_samples_for_each_video == 1 else lemniscate.n_samples_for_each_video
             predictions_reshape =  predictions.view(sample_duration, int(batchSize/sample_duration), -1).narrow(2, 0, 1).view(sample_duration, int(batchSize/sample_duration))
             predictions_vote, _ = torch.mode(predictions_reshape, dim = 0)
             targets_vote, _ = torch.mode(targets.view(sample_duration, int(batchSize/sample_duration)), dim = 0)
