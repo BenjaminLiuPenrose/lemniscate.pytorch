@@ -356,3 +356,69 @@ def kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, K, sigma, recomp
     print(top1/(total + 1e-8))
 
     return top1/(total + 1e-8), top5/(total + 1e-8)
+
+def kNN_ucf101_store(epoch, net, lemniscate, trainloader, testloader, K, sigma, recompute_memory=0, async_bank = False):
+    net.eval()
+    net_time = AverageMeter()
+    cls_time = AverageMeter()
+    total = 0
+    testsize = testloader.dataset.__len__()
+    X_test = []
+    y_test = []
+
+    trainFeatures = lemniscate.memory.t()
+    if hasattr(trainloader.dataset, 'imgs'):
+        trainLabels = torch.LongTensor([y for (p, y) in trainloader.dataset.imgs]).cuda()
+    else:
+        trainLabels = torch.LongTensor(trainloader.dataset.targets).cuda()
+    C = trainLabels.max() + 1
+
+    if recompute_memory:
+        transform_bak = trainloader.dataset.transform
+        trainloader.dataset.transform = testloader.dataset.transform
+        temploader = torch.utils.data.DataLoader(trainloader.dataset, batch_size=int(128 / lemniscate.sample_duration), shuffle=False, num_workers=2)
+        for batch_idx, (inputs, targets, indexes, findexes) in enumerate(temploader):
+            targets = targets.cuda(non_blocking=True)
+            batchSize = inputs.size(0)
+
+            b, d, c, w, h = inputs.shape; inputs = inputs.view(b*d, c, w, h)
+            b, d = targets.shape; targets = targets.view(b*d)
+            b, d = indexes.shape; indexes = indexes.view(b*d)
+            b, d = findexes.shape; findexes = findexes.view(b*d)
+
+            features = net(inputs)
+            # stop w = v process to make w stand alone
+            trainFeatures[:, batch_idx*batchSize:batch_idx*batchSize+batchSize] = features.data.t()
+        trainLabels = torch.LongTensor(temploader.dataset.targets).cuda()
+        trainloader.dataset.transform = transform_bak
+
+    top1 = 0.
+    top5 = 0.
+    end = time.time()
+    sample_duration = lemniscate.sample_duration
+    with torch.no_grad():
+
+        for batch_idx, (inputs, targets, indexes, findexes) in enumerate(testloader):
+            end = time.time()
+            targets = targets.cuda(non_blocking=True)
+
+            ### modify 0813
+            b, d, c, w, h = inputs.shape; inputs = inputs.view(b*d, c, w, h)
+            b, d = targets.shape; targets = targets.view(b*d)
+            b, d = indexes.shape; indexes = indexes.view(b*d)
+            b, d = findexes.shape; findexes = findexes.view(b*d)
+            ### modify 0813
+
+            batchSize = inputs.size(0)
+            # st()
+            features = net(inputs)
+            features = features.cpu().numpy()
+            targets = targets.cpu().numpy()
+            for fi in range(features.shape[0]):
+                X_test.append( features[fi, :] )
+                y_test.append( targets[fi] )
+    X_test = np.array(X_test)
+    y_test = np.array(y_test)
+
+
+    return X_test, y_test

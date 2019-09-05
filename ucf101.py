@@ -247,6 +247,8 @@ def train(epoch):
 for epoch in range(start_epoch, start_epoch + 100):
     train(epoch)
     acc, acc_top5 = kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, 200, args.nce_t, 0)
+    if epoch > 3:
+        break
     if acc > best_acc:
         print('Saving..')
         state = {
@@ -268,6 +270,9 @@ for epoch in range(start_epoch, start_epoch + 100):
         y = np.array([trainset.targets]).repeat(repeat_size).T
         np.save("best_acc_ucf_cls_test33-2.npy", X)
         np.save("best_acc_ucf_clsy_test33-2.npy", y)
+        X_test, y_test = kNN_ucf101_store(epoch, net, lemniscate, trainloader, testloader, 200, args.nce_t, 0)
+        np.save("best_acc_ucf_clst_test33-2.npy", X_test)
+        np.save("best_acc_ucf_clsyt_test33-2.npy", y_test)
         ### modify 0814
     print('best accuracy: {:.2f}'.format(best_acc*100))
 
