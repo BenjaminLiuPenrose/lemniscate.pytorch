@@ -27,7 +27,7 @@ from lib.LinearAverage import LinearAverage, LinearAverageWithWeights
 from lib.NCECriterion import NCECriterion
 from lib.SmoothCrossEntropy import SmoothCrossEntropy
 from lib.utils import AverageMeter
-from test import NN, kNN, kNN_ucf101
+from test import NN, kNN, kNN_ucf101, kNN_ucf101_store
 
 parser = argparse.ArgumentParser(description='PyTorch UCF101 Training')
 parser.add_argument('--lr', default=0.03, type=float, help='learning rate')
