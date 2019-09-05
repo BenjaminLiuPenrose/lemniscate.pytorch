@@ -207,8 +207,8 @@ def train(epoch):
     net.train()
     end = time.time()
     for batch_idx, (inputs, targets, indexes, findexes) in enumerate(trainloader):
-        if batch_idx > 3:
-            return
+        # if batch_idx > 3:
+        #     return
         data_time.update(time.time() - end)
         # view targets
         inputs, targets, indexes, findexes = inputs.to(device), targets.to(device), indexes.to(device), findexes.to(device)
@@ -247,8 +247,8 @@ def train(epoch):
 for epoch in range(start_epoch, start_epoch + 100):
     train(epoch)
     acc, acc_top5 = kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, 200, args.nce_t, 0)
-    if epoch > 3:
-        break
+    # if epoch > 3:
+    #     break
     if acc > best_acc:
         print('Saving..')
         state = {
