@@ -259,7 +259,7 @@ for epoch in range(start_epoch, start_epoch + 100):
         }
         if not os.path.isdir('checkpoint'):
             os.mkdir('checkpoint')
-        torch.save(state, './checkpoint/ckpt_ucf101_test41-xx1.t7')
+        torch.save(state, './checkpoint/ckpt_ucf101_test33-2.t7')
         best_acc = acc
         print("="*100+"saving best_acc_ucf.npy"+"="*100)
         ### modify 0814
@@ -268,11 +268,11 @@ for epoch in range(start_epoch, start_epoch + 100):
         # X = lemniscate.memory.cpu().detach().numpy()
         repeat_size = args.sample_duration if args.n_samples_for_each_video == 1 else args.n_samples_for_each_video
         y = np.array([trainset.targets]).repeat(repeat_size).T
-        np.save("best_acc_ucf_cls_test41-xx1.npy", X)
-        np.save("best_acc_ucf_clsy_test41-xx1.npy", y)
+        np.save("best_acc_ucf_cls_test33-2.npy", X)
+        np.save("best_acc_ucf_clsy_test33-2.npy", y)
         X_test, y_test = kNN_ucf101_store(epoch, net, lemniscate, trainloader, testloader, 200, args.nce_t, 0)
-        np.save("best_acc_ucf_clst_test41-xx1.npy", X_test)
-        np.save("best_acc_ucf_clsyt_test41-xx1.npy", y_test)
+        np.save("best_acc_ucf_clst_test33-2.npy", X_test)
+        np.save("best_acc_ucf_clsyt_test33-2.npy", y_test)
         ### modify 0814
     print('best accuracy: {:.2f}'.format(best_acc*100))
 
