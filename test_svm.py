@@ -75,6 +75,7 @@ y = np.load("best_acc_ucf_clsy_test{}.npy".format(experiment_num))
 y = y.repeat(n_samples_for_each_video) # repeat in the code
 X_test = np.load("best_acc_ucf_clst_test{}.npy".format( experiment_num ))
 y_test = np.load("best_acc_ucf_clsyt_test{}.npy".format( experiment_num ))
+y_test2 = np.array([y_test[i * sample_duration] for i in range(  int(len(y_test) / sample_duration))] );
 st()
 
 ### SVM
