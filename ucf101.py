@@ -55,7 +55,7 @@ parser.add_argument('--initial_scale', default=1.0, type=float, help='Initial sc
 parser.add_argument('--num_scales', default=5, type=int, help='Number of scales for multiscale cropping')
 parser.add_argument('--scale_step', default=0.84089641525, type=float, help='Scale step for multiscale cropping')
 parser.add_argument('--resnet_shortcut', default='B', type=str, help='Shortcut type of resnet (A | B)')
-
+parser.add_argument('--experiment_num', default='B', type=str, help='experiment_num')
 args = parser.parse_args()
 
 args.scales = [args.initial_scale]
@@ -259,7 +259,7 @@ for epoch in range(start_epoch, start_epoch + 100):
         }
         if not os.path.isdir('checkpoint'):
             os.mkdir('checkpoint')
-        torch.save(state, './checkpoint/ckpt_ucf101_test52-x1.t7')
+        torch.save(state, './checkpoint/ckpt_ucf101_test{}.t7'.format(args.experiment_num))
         best_acc = acc
         print("="*100+"saving best_acc_ucf.npy"+"="*100)
         ### modify 0814
@@ -268,11 +268,11 @@ for epoch in range(start_epoch, start_epoch + 100):
         # X = lemniscate.memory.cpu().detach().numpy()
         repeat_size = args.sample_duration if args.n_samples_for_each_video == 1 else args.n_samples_for_each_video
         y = np.array([trainset.targets]).repeat(repeat_size).T
-        np.save("best_acc_ucf_cls_test52-x1.npy", X)
-        np.save("best_acc_ucf_clsy_test52-x1.npy", y)
+        np.save("best_acc_ucf_cls_test{}.npy".format(args.experiment_num), X)
+        np.save("best_acc_ucf_clsy_test{}.npy".format(args.experiment_num), y)
         X_test, y_test = kNN_ucf101_store(epoch, net, lemniscate, trainloader, testloader, 200, args.nce_t, 0)
-        np.save("best_acc_ucf_clst_test52-x1.npy", X_test)
-        np.save("best_acc_ucf_clsyt_test52-x1.npy", y_test)
+        np.save("best_acc_ucf_clst_test{}.npy".format(args.experiment_num), X_test)
+        np.save("best_acc_ucf_clsyt_test{}.npy".format(args.experiment_num), y_test)
         ### modify 0814
     print('best accuracy: {:.2f}'.format(best_acc*100))
 
