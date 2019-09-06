@@ -29,10 +29,10 @@ video_path = './data/UCF-101-Frame/'
 annotation_path = './data/UCF-101-Annotate/ucfTrainTestlist/ucf101_01.json'
 
 resnet = resnet18(low_dim = low_dim, spatial_size = spatial_size)
-checkpoint = torch.load('./checkpoint/' + 'ckpt_ucf101_test{}.t7'.format(experiment_num))
-checkpoint2 = copy.deepcopy(checkpoint)
-checkpoint2['net'] = OrderedDict([(".".join(k.split('.')[1:]), v) for k, v in checkpoint['net'].items()])
-resnet.load_state_dict(checkpoint2['net'])
+# checkpoint = torch.load('./checkpoint/' + 'ckpt_ucf101_test{}.t7'.format(experiment_num))
+# checkpoint2 = copy.deepcopy(checkpoint)
+# checkpoint2['net'] = OrderedDict([(".".join(k.split('.')[1:]), v) for k, v in checkpoint['net'].items()])
+# resnet.load_state_dict(checkpoint2['net'])
 sample_duration = sample_duration if n_samples_for_each_video == 1 else n_samples_for_each_video
 
 ### prepare datasets
