@@ -19,12 +19,12 @@ warnings.filterwarnings("ignore")
 
 ### load resnet
 from models.resnet import resnet18
-low_dim = 1024
+low_dim = 512
 spatial_size = 224
 norm_value = 255
-sample_duration = 8
+sample_duration = 1
 n_samples_for_each_video = 1
-experiment_num = "42-1"
+experiment_num = "41-xx1"
 video_path = './data/UCF-101-Frame/'
 annotation_path = './data/UCF-101-Annotate/ucfTrainTestlist/ucf101_01.json'
 
@@ -73,6 +73,9 @@ X = np.load("best_acc_ucf_cls_test{}.npy".format(experiment_num))
 y = np.load("best_acc_ucf_clsy_test{}.npy".format(experiment_num))
 # X = X[:, :-1]
 y = y.repeat(n_samples_for_each_video) # repeat in the code
+X_test = np.load("best_acc_ucf_clst_test{}.npy".format( experiment_num ))
+y_test = np.load("best_acc_ucf_clsyt_test{}.npy".format( experiment_num ))
+st()
 
 ### SVM
 def svc_param_selection(X, y, nfolds, verbose = 2):
@@ -107,7 +110,7 @@ y_test = np.array(y_test)
 y_test2 = np.array([y_test[i * sample_duration] for i in range(  int(len(y_test) / sample_duration))] )
 
 ### build and train SVM
-st()
+# st()
 params = svc_param_selection(X, y, nfolds = 5)
 clf = SVC(**params)
 clf.fit(X, y);
