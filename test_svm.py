@@ -17,14 +17,22 @@ from pdb import set_trace as st
 import warnings
 warnings.filterwarnings("ignore")
 
+
+import argparse
+parser = argparse.ArgumentParser(description='PyTorch UCF101 Training')
+parser.add_argument('--low_dim', default=128, type=int, help='low dimension')
+parser.add_argument('--sample_duration', default=1, type=int, help='sample duration')
+parser.add_argument('--experiment_num', default="", type=str, help='experiment number')
+args = parser.parse_args()
+
 ### load resnet
 from models.resnet import resnet18
-low_dim = 512
 spatial_size = 224
 norm_value = 255
-sample_duration = 8
+low_dim = args.low_dim
+sample_duration = args.sample_duration
 n_samples_for_each_video = 1
-experiment_num = "42-xx1"
+experiment_num = args.experiment_num
 video_path = './data/UCF-101-Frame/'
 annotation_path = './data/UCF-101-Annotate/ucfTrainTestlist/ucf101_01.json'
 
