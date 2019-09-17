@@ -197,7 +197,7 @@ def adjust_learning_rate(optimizer, epoch):
 # Training
 def train(epoch):
     print('\nEpoch: %d' % epoch)
-    adjust_learning_rate(optimizer, epoch)
+
     train_loss = AverageMeter()
     data_time = AverageMeter()
     batch_time = AverageMeter()
@@ -244,7 +244,7 @@ def train(epoch):
               'Loss: {train_loss.val:.4f} ({train_loss.avg:.4f})'.format(
               epoch, batch_idx, len(trainloader), batch_time=batch_time, data_time=data_time, train_loss=train_loss))
 
-for epoch in range(start_epoch, start_epoch + 100):
+for epoch in range(start_epoch, start_epoch + 1000):
     train(epoch)
     acc, acc_top5 = kNN_ucf101(epoch, net, lemniscate, trainloader, testloader, 200, args.nce_t, 0)
     # if epoch > 3:
